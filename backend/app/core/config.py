@@ -24,14 +24,14 @@ class Settings(BaseSettings):
     # Application
     APP_NAME: str = "Computational Entropy Lab"
     APP_VERSION: str = "1.0.0"
-    DEBUG: bool = True
-    PORT: int = 8000
+    DEBUG: bool = os.getenv("DEBUG", "false").lower() == "true"
+    PORT: int = int(os.getenv("PORT", "8000"))
     
     # Database
     DATABASE_URL: str = os.getenv("DATABASE_URL", _default_database_url())
     
     # Security
-    SECRET_KEY: str = "your-super-secret-key-change-in-production"
+    SECRET_KEY: str = os.getenv("SECRET_KEY", "your-super-secret-key-change-in-production")
     
     # LLM Provider Configuration
     # Supported: "openai", "anthropic", "simulation"

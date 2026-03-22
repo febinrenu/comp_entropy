@@ -14,6 +14,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 import sys
+import os
 
 from app.core.config import settings
 from app.core.paths import ensure_runtime_dirs, LOG_DIR
@@ -79,9 +80,23 @@ This API provides endpoints for:
 )
 
 # CORS configuration
+allow_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://comp-ent.vercel.app",  # Vercel frontend URL
+]
+
+# Allow custom origins from environment variable
+if settings.DEBUG:
+    allow_origins.append("*")
+else:
+    custom_origins = os.getenv("ALLOWED_ORIGINS", "")
+    if custom_origins:
+        allow_origins.extend(custom_origins.split(","))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=allow_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
