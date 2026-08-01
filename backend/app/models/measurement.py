@@ -5,11 +5,30 @@ Measurement Model
 Database model for energy and performance measurements.
 """
 
-from sqlalchemy import Column, Integer, String, Float, DateTime, Text, JSON, ForeignKey, Boolean
+from sqlalchemy import Column, Integer, String, Float, DateTime, Text, JSON, ForeignKey, Boolean, Enum
 from sqlalchemy.orm import relationship
 from datetime import datetime
+import enum
 
 from app.core.database import Base
+
+
+class MeasurementSource(str, enum.Enum):
+    """Where a measurement's energy figure actually came from -- so real
+    hardware measurement and modeled estimates are never blended into one
+    number without a way to tell them apart afterward."""
+    NVML_REAL = "nvml_real"                    # real NVIDIA GPU wattage
+    TDP_PROXY = "tdp_proxy"                     # CPU-time x TDP estimate
+    SYNTHETIC_SIMULATION = "synthetic_simulation"  # llm_service simulation mode
+
+
+class MeasurementVariant(str, enum.Enum):
+    """Whether this measurement is on the raw mutated prompt or a
+    length-equalized variant of it (see mutation_engine.length_match) --
+    needed to test whether an SII-energy relationship is actually a
+    prompt-length confound."""
+    RAW = "raw"
+    LENGTH_MATCHED = "length_matched"
 
 
 class Measurement(Base):
@@ -36,6 +55,24 @@ class Measurement(Base):
     cpu_energy_joules = Column(Float, nullable=True)
     gpu_energy_joules = Column(Float, nullable=True)
     ram_energy_joules = Column(Float, nullable=True)
+
+    # Provenance: what actually produced total_energy_joules. Always set
+    # this explicitly rather than leaving a reader to assume a real
+    # measurement occurred -- see MeasurementSource for the three cases.
+    measurement_source = Column(
+        Enum(MeasurementSource, values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        nullable=False,
+        default=MeasurementSource.TDP_PROXY,
+    )
+
+    # Whether this row is the raw mutated prompt or its length-matched
+    # variant (see mutation_engine.length_match) -- lets analysis isolate
+    # a prompt-length confound from the SII/mutation-type effect itself.
+    variant = Column(
+        Enum(MeasurementVariant, values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        nullable=False,
+        default=MeasurementVariant.RAW,
+    )
     
     # Power Metrics (in Watts)
     avg_power_watts = Column(Float, nullable=True)
@@ -123,6 +160,8 @@ class Measurement(Base):
             "output_tokens": self.output_tokens,
             "energy_per_token_mj": self.energy_per_token_mj,
             "tokens_per_second": self.tokens_per_second,
+            "measurement_source": self.measurement_source.value if self.measurement_source else None,
+            "variant": self.variant.value if self.variant else None,
             "is_valid": self.is_valid,
             "created_at": self.created_at.isoformat() if self.created_at else None
         }

@@ -1,0 +1,914 @@
+{
+  "model": "gemma2",
+  "ollama_tag": "gemma2:2b",
+  "records": [
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": -0.0,
+      "n_clusters": 1,
+      "k": 5,
+      "outputs": [
+        "The capital of Australia is **Canberra**. \ud83c\udde6\ud83c\uddfa",
+        "The capital of Australia is **Canberra**. \ud83c\udde6\ud83c\uddfa",
+        "The capital of Australia is **Canberra**.",
+        "The capital of Australia is **Canberra**.",
+        "The capital of Australia is **Canberra**."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "noise_typo",
+      "sii": 0.8599999999999999,
+      "sc": -0.0,
+      "n_clusters": 1,
+      "k": 5,
+      "outputs": [
+        "The capital of Australia is **Canberra**. \ud83c\udde6\ud83c\uddfa",
+        "The capital of Australia is **Canberra**. \ud83c\udde6\ud83c\uddfa",
+        "The capital of Australia is **Canberra**. \ud83c\udde6\ud83c\uddfa",
+        "The capital of Australia is **Canberra**. \ud83c\udde6\ud83c\uddfa",
+        "The capital of Australia is **Canberra**. \ud83c\udde6\ud83c\uddfa"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.908655555555556,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "Please provide more context! \"The thing\" could refer to many things about Australia.  To help me answer your question, tell me:\n\n* **What specific topic are you interested in?** (e.g., Geography, culture, economy, history)\n* **What kind of information are you looking for",
+        "Please give me more context!  \"The thing in question\" could refer to many things about Australia. \n\nTo help me understand what you're asking, please tell me:\n\n* **What are you interested in learning about regarding Australia?** (e.g., geography, culture, history)\n*",
+        "Please provide me with more context!  \"The thing in question\" could be anything. To help me answer your question, tell me:\n\n* **What topic are you talking about?** (e.g., geography, history, culture) \n* **What kind of information are you looking for?**",
+        "Please provide me with more context!  \"The thing in question\" is very broad. \n\nTo help me understand what you're asking, tell me:\n\n* **What subject are you interested in?** (e.g., politics, culture, geography, environment)\n* **Are you looking for",
+        "Please provide more context!  \"The thing in question of Australia\" could refer to many things. \n\nTo help me understand, tell me:\n\n* **What topic are you interested in?** Is it politics, geography, culture, animals, or something else?\n* **What is the context for your"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "negation",
+      "sii": 1.5608428571428579,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The answer is **none of the above**. \n\nAustralia's capital cities are:\n\n* **Canberra** (Federal Capital) \n\n\nLet me know if you have any other geography questions! \ud83d\ude0a \ud83d\uddfa\ufe0f",
+        "The answer to this question depends on what you're referring to:\n\n* **If you're asking about the official capital city:**  **Canberra** is the Australian Capital Territory (ACT). \n* **If you're asking about a state or territory with an alternative capital:** While Canberra is the",
+        "The question asks for what is **not** the capital of Australia. \n\nHere's a simple answer:\n\n* **Sydney** is the capital city of Australia. \n\n\nLet me know if you'd like to explore other facts about Australia! \ud83d\ude0a",
+        "The capital of Australia is **Canberra**. \n\nLet me know if you have any other questions! \ud83d\ude0a",
+        "The answer to this question depends on how you interpret \"capital\" \u2013 do you mean:\n\n* **Main city for population:**  **Sydney** and **Melbourne** are often considered major contenders. \n* **Location of the Parliament House:** **Canberra** is the only officially designated capital of Australia, and"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": -0.0,
+      "n_clusters": 1,
+      "k": 5,
+      "outputs": [
+        "The capital of Australia is **Canberra**. \ud83c\udde6\ud83c\uddfa",
+        "The capital of Australia is **Canberra**. \ud83c\udde6\ud83c\uddfa",
+        "The capital of Australia is **Canberra**.",
+        "The capital city of Australia is **Canberra**.",
+        "The capital of Australia is **Canberra**."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.1910000000000003,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "This sounds like a riddle!  The answer is **Canberra**. \n\nHere's why it's tricky:\n\n* **It's common knowledge that Canberra is the capital of Australia.** The city was specifically built as the Australian Capital Territory (ACT) and serves as the nation's political center.",
+        "This question plays on a common misunderstanding about Australian geography! \n\n**The answer is: Canberra**.  \n\nHere's why it might seem like something else:\n\n* **Sydney:** Sydney is Australia's largest city and its most famous.  Many people think of it as the capital, due to its",
+        "This statement plays on a common misconception about the Australian capital. \n\nWhile **Canberra** is the official capital of Australia, it's important to understand why:\n\n* **Sydney** and **Melbourne** are often considered the country's major cities and cultural hubs, but they don't hold the title",
+        "This is a bit of a trick question!  \n\n* **The capital of Australia is Canberra.** \n\nYou're right to point out that it's not often the case where the capital city is *actually* a different location than where the country itself is located. The statement \"although, in fact,",
+        "This question plays on the idea of a **\"what if\"** scenario.  \n\nThe answer is **Canberra**. \n\nHowever, your statement \"although, in fact, this never happens\" suggests you're hinting at a hypothetical situation where Canberra wouldn't be the capital of Australia.  Why might"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": -0.0,
+      "n_clusters": 1,
+      "k": 5,
+      "outputs": [
+        "The novel *Pride and Prejudice* was written by **Jane Austen**.",
+        "**Jane Austen** wrote the novel *Pride and Prejudice*.",
+        "The novel *Pride and Prejudice* was written by **Jane Austen**.",
+        "**Jane Austen** wrote the novel *Pride and Prejudice*.",
+        "**Jane Austen** wrote the novel *Pride and Prejudice*."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "noise_typo",
+      "sii": 1.3434285714285716,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "It seems like you're trying to ask \"Who wrote the novel 'The Nvl Oekdde and Prejidxe'? \".\n\nUnfortunately, that title doesn't seem to be a standard one for any known novels.  It might be:\n\n* **A typo or misspelling:** Double check the",
+        "Let's break down this question and explore the relationship between \"who\" and \"what\" in this context.\n\n**Understanding the Question:**\n\nThe question, \"Qho wrooge thw nvl Oekdde annd Prejidxe?\" is a playful attempt to ask: \n\n* **",
+        "It seems like you're asking about the **\"W**ro**o**g**e** Th**w** N**v**l **O**k**k**d**e** Annd Pr**ej**idx**e**\" \u2013 a tricky combination of words! \n\nLet's",
+        "It seems you're asking about the \"**who** wrote **the novel** **and principle**?\"\n\nTo help me understand your question, please clarify: \n\n* **What is the name of the novel you're interested in?**  \n* **Are you looking for information on a specific author",
+        "It seems like you're asking about **\"who wrote the novel 'The Nvl Oekdde and Prejidxe'\"**.  \n\nUnfortunately, I can't provide a definitive answer to that. Here's why:\n\n* **No Known Novel:** There isn't any widely known or published"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.5917142857142856,
+      "sc": 0.7219280948873623,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "*Pride and Prejudice* was written by **Jane Austen**.",
+        "**Jane Austen** wrote *Pride and Prejudice*.",
+        "**Pride and Prejudice** was written by **Jane Austen**.",
+        "**Jane Austen** wrote *Pride and Prejudice*.",
+        "**Jane Austen** wrote *Pride and Prejudice*. \n\nIt's a beloved classic of English literature! \ud83d\udcda"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "negation",
+      "sii": 1.875870329670329,
+      "sc": 0.9709505944546686,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "You're absolutely right! \n\n**Jane Austen** wrote the beloved novel *Pride and Prejudice*.",
+        "You are absolutely right. \n\n**Pride and Prejudice was written by Jane Austen.**  \n\nIt's a common mistake to assume otherwise, perhaps because of the iconic status of the novel or its frequent appearance in popular culture. \n\nDo you have any questions about *Pride and Prejudice* or Jane Austen herself?",
+        "You are absolutely correct! \n\n**Jane Austen** wrote the beloved classic novel *Pride & Prejudice*.  \n\nPerhaps you were thinking of something else, or perhaps you had a different point in mind. \ud83d\ude0a",
+        "You're absolutely right! \n\n**Jane Austen** wrote the novel *Pride and Prejudice*.  \n\n\nDo you have any other questions about this classic novel or Jane Austen's work in general? \ud83d\ude0a",
+        "You are absolutely correct! \n\n**Jane Austen** wrote the beloved novel *Pride and Prejudice*."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "You're asking about **\"Pride and Prejudice,\"** a beloved novel written by **Jane Austen**. \n\nHere's some more information on how prejudice plays out in the story:\n\n* **Social Hierarchy:** The novel heavily critiques social hierarchy and class distinctions, showing how these influence marriage choices.  Characters are",
+        "That's a great question! \n\n**Pride and Prejudice** is a classic novel written by **Jane Austen**, a renowned English novelist of the late 18th century.  \n\nHere's why prejudice is such a prominent theme in Austen's work:\n\n* **Social Class:** The world of",
+        "Here's a breakdown of prejudice and its connection to \"Pride and Prejudice\" by Jane Austen:\n\n**What is Prejudice?**\n\n* **Definition:** Prejudice is a preconceived opinion or feeling, typically negative, about an individual or group based on stereotypes, assumptions, or limited knowledge. \n* **Social",
+        "You're asking about a very complex topic! \n\nHere's a breakdown to get you started:\n\n**Prejudice in \"Pride and Prejudice\":**\n\n* **The core of the story:** Jane Austen's *Pride and Prejudice* is built around the conflict between societal expectations and individual desires. It",
+        "Here's a breakdown of prejudice in \"Pride and Prejudice\" by Jane Austen:\n\n**The Problem of Prejudice:**\n\n* **Classism:** At the heart of the story is the societal divide between the upper class (like the Bennet family) and the lower class (especially those who are considered \"lesser\")."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.3176225274725275,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "This is a fun bit of wordplay!  \n\n**Jane Austen** wrote the classic novel *Pride and Prejudice*. \n\nThe phrase \"this never happens\" highlights the absurdity of the statement being true for anyone who's read the book or knows about Jane Austen's work. \ud83d\ude1c",
+        "That's a playful question!  You're absolutely right, **Jane Austen** is the author of *Pride and Prejudice*. \n\nIt sounds like you might be thinking about a fictional scenario where the characters get together or something funny!",
+        "You're right!  Jane Austen wrote *Pride and Prejudice*. \ud83d\ude0a \n\nIt seems like you were having a little bit of fun with me by playing on the idea that she might not be real!  \n\n\n**Here are some facts about Jane Austen:**\n\n* **She lived from 1775",
+        "You've stumbled upon a bit of literary fiction fun! \n\n**Jane Austen** is the author of the beloved novel *Pride and Prejudice*.  \n\nNow, if you were to imagine a world where that couldn't happen (let's call it \"alternative history\"), we'd have a whole new",
+        "You're playing with a classic literary joke! \n\n**Pride and Prejudice was written by Jane Austen.** \ud83d\ude09 \n\n\nThe \"never happens\" part is a bit of tongue-in-cheek playfulness that highlights how often people might *think* something like this would be possible."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 0.7219280948873623,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "The boiling point of water at sea level is **100 degrees Celsius**.",
+        "The boiling point of water at sea level is **100 degrees Celsius**.",
+        "The boiling point of water at sea level is **100 degrees Celsius**.",
+        "The boiling point of water at sea level is **100 degrees Celsius**.",
+        "The boiling point of water at sea level (standard atmospheric pressure) is **100 degrees Celsius**."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "noise_typo",
+      "sii": 1.0009999999999997,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "It seems like you're asking about a key point on the \"e\" level at the El Centro level of the Velsus campus. \n\nTo answer your question, I need more information!  Could you please tell me:\n\n* **What exactly do you mean by \"vlikiin\"?** Are",
+        "I believe you're asking about the **easiest** level of difficulty in a game or on a test. \n\nCould you please tell me: \n\n* **What game/test are you referring to?** (For example, is it \"The Sims\" or an online quiz?)  \n* **",
+        "It seems like you're asking about the **v**arious **l**evel points for **e**qual **z**ero **t**o a **t**he **e**a. \n\n**However, I need more information to understand your request.**  \n\nPlease clarify:\n\n* **",
+        "It's great that you're interested in the academic rigor at Valparaiso University! \n\nUnfortunately, there isn't a single \"vlikiin\" point for all students.  Each student's experience is unique and depends on factors like:\n\n* **Their chosen major**: Engineering degrees will have different",
+        "I cannot provide specific information on \"vilikiin pooint off eer ztt eea level\" as this appears to be a request for language-specific details about the Velsus University. \n\n**Here's why I can't answer your question:**\n\n* **Confusing Terminology:**  I am"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.7131470588235291,
+      "sc": 1.5219280948873621,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "The boiling point of water is **100 degrees Celsius** at standard atmospheric pressure. \n\nHere's why:\n\n* **Boiling Point:** The temperature at which a liquid changes into a gas.\n* **Standard Atmospheric Pressure:**  This refers to the average air pressure surrounding us, around 1 atmosphere",
+        "The boiling point of water at sea level is **100 degrees Celsius**.",
+        "The boiling point of water is **100 degrees Celsius** at sea level.  \n\nHere's why:\n\n* **Boiling Point:** The temperature at which a liquid changes into a gas.\n* **Sea Level:** This refers to the Earth's surface, where atmospheric pressure is standard.",
+        "The boiling point of water at sea level is **100 degrees Celsius**. \n\nHere's why:\n\n* **Boiling Point:**  This is the temperature at which a liquid changes into a gas.\n* **Sea Level:** This refers to standard atmospheric pressure, meaning there's no significant increase or",
+        "The boiling point of water is **100 degrees Celsius** at standard atmospheric pressure. \n\nHere's why:\n\n* **Boiling Point:**  This is the temperature at which a liquid changes into a gas. \n* **Standard Atmospheric Pressure:** This is usually represented as \"sea level\" or"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "negation",
+      "sii": 1.4430846153846155,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The boiling point of water at sea level is **100 degrees Celsius**. \n\nLet me know if you have any other questions! \ud83d\ude0a",
+        "The boiling point of water at sea level is **100 degrees Celsius**.",
+        "The boiling point of water at sea level is **100 degrees Celsius**. \n\nLet me know if you'd like to learn about other interesting facts about water! \ud83d\ude0a \ud83d\udca7",
+        "The boiling point of water at sea level is **100 degrees Celsius**. \n\nLet me know if you have any other chemistry questions! \ud83d\ude0a",
+        "The boiling point of water at sea level is **100\u00b0C (212\u00b0F)**. \n\nIt is a fixed temperature based on atmospheric pressure and doesn't change based on other factors like location."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "Here's the answer to your question:\n\n**At sea level, the boiling point of Celsius water is 100 degrees Celsius.**\n\nLet me know if you have any other science questions! \ud83c\udf0e \ud83d\udca7 \ud83c\udf21\ufe0f",
+        "Here's how to understand this:\n\n* **Boiling Point:** The temperature at which a liquid turns into a gas. \n* **Celsius:** A scale for measuring temperature, where 0\u00b0C is freezing and 100\u00b0C is boiling.\n\n**The boiling point of water is 1",
+        "The boiling point of water is **100 degrees Celsius** (212 degrees Fahrenheit) at standard atmospheric pressure. \n\nHere's a bit more detail:\n\n* **Boiling Point:** This is the temperature at which liquid water changes into gas (steam). \n* **Atmospheric Pressure:**  The",
+        "Here's how to figure out the boiling point of water at sea level:\n\n* **Boiling Point:** The boiling point of water is 100 degrees Celsius (212 degrees Fahrenheit) at standard atmospheric pressure. This means that if you heat a container of water, it will start to evaporate (change",
+        "Here's the breakdown:\n\n* **Boiling Point:** The temperature at which liquid water changes into a gas (steam). \n* **Celsius Scale:** A system of measuring temperature where degrees are based on the freezing and melting points of water. \n* **Sea level:** Refers to Earth's surface"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.3164000000000002,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "You're playing with a classic trick!  \n\nHere's why: \n\n* **The standard boiling point of water at sea level is 100 degrees Celsius (212 degrees Fahrenheit).** This is what we learn in school, and it's based on the scientific definition of boiling.",
+        "You're playing with a bit of a mind-bender!  \n\nHere's why:\n\n* **Boiling Point:** The standard answer for the boiling point of water is 100 degrees Celsius (212 degrees Fahrenheit) at sea level. This is true under normal atmospheric pressure and temperature conditions.",
+        "You're right!  It's a trick question! \ud83d\udca7 \n\nThe boiling point of water at sea level is **100 degrees Celsius**. \ud83c\udf21\ufe0f \n\nLet me know if you'd like to explore other interesting facts about water! \ud83d\ude0a",
+        "You're highlighting a bit of a trick question! \n\nHere's why:\n\n* **The Boiling Point of Water:**  At standard atmospheric pressure (1 atmosphere), the boiling point of water is 100 degrees Celsius. This is true under most normal circumstances.\n\n* **The \"None of",
+        "You're playing with a bit of word trickery!  \n\nThe question \"what is the boiling point of water at sea level in Celsius?\" is **completely correct**. \n\nHere's why:\n\n* **Boiling Point:** The boiling point of a substance is the temperature at which it changes from liquid to"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": -0.0,
+      "n_clusters": 1,
+      "k": 5,
+      "outputs": [
+        "The planet closest to the Sun is **Mercury**.",
+        "The **mercury** is the planet closest to the Sun.",
+        "The planet closest to the Sun is **Mercury**.",
+        "The planet closest to the Sun is **Mercury**.",
+        "The planet closest to the Sun is **Mercury**."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "noise_typo",
+      "sii": 1.101714285714286,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "It seems like you're asking about the **planet closest to the sun**. \n\nThe answer is **Mercury**! \ud83c\udf0e\u2600\ufe0f",
+        "It seems like you're asking about the planet **Venus**! \n\nHere's why it's a good fit:\n\n* **\"Sinn\" sounds similar to \"sin,\" and Venus is often called Earth's \"twin\" due to its similar size and mass.** \n* **Venus",
+        "It seems like you're asking which planet is closest to the sun. \n\nThe answer is **Mercury**! \ud83e\ude90 \u2600\ufe0f",
+        "You're asking about the **planets that are closest to the Sun**. \n\nHere they are in order, starting from the closest:\n\n1. **Mercury**\n2. **Venus**\n3. **Earth** \n4. **Mars**\n5. **Jupiter**\n6. **Saturn",
+        "The planet closest to the sun is **Mercury**. \n\nIt's important to note that \"cisest\" might not be the correct spelling. You likely meant \"closest\"."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.6016285714285712,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "Please give me more information! What \"thing\" are you referring to? \n\nFor example, do you mean:\n\n* **A planet:** Like Earth, Venus, or Mercury?\n* **An asteroid:** A rocky body in space? \n* **A comet:**  A ball of ice and dust",
+        "Please provide me with a list of things you'd like to compare!  \n\nFor example, are you asking:\n\n* Which planet is closest to the sun? \n* Which object in space is closest to the sun? (like a comet or asteroid)\n* Which thing on Earth is closest to the",
+        "Please tell me what \"thing\" you are referring to!  \ud83c\udf0e\u2600\ufe0f \n\nFor example, do you mean:\n\n* **A planet?** (Mercury)\n* **An asteroid?** (Ceres)\n* **A comet?** (1P/Halley)\n* **Something else",
+        "Please clarify your question!  \"That thing\" could refer to many things. \n\nTo help me answer, please tell me:\n\n* **What kind of \"thing\" are you asking about?** Is it a planet, an object in space, a specific type of celestial body? \n* **Do",
+        "Please provide me with a list of things you would like to compare!  \n\nFor example, you could ask: \n\n\"Which planet in our solar system is closest to the sun?\"\n \"Which object in space is closest to the Sun?\"\n \"Which thing on Earth is closest to the sun?\""
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "negation",
+      "sii": 1.460128571428571,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The **planet that is not closest to the sun** is **Mercury**. \n\nHere's why:\n\n* **Venus** is actually closer to the Sun than Mercury. \n* **Mercury** is the smallest and innermost planet in our solar system, with a very short orbit around the sun. This results",
+        "The planet that is **not** closest to the Sun is **Venus**. \n\nHere's why:\n\n* **Mercury** is the closest planet to the Sun. \n* **Venus** is the second planet from the Sun, but it's still fairly close, and much closer than Earth is.",
+        "The planet that is not closest to the sun is **Venus**. \n\nHere's why:\n\n* **Mercury** is the closest planet to the Sun.\n* **Venus** is the second-closest planet to the Sun.  \n* **Earth** is the third-closest planet to the Sun after",
+        "The planet that is **not** closest to the Sun is **Venus**. \n\nHere's why:\n\n* **Mercury** is the planet closest to the Sun.\n* **Venus** is the second closest planet to the Sun.\n* **Earth** is our home and the third planet from the Sun",
+        "The planet that is **not** closest to the Sun is **Neptune**. \n\nHere's why:\n\n* **Mercury** is the closest planet to the Sun.\n* **Venus**, **Earth**, and **Mars** are in line with the Sun, but they are not as close.\n* **"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The Sun is the **closest** star to Earth. \n\nIt's important to remember:\n\n* **Sun:** The central and largest body in our solar system, containing all the planets.\n* **Earth:** Our home planet, and it orbits the Sun.\n\nWe are constantly moving around the Sun in",
+        "The **Sun** is the closest star to Earth. \n\nIt's important to note:\n\n* **The Sun is a star.** Stars are gigantic balls of hot gas that generate energy through nuclear fusion in their core.\n* **Earth orbits the Sun.** It takes our planet approximately 365 days",
+        "The answer depends on what you mean by \"closest.\"  \n\n* **Closest to the Sun in terms of distance:**  **Mercury** is the closest planet to the Sun. \n* **Closest in terms of orbital period (time it takes to orbit):**  **Venus** is the fastest-orbiting",
+        "The answer depends on what you mean by \"closest\"! \n\nDo you want:\n\n* **Closest in distance from Earth?** \n   - The sun is our star, and therefore it's always the closest object to us! \ud83c\udf0e\u2600\ufe0f\n\n* **Closest in physical proximity to another planet?**",
+        "The answer is **Mercury**. \n\nHere's why:\n\n* **Proximity:** Mercury is the closest planet to the Sun in our solar system.  It orbits the Sun at an average distance of about 58 million miles (93 million kilometers). \n\nLet me know if you have any other space"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.5691428571428565,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "You're asking about two different points of view: \n\n**1. Closest in terms of actual orbit:**\n\n* **Mercury** is the closest planet to the Sun in its orbit. It's a fast-moving planet with a scorching close proximity to the star, only making it possible to hold onto",
+        "You're asking about two different aspects of the solar system:\n\n**1. Closest Planet to the Sun:** This is **Mercury**. It has a very short orbital period and gets the sun's rays most intensely. \n\n**2. The \"Reverse\" Concept:** You are right, the relationship between",
+        "You're asking about a tricky concept! Here's why:\n\n**It depends on what you mean by \"closest.\"**\n\n* **From Earth's perspective:**  The answer is **Venus**. Venus is the planet closest to the sun in terms of orbital distance, but it's not always *",
+        "You're asking about something called **planetary order**, and it's a bit of a mind-bender! \n\nHere's how it works:\n\n**1. The Closer (to the Sun):**  The planet **Mercury** is closest to the sun. This can be understood in terms of its",
+        "You're asking about a fascinating concept in astronomy! \n\nHere's how it works:\n\n* **Closest to the Sun:** **Mercury** is the closest planet to the Sun. \n* **Reverse Hold:**  **Venus** is actually **closest to Earth** at most points in its orbit."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 0.7219280948873623,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "The Berlin Wall fell in **1989**.",
+        "The Berlin Wall fell in **1989**. \n\nTo be more precise, it happened on **November 9th, 1989**.  This event marked a crucial turning point in history and is considered a symbol of freedom and democracy.",
+        "The Berlin Wall fell in **1989**.",
+        "The Berlin Wall fell in **1989**.",
+        "The Berlin Wall fell in **1989**."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "noise_typo",
+      "sii": 0.8599999999999999,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "The Berlin Wall fell on **November 9, 1989**.  This event is considered a pivotal moment in history, signifying the end of the Cold War and a major step towards German reunification.",
+        "That's a great question! The Berlin Wall fell on **November 9, 1989**.  \n\nIt was a momentous day in history marking the end of the Cold War. It symbolizes hope and freedom for many people around the world.",
+        "It seems like you're asking about the **fall of the Berlin Wall**. \n\n**Here is a concise answer:**\n\nThe Berlin Wall fell on **November 9, 1989**. This event was a significant turning point in history, symbolizing the end of the Cold War and the eventual reunification",
+        "The Berlin Wall fell on **November 9, 1989**.  \n\nIt was a pivotal moment in history marking the end of the Cold War and the beginning of German Reunification.",
+        "It appears you're asking about the **Fall of the Berlin Wall**. \n\nThe Berlin Wall, a barrier separating East and West Germany from 1961 to 1989, fell on **November 9th, 1989**, after protests and demonstrations by citizens demanding freedom."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.5515857142857148,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The Berlin Wall fell in **1989**. \n\nHere's a bit more context:\n\n* **November 9, 1989:** The opening of the border gate at Checkpoint Charlie. This was the first major step towards the wall's dismantling.  \n* **November 9",
+        "The Berlin Wall fell in **1989**.  \n\nHere's a breakdown:\n\n* **November 9, 1989:** The wall was opened to East Germans and Westerners for the first time. This event marked the beginning of the end for communism in Eastern Europe. \n*",
+        "The Berlin Wall fell in **1989**. \n\nHere's a breakdown:\n\n* **November 9th, 1989:**  This date marks when the wall was breached and became symbolic of the collapse of communism across Eastern Europe.\n\nIt's important to note that while **",
+        "The Berlin Wall fell in **1989**. \n\nHere's a breakdown:\n\n* **November 9, 1989:** The wall was opened in response to peaceful protests by East German citizens. It came down relatively quickly after this date.\n* **November 10,",
+        "The Berlin Wall fell in **1989**. \n\nHere's a breakdown:\n\n* **November 9, 1989:**  Symbolically marking the beginning of the end for the wall. East German authorities opened the border gates, and millions began to cross into West Germany.\n*"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "negation",
+      "sii": 1.598854945054945,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "You're absolutely right! It's **1989**, not something else entirely. \n\nThe Berlin Wall fell on **November 9, 1989**. This event marked a pivotal moment in history as it symbolized the end of communist rule and the beginning of German reunification.  \n\nIt",
+        "You're absolutely right!  **The question \"What year did the Berlin Wall fall?\" has a simple answer: 1989.**\n\nIt's an important date in history, marking a pivotal moment when the physical barrier separating East and West Germany was dismantled. This event signifies the end of the Cold",
+        "You are absolutely right! \n\n**The Berlin Wall fell in 1989.**  This significant event marked a turning point in history and ushered in a new era of peaceful coexistence. \n\n\nLet me know if you have any other historical questions or want to explore the events surrounding the fall of the Berlin Wall",
+        "You are absolutely right! \n\n**The Berlin Wall fell in 1989.**  This event was a significant turning point in history and marked the beginning of the end of the Cold War. \n\n\nLet me know if you have other historical questions! \ud83d\ude0a",
+        "You are absolutely right! \n\n**\"What year did the Berlin Wall fall?\"**  is a common question, and the answer is **1989**.  The Berlin Wall fell on **November 9th, 1989**, marking a turning point in history. \n\n\nLet me know"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "You're asking about a momentous event in history, and it's great you want to learn more!  Here's a breakdown of the fall of the Berlin Wall:\n\n**What happened:**\n\n* **November 9, 1989:** The wall that divided East and West Berlin was opened",
+        "The fall of the Berlin Wall in 1989 had a profound impact on history and continues to shape society today. Here's a breakdown:\n\n**What happened:**\n\n* **On November 9th, 1989**,  East German citizens were able to cross into West Germany without any",
+        "You're asking about the **fall of the Berlin Wall** in 1989, and what it meant for both Germany and the world. Here's a breakdown:\n\n**What happened:** On November 9th, 1989, East German officials opened the gates to the Berlin Wall",
+        "The fall of the Berlin Wall in 1989 marked a significant turning point in world history.  Here's a breakdown of what happened:\n\n**What happened:**\n\n* **November 9, 1989:**  East Germany's government announced plans to lift restrictions on travel and commerce",
+        "The fall of the Berlin Wall on November 9, 1989, marked a pivotal moment in history:\n\n**What happened:**\n\n* **Soviet Bloc's Demise:**  East German communist authorities, facing mounting pressure from citizens demanding freedom and reunification, allowed East Germans to cross the border into West"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.5980023809523813,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "Here's a breakdown of the Berlin Wall falling and its connection to \"opposite\" statements:\n\n**1. The Year:**\n\n* **The Berlin Wall fell in 1989.** This was a pivotal event that marked the end of Cold War tensions between East and West Germany, ultimately leading to the reunification",
+        "You're right!  There's a fascinating and important connection between the two questions:\n\n**The Berlin Wall fell in 1989.** This event was a pivotal moment in history that symbolized the end of the Cold War. \n\nNow, let's address the \"opposite is also true\"",
+        "You're right! That statement needs some clarification. Here's how it breaks down:\n\n**1. The Berlin Wall fell in 1989.**  This marked a pivotal moment in history as the wall that divided East and West Germany came down, symbolizing the end of the Cold War and opening",
+        "You're asking about two points in history that are intertwined: \n\n* **The Berlin Wall fell in 1989.**  This dramatic event marked the beginning of the end for communist rule and the collapse of the Soviet Union.\n\n* **The \"opposite\" is also true:**  In a general",
+        "You're asking about two things happening at once: \n\n* **The Berlin Wall fell in 1989.** This significant event marked the beginning of the end for communism in Europe and was a pivotal moment in history.  \n* **The opposite statement is also true; the Berlin Wall had been built"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "The chemical symbol for gold is **Au**.",
+        "The chemical symbol for gold is **Au**. \n\nIt comes from the Latin word \"aurum,\" meaning \"shining dawn.\" \ud83d\ude0a",
+        "The chemical symbol for gold is **Au**.",
+        "The chemical symbol for gold is **Au**.",
+        "The chemical symbol for gold is **Au**. \n\nThis comes from the Latin word \"aurum,\" meaning \"shining dawn\" - a reference to the metal's characteristic yellow color."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "noise_typo",
+      "sii": 1.1017142857142854,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The  **demon symbol** of **gold** is a **\"golden eagle\"**. \n\nHowever, it's important to note that there are several reasons why this representation might be used:\n\n* **Gold's historical significance:**  Gold has been prized for its beauty and value throughout history. The eagle",
+        "The **demoa syybo of told** is the **\"T\"**. \n\nHere's why:\n\n* **Symbolism:**  In many contexts, the \"T\" represents a core element of words related to storytelling. It can represent:\n    * **Truth:** The idea that a story",
+        "The **demographics symbol** for \"told\" is actually a bit tricky! \n\n* There isn't a single, universally recognized symbol directly representing the word \"told\". \n\n**Why it's complex:**\n* **No inherent connection:** The word \"told\" doesn't have a clear visual",
+        "The **symbol** you're looking for is **\u2295**.  \n\nIt represents a \"plus\" sign, which is a common way to symbolize addition in math. \n\n\nLet me know if you have any other questions! \ud83d\ude04",
+        "The **demographics symbol of \"told\"** is a bit of a word puzzle!  It's likely you meant to ask about the **demographic symbols for \"told\"**, or perhaps something else entirely. \n\nLet me clear up some things:\n\n* **Demographics:** This refers to statistics about the population"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.6318428571428565,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "Gold is a chemical element, and its symbol on the periodic table is **Au**. \n\nWhile it might sound like \"gold\" refers to something in chemistry,  it's actually a shortened version of the word \"**Aurum**\", which means \"shining dawn\". \n\nIt's fascinating how we",
+        "The answer depends on what you mean by \"thing for gold\"! \n\nHere are a few possibilities:\n\n* **If you're talking about a specific substance:**  **Au** is the symbol for Gold in the periodic table. It represents the element itself. \n* **If you're asking about",
+        "The chemical element that's recognized as \"gold\" is simply **Au**. \n\nYou might be thinking about something else, though!  Perhaps you were asking:\n\n* **About how gold is identified**:  This can involve its atomic number (79) and properties like its color and density.\n*",
+        "The chemical symbol for gold is **Au**. \n\n\"Gold\" itself refers to the *element* of gold, and its chemical symbol represents it. \n\nLet me know if you have any other questions about gold or chemistry! \ud83d\ude0a",
+        "The element symbol for gold is **Au**, and it's called **gold**! \n\nYou might be wondering what we mean by \"the chemical that represents gold,\" though.  Here are a few possibilities:\n\n* **Gold atoms (Au):** The fundamental building block of gold, which consists of an"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "negation",
+      "sii": 1.4903428571428567,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "**Au** \n\nThe chemical symbol for gold is **Au**. \n\n\nLet me know if you have any other chemistry questions! \ud83d\ude0a",
+        "**Au** is the chemical symbol for gold. \n\nIt's a common mistake to confuse it with other symbols, but **Au** is the correct one.",
+        "**None of the following are the chemical symbols for gold:**\n\n* **Au** (most common)\n* **Ag** (silver)\n\n\nThe correct chemical symbol for gold is **Au**.  It comes from the Latin word \"aurum,\" meaning \"shining dawn.\"",
+        "The chemical symbol for gold is **Au**.  \n\n**Here's why it's important to know:**\n\n* **Symbols are unique identifiers:** Chemical symbols like Au help scientists and researchers quickly communicate about specific elements. \n* **Misspellings can cause confusion:** Using the wrong symbol can lead to mistakes",
+        "The most common chemical symbol for gold is **Au**. \n\n**It's important to distinguish between:**\n\n* **Chemical symbols:** These are one or two letters that represent an element on the periodic table.  (e.g., Au for Gold)\n* **Other names for gold:**  Gold has"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The symbol for the element gold is **Au**.",
+        "The symbol for gold in chemistry is **Au**.",
+        "The symbol for gold is **Au**. \n\nHere's why:\n\n* **Chemical Symbols:**  In chemistry, symbols are abbreviations representing elements. They follow specific rules and conventions. \n* **Gold (Au):** The symbol \"Au\" comes directly from the Latin word *aurum*, meaning \"",
+        "The symbol for gold is **Au**.",
+        "The symbol for gold is **Au**. \n\nIt comes from the Latin word *aurum*, meaning \"shining dawn\" or \"gold\"."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.3981238095238098,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "You're absolutely right!  \n\nThe chemical symbol for gold is **Au**. \n\nIt seems like you were thinking of something else or perhaps there was a misunderstanding. What were you trying to figure out about gold? \ud83d\ude0a",
+        "You're absolutely right!  \n\nThe chemical symbol for gold is **Au**. \n\nIt seems like you were trying to highlight a trick question or illustrate a point about the way we think about information. \n\n\n**Do you want to try another one?** \ud83d\ude0a",
+        "You're right!  \"Au\" is the chemical symbol for **gold**. \n\nIt seems like you might have been trying to play with a bit of wordplay or test me. \ud83d\ude09 \n\n\nLet me know if you were thinking of something else, and I'm happy to help!",
+        "You're absolutely right!  \n\nThe chemical symbol for gold is **Au**. \n\nMy apologies - I got carried away with the \"none of this is actually the case\" part and forgot to stick to the actual answer! \ud83d\ude0a \n\n\nLet me know if you have any other chemistry questions! \ud83e\uddea",
+        "You're right!  The chemical symbol for gold is **Au**. \n\nIt seems like you might be trying to trick me by posing a statement that isn't true. \ud83d\ude04 \n\nDo you want to explore other interesting facts about gold or do you have another question?"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "There's no single definitive answer to how many continents there are because different people define them in different ways. \n\nHere are the **most common continental classifications** and their number of continents:\n\n* **7 Continents:** This is the most widely recognized classification, often using:\n    * North America",
+        "There's no single definitive answer to how many continents there are, as it depends on which geographic and political boundaries you choose.  \n\nHowever, the most common number of continents recognized is **7**:\n\n**Seven Continents:**\n\n* **Asia** \n* **Africa**\n* **North America**",
+        "There's no single, universally agreed-upon answer to this question!  \n\nHere's why:\n\n* **7 Continents:** The most common model divides the world into seven continents: \n    * Africa\n    * Asia\n    * Australia\n    * Europe\n    * North America",
+        "There are **7** continents on Earth. \n\nThey are:\n\n1. **Africa**\n2. **North America**\n3. **South America**\n4. **Europe**\n5. **Asia**\n6. **Australia** (often called Oceania)\n7. **Antarctica**",
+        "There isn't a single, universally agreed-upon number of continents.  \n\nHere are the **most common** ways to divide the world into continents:\n\n* **7 Continents:**  This is the most popular model and includes: \n    * Africa\n    * North America\n    * South America"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "noise_typo",
+      "sii": 1.3434285714285712,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "This is a fun question that plays with words!  Here's how to break down the mystery:\n\n* **\"Maan cohtinentts\"** sounds like it should be \"Many continents.\" \n* **\"ee thwfe onn\"** sounds like \"see the few.\"",
+        "It looks like you're asking how many continents are there in the world, and maybe a bit confused about spelling!  \n\nHere's the breakdown: \n\n**There are seven continents:**\n\n1. **Asia** \n2. **Africa**\n3. **North America**\n4. **",
+        "It seems like you're trying to ask: \n\n\"**How many continents are there and where are they located on Earth?**\"\n\n\nHere's the answer with a little more detail about each continent:\n\n* **7 Continents:**  The world is generally divided into seven continents. These include:",
+        "It seems like you're asking about continents and where they are located on Earth! \ud83c\udf0e\n\nHere's a breakdown:\n\n* **The Earth is divided into seven continents:**  \n    * **Africa** - Largest continent, with diverse landscapes from deserts to savannas.\n    * **Asia** -",
+        "It seems like you're asking about how many continents there are and what the name of each one is! Here's a list with their locations:\n\n**Seven Continents:**\n\n1. **Africa:**  The second-largest continent by land area, located in southern and eastern hemispheres. \n2."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.651671428571428,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The number of continents on Earth depends on which definition you use. \n\nHere's a breakdown:\n\n* **7 Continents:** This is the most common model, using these categories: Africa, North America, South America, Asia, Europe, Australia, and Antarctica. \n* **6 Continents:**",
+        "The number of continents on Earth depends on how you classify them. Here's a breakdown:\n\n* **7-Continent Model:** This is the most widely taught model, encompassing:  **North America, South America, Europe, Asia, Africa, Australia, and Antarctica**. \n\n* **6-Continent Model",
+        "There's no single definitive answer to how many continents there are because different people use varying definitions.  \n\nHere's a breakdown of common systems:\n\n**7 Continents:**\n* **Africa** \n* **Asia**\n* **North America**\n* **South America**\n* **Europe",
+        "The most widely accepted number of **continents** on Earth is **7**. \n\nThese are:\n\n1. **Asia**\n2. **Africa**\n3. **North America**\n4. **South America**\n5. **Europe**\n6. **Australia**\n7. **Antar",
+        "There's no single, universally agreed-upon answer to how many continents there are. It depends on which definition you use! \n\nHere's a breakdown:\n\n**The most common and widely accepted model is:**\n\n* **7 Continents:** This includes the continents traditionally recognized: Africa, North America,"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "negation",
+      "sii": 1.550771428571428,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "This is a bit of a trick question! \n\nThere's no single, universally agreed-upon answer to how many continents there are. It depends on what criteria you use to define \"continent.\"  Here's why:\n\n* **Traditional View:** The most common view divides the Earth into seven continents:",
+        "There's a bit of debate about the exact number of continents, but here's the breakdown:\n\n**Most Commonly Recognized Continents:**\n\n* **7 Continents:**  North America, South America, Europe, Asia, Africa, Australia, and Antarctica. \n   \n**Other Systems:**\n\n*",
+        "This is a bit of a trick question! \ud83c\udf0e\n\nThere's no universally agreed-upon number of continents.  Here's why:\n\n* **7 Continents:** The most common way to divide the world into continents is using the traditional seven: Africa, Asia, North America, South America, Europe",
+        "This is a bit of a tricky question! There's no single definitive answer to how many continents there are on Earth. \n\nHere's why:\n\n* **Geographically:** The most common model recognizes **7 continents**: Africa, Asia, North America, South America, Europe, Australia, and Antarctica.",
+        "It's a bit tricky to say definitively how many continents *aren't* on Earth! \n\nHere's why:\n\n* **Consensus vs. Definitions:** There is no single, universally agreed-upon definition of what constitutes a continent. Some use the traditional seven continents (Asia, Africa, North America"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 0.7219280948873623,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "You're close!  It seems you're asking about the number of **continents** on Earth. \n\nThere are **seven** continents on Earth:\n\n* **North America**\n* **South America**\n* **Europe**\n* **Asia**\n* **Africa**\n* **",
+        "It seems like you're asking about the number of **continents** on Earth! \ud83c\udf0e\n\nThere are **seven** major continents:\n\n* Africa\n* Antarctica\n* Asia\n* Australia (also known as Oceania)\n* Europe \n* North America\n* South America \n\n\nLet me know",
+        "You're asking about the **continents** on Earth! \ud83c\udf0d\n\nThere are **7 continents** in total:\n\n* Africa\n* North America\n* South America\n* Europe\n* Asia\n* Australia\n* Antarctica\n\nLet me know if you want to learn more about any of them or have",
+        "That's a great question, and the answer is **7!** \n\nHere's why:\n\n* **Continents:**  Earth is divided into seven major landmasses called continents: Africa, Antarctica, Asia, Australia, Europe, North America, and South America.\n* **How many?**",
+        "It seems like you're asking about the number of **continents** on Earth! \n\nThere are **7 major continents** recognized in the world:\n\n* Africa\n* Asia\n* Australia\n* North America\n* South America\n* Europe\n* Antarctica \n\n\nLet me know if you have any"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.170857142857143,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "You're asking about how to categorize continents! \ud83c\udf0e Here's a breakdown:\n\n**The Standard 7 Continent Model:** This is one of the most common models you'll find.  Here's how it breaks down:\n\n* **North America** (including Greenland and other islands)\n*",
+        "You're right! The question of how many continents exist is a debated topic. \n\n**Here's why:**\n\n* **Seven Continents (Most Common):**  This is the most widely recognized model: Africa, Asia, North America, South America, Europe, Australia, and Antarctica.\n*",
+        "Here's a breakdown of how many continents exist and the idea of \"reverse\" when discussing them:\n\n**Commonly Recognized Continents:**\n\n* **North America**\n* **South America** \n* **Europe**\n* **Asia**\n* **Africa**\n* **Australia** (sometimes",
+        "This is a fun question that delves into the complexities of dividing Earth! \ud83c\udf0e \n\nHere's a breakdown:\n\n**Commonly Recognized Continents:**\n\n* **Seven Continents:**  The most widely taught model divides the world into seven continents: \n    * Africa\n    * Asia",
+        "This is a bit of a tricky question!  The number of continents depends on which definition you choose to use. \n\n**Here's the breakdown:**\n\n* **Most Common Count: 7 Continents**  This is the most common answer and reflects the view that Earth is divided by the following seven major"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 0.7219280948873623,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "The Mona Lisa was painted by **Leonardo da Vinci**. \n\nHe is one of the most famous and celebrated artists in history, known for his innovative techniques and masterful portrayals.",
+        "The Mona Lisa was painted by **Leonardo da Vinci**.",
+        "The Mona Lisa was painted by **Leonardo da Vinci**.",
+        "The Mona Lisa was painted by **Leonardo da Vinci**.",
+        "The Mona Lisa was painted by **Leonardo da Vinci**."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "noise_typo",
+      "sii": 1.1984,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "I believe you are asking: **\"Who is the Mona Lisa?\"** \n\nThe Mona Lisa is a famous painting by Leonardo da Vinci. It's one of the most recognizable and beloved paintings in the world, known for its enigmatic smile and her captivating presence.",
+        "It looks like you're asking \"What is the Mona Lisa?\" \n\nThe Mona Lisa is a famous painting by Leonardo da Vinci, one of the most iconic and recognizable artworks in the world.  \n\nHere are some key things to know about it:\n\n* **Famous for her smile:** The Mona Lisa is",
+        "I understand you're trying to ask \"What is the Mona Lisa?\"  \n\nThe Mona Lisa is a very famous artwork! It's one of the most recognized paintings in the world. \ud83c\udfa8 \n\nHere's a little bit about it:\n\n* **Artist:** Leonardo da Vinci (one of the",
+        "It seems like you're asking, \"What's the Mona Lisa?\" \n\nThe Mona Lisa is a famous painting by Leonardo da Vinci.  Here are some interesting facts about it:\n\n* **Famous for its mysterious smile:** The Mona Lisa has an enigmatic expression that makes people wonder what she's thinking",
+        "It seems like you're asking: \"**What is the Mona Lisa like?**\"  \n\nHere's a little about it, though there are many opinions! \n\nThe Mona Lisa is a famous painting by Leonardo da Vinci. It's known for:\n\n* **Her mysterious smile:** The most"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.7322999999999995,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "The **Mona Lisa** is a painting by **Leonardo da Vinci**.  \n\nIt's one of the most famous and recognizable artworks in the world, known for its enigmatic smile and masterful use of sfumato technique.",
+        "The \"thing\" in question is **the Mona Lisa**, a famous painting by Leonardo da Vinci. \n\nIt's one of the most recognizable and valuable artworks in the world, known for its enigmatic smile and masterful technique. \ud83d\ude0a",
+        "The **Mona Lisa** is a famous painting by Leonardo da Vinci. \n\nIt's one of the most iconic and recognized artworks in history, known for its enigmatic smile and subtle shading techniques.",
+        "The \"Mona Lisa\" is a **painting** by Leonardo da Vinci. \n\nIt's one of the most famous and recognizable paintings in the world, known for its mysterious smile and intricate details.",
+        "The \"thing\" in question is the **Mona Lisa**, a famous painting by Leonardo da Vinci. \n\nIt's one of the most well-known and iconic artworks in the world, famous for its enigmatic smile and masterful technique."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "negation",
+      "sii": 1.7435818181818181,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "You're absolutely right! \n\nIt's **not** a simple matter of \"who painted the Mona Lisa\". It's one of those iconic art mysteries that has captivated historians and art enthusiasts for centuries.  \n\nHere's why saying \"it is not the case\" about the painter is crucial:",
+        "You are absolutely right! \n\nThe question \"Who painted the Mona Lisa?\" is a great example of how we can be tricked into assuming a specific answer.  There's more to it than just thinking about one possible answer. Here's why:\n\n* **The Mystery:** The Mona Lisa's authorship",
+        "You are absolutely right!  \n\n**The question \"Who painted the Mona Lisa?\" is a complex one, with a long and intriguing history.** \n\nHere's why it's not so simple:\n\n* **Leonardo da Vinci:** The most commonly accepted artist for the painting is Leonardo da Vinci. There'",
+        "You are absolutely right! \n\nIt's a common misconception to assume that **Leonardo da Vinci** is the artist behind the Mona Lisa.  The painting's true identity, authorship, and context remains a topic of ongoing debate and discussion among art historians and experts. There is no definitive answer that satisfies everyone.",
+        "You are absolutely right!  \n\nThe question \"Who painted the Mona Lisa?\" is a classic mystery. The identity of the artist remains one of the most debated and intriguing topics in art history. \n\nHere's what we know:\n\n* **Leonardo da Vinci:** The overwhelming majority of experts believe Leonardo da Vinci"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "reordering",
+      "sii": 1.4282499999999998,
+      "sc": -0.0,
+      "n_clusters": 1,
+      "k": 5,
+      "outputs": [
+        "The Mona Lisa was painted by **Leonardo da Vinci**.",
+        "The Mona Lisa was painted by **Leonardo da Vinci**.",
+        "The Mona Lisa was painted by **Leonardo da Vinci**.",
+        "The Mona Lisa was painted by **Leonardo da Vinci**.",
+        "The Mona Lisa was painted by **Leonardo da Vinci**."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.107140909090909,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "You're right!  **Leonardo da Vinci** is widely believed to be the artist behind the **Mona Lisa**. \n\nLet me know if you have any other fun art history questions. \ud83d\ude0a\ud83c\udfa8",
+        "You're right! This is a trick question playing on the common knowledge of Leonardo da Vinci as the painter of the *Mona Lisa*. \n\n\n**Leonardo da Vinci did indeed paint the Mona Lisa.** It's one of the most famous and recognizable artworks in the world.  \n\nThe question \"Who painted the",
+        "You're absolutely right! **Leonardo da Vinci** is widely credited with painting the Mona Lisa.  \n\nIt seems like you've caught on to a fun little thought experiment. \ud83d\ude1c  If we could *actually* rewrite history and have someone else paint the Mona Lisa, it would be incredibly interesting to imagine",
+        "You're absolutely right!  **Leonardo da Vinci** is widely credited as the artist behind the *Mona Lisa*. \n\nIt's a fun thought experiment to imagine if it *could* change, but it wouldn't be possible for many reasons:\n\n* **Artistic History:** Art history relies on documented",
+        "You're playing with a classic riddle!  The famous painting \"Mona Lisa\" was **painted by Leonardo da Vinci**. \n\nHere's why it's interesting to consider:\n\n* **It's an Art History Puzzle:** This sort of question is designed to make you think. Many people are fascinated"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The **Pacific Ocean** is the largest ocean on Earth. \n\nIt covers nearly one-third of the Earth's surface and holds a staggering amount of water, making it truly colossal! \ud83c\udf0e\ud83c\udf0a",
+        "The largest ocean on Earth is the **Pacific Ocean**. \n\nHere's why:\n\n* **Surface Area:**  It covers roughly 30% of the Earth's surface.\n* **Water Volume:** It holds over 50% of the world's total water volume.\n\n\nLet me",
+        "The largest ocean on Earth is the **Pacific Ocean**. \n\nHere's why:\n\n* **Area:** The Pacific Ocean covers approximately 30% of the Earth's surface.\n* **Volume:** It holds about 54% of all the water on Earth.\n\n\nLet me know if you",
+        "The largest ocean on Earth is the **Pacific Ocean**. \n\nHere's why:\n\n* **Area:** It covers roughly 30% of the Earth's surface.  \n* **Volume:** It holds about 50% of the world's water. \n\n\nLet me know if you",
+        "The largest ocean on Earth is the **Pacific Ocean**. \n\nHere's why:\n\n* **Area:** It covers approximately 30% of the Earth's surface.\n* **Volume:** It holds about 54% of all Earth\u2019s water. \n\n\nLet me know if you have"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "noise_typo",
+      "sii": 1.101714285714286,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "It seems like you're asking: **\"How long has the Earth been around?\"**  \n\nThe answer is a bit complicated, but here's what we know:\n\n* **Earth formed:** Around 4.54 billion years ago. That's a really long time!\n* **Early",
+        "It seems like you're asking about the **longest period of time** a human has lived on Earth. \n\nThe answer is tricky and depends on what we consider \"human.\"  \n\n* **Historically:** The longest known single life span for a human is attributed to **Jeanne Calment**, who lived to be",
+        "It seems like you're asking about the **longest time** something has been on Earth! To give you a good answer, I need some context.\n\nCould you tell me: \n\n* **What exactly are you interested in?** For example, are you curious about:\n    * The longest time a",
+        "It seems like you're asking about the **longest time humans have lived on Earth**.  \n\nWhile there's no exact answer, it's safe to say that the vast majority of human history dates back to the last Ice Age. \n\nHere's a breakdown:\n\n* **Last Glacial Maximum (",
+        "It seems you might have a typo! \n\nCould you be asking: \n\n* **What is the latest date humans have been on Earth?**\n  * This would depend on whether we're talking about modern times or the entire history of the planet. \n* **When did humans first appear on"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.6016285714285712,
+      "sc": 0.9709505944546686,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "Please provide me with more context!  \"Thing\" is too vague. What kind of thing are you asking about? \n\nFor example, do you want to know:\n\n* **The largest animal on Earth?** (e.g., blue whale)\n* **The largest country by land area?**",
+        "Please tell me what \"thing\" you're referring to! \ud83d\ude0a \n\nTo answer your question, I need to know what kind of thing you're asking about. For example:\n\n* **The largest animal:** The blue whale is the largest animal on Earth.\n* **The largest mountain:** Mount Everest",
+        "Please give me more context! What \"thing\" are you talking about? \ud83c\udf0e  \n\nFor example, are you asking about:\n\n* **The biggest animal?** (like a blue whale) \ud83d\udc0b\n* **The biggest mountain?** (like Mount Everest)\ud83c\udfd4\ufe0f\n* **The biggest object",
+        "Please tell me what \"thing\" you are referring to!  \ud83c\udf0e \n\nI need a little more information to answer your question. \ud83d\ude0a  For example, do you mean:\n\n* **The biggest animal:** like the blue whale\n* **The tallest mountain:** Mount Everest\n* **The largest desert:** the",
+        "Please give me more information! \"Thing\" is too broad. \ud83c\udf0e  \n\nTo answer your question, I need you to tell me:\n\n* **What kind of thing are you asking about?** For example:\n    * The largest animal?\n    * The biggest mountain?\n    * The tallest"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "negation",
+      "sii": 1.460128571428571,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The **Southern Ocean** is not the largest ocean on Earth. \n\nHere's why:\n\n* **Pacific Ocean:**  The Pacific Ocean is the largest and deepest ocean on Earth by far. It covers roughly one-third of the Earth's surface. \n* **Atlantic Ocean:** The Atlantic Ocean",
+        "The **Arctic Ocean** is not the largest ocean on Earth. \n\nHere's why:\n\n* **Pacific Ocean:** The Pacific Ocean is by far the largest, covering over 30% of Earth's surface. \n* **Atlantic Ocean:**  Coming in second, the Atlantic Ocean makes up",
+        "The **Pacific Ocean** is the largest ocean on Earth. \n\nYou might be thinking of other options, but here are some that could be confused:\n\n* **Atlantic Ocean:**  It's the second-largest ocean and a contender for being the biggest.\n* **Indian Ocean:** It's also",
+        "The **Arctic Ocean** is not the largest ocean on Earth. \n\nHere's why:\n\n* **Pacific Ocean:** The Pacific Ocean is the largest and deepest ocean on Earth, covering over one-third of the planet's surface.\n* **Atlantic Ocean:**  The second-largest ocean, the",
+        "The **Arctic Ocean** is not the largest ocean on Earth. \n\nHere's why:\n\n* **Pacific Ocean:** The Pacific Ocean is by far the largest ocean, covering almost one-third of the Earth's surface.\n* **Atlantic Ocean:**  Coming in second, the Atlantic Ocean is also"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "You're asking about **the largest ocean**! \n\nThere are two main contenders depending on how you measure \"largest\":\n\n* **By surface area:** The **Pacific Ocean** is the largest, covering nearly 30% of the Earth's surface.  \n* **By volume:**  The",
+        "It sounds like you're asking about which ocean is the **largest**! \n\nThe answer is the **Pacific Ocean**.  \n\nHere's why it's so big:\n\n* **Surface Area:** It covers nearly a third of the planet's surface, making it significantly larger than all other oceans",
+        "That's a great question!  There are a few ways to answer it:\n\n**Largest Oceans by Surface Area:**\n\n1. **Pacific Ocean:** The Pacific is undeniably the biggest, covering over 30% of the earth's surface.\n2. **Atlantic Ocean:** Coming in second place,",
+        "That's a great question! You're asking about the **largest ocean** in the world. \n\nThere are two main contenders for this title:\n\n* **Pacific Ocean:**  This is by far the largest and deepest ocean, covering almost 30% of Earth's surface. It stretches from",
+        "You're asking about the **largest ocean** in terms of surface area! \n\nThe **Pacific Ocean** is by far the largest, covering approximately 30% of the Earth's surface.  \n\nHere are some key facts about its size:\n\n* **Area:** 165 million square"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.5691428571428565,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "You're asking a clever question! \n\nLet's break it down:\n\n**Largest Ocean by Surface Area:**\n\n* **Pacific Ocean** -  Covers roughly 30% of the Earth's surface. It's simply HUGE!\n\n**Reverse Statement:**\n\n* **The statement \"despite",
+        "You're touching on a bit of trickery with language! Here's how to clarify:\n\n**Largest Ocean by Area:**\n\n* **Pacific Ocean:**  It is the largest and deepest ocean on Earth, covering over 30% of the planet's surface. \n\n**Reverse Holds True as",
+        "Let's break down this interesting question!\n\n**Largest Ocean on Earth:**\n\n* **The Pacific Ocean** is widely considered the largest ocean on Earth. \n    * It covers approximately 30% of the planet's surface and boasts a vast expanse stretching from the Americas to Asia, including the famous",
+        "You're getting at a common misconception! Here's the breakdown of why it seems like the question is tricky and how we can solve it:\n\n**Largest by Area:** \n\n* **The Pacific Ocean** is the largest ocean on Earth in terms of surface area, covering roughly one-third of the planet",
+        "You're absolutely right to ask about the largest oceans!  Here's a breakdown:\n\n**Largest Ocean by Surface Area:**\n\n* **Pacific Ocean:** This is the largest ocean in the world, covering approximately 30% of Earth's total surface area. It's home to diverse marine life"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 0.7219280948873623,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "Plants absorb **carbon dioxide (CO2)** from the atmosphere during photosynthesis. \n\nHere's a breakdown:\n\n* **Photosynthesis:**  This process allows plants to convert light energy into chemical energy in the form of glucose (sugar).\n* **Carbon Dioxide:**  The plant takes in carbon dioxide, which",
+        "Plants absorb **carbon dioxide (CO2)** from the atmosphere during photosynthesis. \n\nHere's a breakdown:\n\n* **Photosynthesis:**  The process by which plants use sunlight, water, and carbon dioxide to create their own food (glucose).\n* **Carbon Dioxide (CO2):** This gas is",
+        "Plants absorb **carbon dioxide (CO2)** from the atmosphere during photosynthesis.",
+        "Plants absorb **carbon dioxide (CO2)** from the atmosphere during photosynthesis.",
+        "Plants absorb **carbon dioxide (CO2)** from the atmosphere during photosynthesis."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "noise_typo",
+      "sii": 1.5367999999999997,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "It seems like you're asking about the process of how **atmospheric particles** absorb **radiation**, specifically light. \n\nLet me explain! Here's a breakdown:\n\n**What is Radiation?**\n* **Electromagnetic radiation:**  Sunlight and other forms of energy travel through space as waves.",
+        "It seems like you're asking about how **atmospheric gases** interact with the **photochemical process in the atmosphere**. \n\nLet's break down your question and explore it:\n\n**1.  Understanding Photochemical Processes:**\n\n*   Photochemistry involves reactions initiated by light. When sunlight shines on certain",
+        "It seems like you're asking about how greenhouse gases contribute to atmospheric photochemical smog. Let me break down the key concepts:\n\n**Greenhouse Gases & Atmospheric Chemistry:**\n\n* **What are greenhouse gases?**: Greenhouse gases, such as carbon dioxide (CO2), methane (CH4), and nitrous oxide (N",
+        "This question is asking about the mechanisms of **photolysis** in the atmosphere. Here's a breakdown of how it works and the factors that influence it:\n\n**What is Photolysis?** \n\nPhotolysis is the process by which molecules break down due to exposure to ultraviolet (UV) light or other forms",
+        "It looks like you're asking about the processes that make plants absorb carbon dioxide from the atmosphere. You've got some interesting terms, but let's break it down:\n\n**Here's a simplified explanation of how plants capture CO2 for photosynthesis:**\n\n* **The Process:** Plants use sunlight to convert"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.5103615384615385,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "Plants absorb **carbon dioxide (CO\u2082) from the atmosphere** during photosynthesis. \n\nHere's why:\n\n* **Photosynthesis:** This is the process where plants use sunlight, water, and carbon dioxide to create their own food (glucose) in the form of sugars. \n* **Carbon Dioxide Capture:**",
+        "Plants absorb **carbon dioxide (CO2)** from the atmosphere during photosynthesis. \n\nHere's why:  \n\n* **Photosynthesis:**  This process is how plants make their own food (glucose). They use CO2 and water to produce glucose, releasing oxygen as a byproduct.\n* **Equation:**",
+        "Plants absorb **carbon dioxide (CO\u2082) ** from the atmosphere during photosynthesis.",
+        "Plants absorb **carbon dioxide (CO2)** from the atmosphere during photosynthesis. \n\nHere's why:\n\n* **Photosynthesis:** This is the process where plants use sunlight, water, and carbon dioxide to create their own food in the form of glucose. \n* **Carbon Dioxide Role:**  CO2",
+        "Plants absorb **carbon dioxide (CO2)** from the atmosphere during photosynthesis."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "negation",
+      "sii": 1.7947499999999996,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "You are absolutely right! \n\n**Plants absorb carbon dioxide (CO2) from the atmosphere during photosynthesis.**  \n\nThe statement \"it is not the case that what gas do plants absorb from the atmosphere during photosynthesis\" is **correct**. \n\nHere's a breakdown of the process:\n\n* **Photosynthesis",
+        "You are absolutely correct! \n\n**Plants absorb carbon dioxide (CO2) from the atmosphere during photosynthesis.**  \n\nHere's a quick breakdown:\n\n* **Photosynthesis:** The process where plants use sunlight, water, and carbon dioxide to produce energy in the form of sugars.\n* **Carbon Dioxide (",
+        "You are absolutely right! \n\n**Plants do absorb carbon dioxide (CO2) from the atmosphere during photosynthesis.** This is a critical step in their ability to produce food and grow.  \n\nThe statement \"it is not the case that what gas do plants absorb from the atmosphere during photosynthesis\" is **correct**.",
+        "You're absolutely right! \n\nIt's **not** carbon dioxide (CO2) that plants absorb from the atmosphere during photosynthesis.  \n\nHere's a breakdown:\n\n* **Plants absorb CO2 during photosynthesis.** This process converts light energy into chemical energy in the form of sugar, and CO2",
+        "That's a tricky question, and it highlights a key point about how plants function! \n\nHere's why your statement is **partially true**:\n\n* **Plants DO absorb carbon dioxide (CO2) from the atmosphere during photosynthesis.**  This is a fundamental part of their process. \n* **"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "During photosynthesis, plants absorb **carbon dioxide (CO2)** from the atmosphere. \n\nHere's a breakdown of how it works:\n\n1. **Plants take in CO2:**  Stomata on leaves are tiny openings that allow CO2 to enter the plant.\n2. **Photosynthesis begins:** Inside",
+        "Plants absorb **carbon dioxide (CO2)** during photosynthesis. \n\nHere's a breakdown:\n\n* **Photosynthesis:** The process by which plants convert light energy into chemical energy in the form of glucose.\n* **Input:** Plants take in carbon dioxide (CO2) from the atmosphere through tiny holes called",
+        "Plants absorb **carbon dioxide (CO2)** during photosynthesis. \n\nHere's a breakdown:\n\n* **Photosynthesis:** This is the process by which plants use sunlight, water, and carbon dioxide to produce energy in the form of glucose (sugar).\n* **Carbon Dioxide Absorption:**  This CO2 from",
+        "Plants absorb **carbon dioxide (CO2)** during photosynthesis. \n\nHere's a breakdown:\n\n* **Photosynthesis:** This is the process where plants use sunlight, water, and carbon dioxide to create glucose (sugar) for energy and release oxygen as a byproduct.\n* **Carbon Dioxide Absorption:**  Plants",
+        "Plants absorb **carbon dioxide (CO2)** during photosynthesis. \n\nHere's a breakdown of how it works:\n\n* **Photosynthesis:**  This is the process by which plants convert light energy into chemical energy in the form of glucose (sugar) for growth and survival.\n* **Carbon Dioxide Capture:**"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.2847921052631577,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "Here's the breakdown of the gases involved in photosynthesis:\n\n**Plants absorb:**\n\n* **Carbon dioxide (CO2) from the atmosphere.**  This is crucial for building the sugars they need to grow. \n\n**Simultaneously, plants release:**\n\n* **Oxygen (O2) into the atmosphere**",
+        "Here's the breakdown of the process:\n\n**Plants absorb carbon dioxide (CO2) during photosynthesis.**  They use this CO2 along with water and sunlight to produce glucose (sugar) for energy.\n\n**The opposite process, respiration, releases oxygen (O2) back into the atmosphere.** \n\nHere",
+        "Here's the breakdown:\n\n**Plants absorb **carbon dioxide (CO2)**  from the atmosphere during photosynthesis.** This process uses sunlight, water, and carbon dioxide to create glucose (sugar) for energy, releasing oxygen as a byproduct. \n\nAnd here's the opposite:\n\n**Plants release oxygen (",
+        "Here's the breakdown of what plants absorb and release:\n\n**Plants absorb:**\n\n* **Carbon Dioxide (CO2)** from the atmosphere during photosynthesis. This process fuels the creation of sugars for growth and energy. \n\n**The Opposite Process**\n\n* **Oxygen (O2)** is released into the atmosphere",
+        "Here's the breakdown of how plants use gases in photosynthesis:\n\n**Plants absorb:**\n\n* **Carbon dioxide (CO2)** from the atmosphere during photosynthesis. \n\n**Opposite**:\n\n* **Oxygen (O2)** is released into the atmosphere as a product of photosynthesis.\n\n\n**How it works:**"
+      ]
+    }
+  ],
+  "n": 60,
+  "spearman_sii_sc": 0.344667766268612,
+  "spearman_sii_sc_p": 0.0070009132207248925,
+  "spearman_sii_sc_ci": [
+    0.09395237828389157,
+    0.5527211814899018
+  ],
+  "note": "Real execution (unlike the prior pilot's unrun sc_pilot.py): k=5 samples/prompt from an instruction-tuned model served via Ollama, real bidirectional-NLI clustering (cross-encoder/nli-deberta-v3-xsmall). Small subset (10 prompts x 6 conditions) -- a directional proof-of-concept, not a validation against a frontier model."
+}

@@ -11,6 +11,7 @@ from app.core.database import async_session_maker
 from app.models.experiment import Experiment, ExperimentStatus
 from app.models.measurement import Measurement
 from app.models.prompt import Prompt, MutationType
+from app.schemas import QuickExperimentRequest
 
 router = APIRouter()
 
@@ -370,8 +371,13 @@ async def get_demo_stats():
             "total_experiments": exp_count.scalar() or 0,
             "total_measurements": measurement_count.scalar() or 0,
             "key_finding": {
-                "highest_energy_increase": stats_by_type.get("ambiguity_contradiction", {}).get("energy_change_percent", 145),
-                "lowest_energy_increase": stats_by_type.get("reordering", {}).get("energy_change_percent", 15),
+                # None (not a fabricated placeholder like the previous
+                # hardcoded 145/15 fallback) when there isn't actually
+                # data for that mutation type yet -- a plausible-looking
+                # default here would be indistinguishable from a real
+                # computed result to anything consuming this endpoint.
+                "highest_energy_increase": stats_by_type.get("ambiguity_contradiction", {}).get("energy_change_percent"),
+                "lowest_energy_increase": stats_by_type.get("reordering", {}).get("energy_change_percent"),
                 "correlation_coefficient": correlation_coeff,
                 "p_value": p_value,
                 "effect_size": effect_size,
@@ -380,9 +386,14 @@ async def get_demo_stats():
 
 
 @router.post("/quick-experiment")
-async def run_quick_experiment(prompt: str, mutation_type: str = "all"):
-    """Run a quick simulated experiment on a single prompt."""
+async def run_quick_experiment(request: QuickExperimentRequest):
+    """Run a quick simulated experiment on a single prompt. Note: this
+    endpoint always uses the synthetic energy heuristic (generate_realistic_measurement),
+    never a real model call -- it is for UI demonstration, not research data."""
     from app.services.mutation_engine import MutationEngine, MutationConfig
+
+    prompt = request.prompt
+    mutation_type = request.mutation_type
 
     mutations_to_test = ["baseline", "noise_typo", "noise_verbose",
                          "ambiguity_semantic", "formality_shift", "reordering",

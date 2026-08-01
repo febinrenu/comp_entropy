@@ -1,0 +1,566 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{microtype}
+\usepackage{balance}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Output:}}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+% =============================================================================
+\title{Computational Entropy: A Framework for Quantifying the Inference
+Energy Cost of Prompt Semantic Instability in Large Language Models}
+\author{
+  \IEEEauthorblockN{Febin K Renu}
+  \IEEEauthorblockA{
+    \textit{Division of Computer Science and Engineering}\\
+    \textit{Karunya Institute of Technology and Sciences}\\
+    Coimbatore, Tamil Nadu, India\\
+    febink@karunya.edu.in}
+  \and
+  \IEEEauthorblockN{G Naveen Sundar}
+  \IEEEauthorblockA{
+    \textit{Division of Computer Science and Engineering}\\
+    \textit{Karunya Institute of Technology and Sciences}\\
+    Coimbatore, Tamil Nadu, India\\
+    naveensundar@karunya.edu}
+}
+\maketitle
+% =============================================================================
+\begin{abstract}
+Prompt engineering research optimises for output quality; almost none
+of it asks what a prompt costs to process. We propose \emph{Computational
+Entropy} ($S_c$), a construct borrowed from semantic-entropy
+clustering, as the theoretical basis for a practical, single-pass
+\emph{Semantic Instability Index} (SII) intended to predict per-token
+inference energy (EPT). Alongside SII we contribute a nine-class
+\emph{Mutation Engine} for generating semantically graded prompt
+variants and the \emph{Prompt Entropy Coefficient} (PEC), a Spearman
+correlation between SII and measured EPT. We test this framework at
+three levels of measurement fidelity. Under a CPU timing-proxy
+protocol with a synthetic energy term, PEC $=0.408$ ($p<0.001$,
+$N=540$) and mutation condition explains $\eta^2=0.157$ of EPT
+variance. Removing the synthetic term and measuring a real, if
+untrained, from-scratch Transformer on real CPU timing reproduces the
+direction (PEC $=0.252$) but shows it is substantially mediated by
+mutation-induced prompt length rather than semantic content. The
+decisive test replaces both the untrained model and the timing proxy:
+two real, open-weight, instruction-tuned models (Phi-3.5-mini,
+Gemma-2-2B), served locally and measured with actual NVIDIA NVML
+GPU-power integration, with an explicit length-matched control for
+every mutated prompt. On this real hardware and real models, the
+SII--EPT correlation is statistically indistinguishable from zero for
+both models, before and after length matching ($|\rho|\le 0.07$, all
+$p>0.4$), and a coefficient-sensitivity sweep confirms this null is
+stable rather than fragile. We report this outcome as the paper's main
+empirical finding, not a footnote: the SII/PEC/Mutation-Engine
+framework is a reusable, cheap-to-compute methodology, but the
+evidence gathered here does not support treating prompt semantic
+instability as a demonstrated energy cost in real deployed models. We
+discuss why proxy and untrained-model measurements can manufacture an
+association that real hardware does not confirm, and what that implies
+for energy claims in prompt-engineering research more broadly.
+\end{abstract}
+\begin{IEEEkeywords}
+LLM inference energy; prompt engineering; semantic instability;
+computational entropy; energy-per-token; green AI; replication
+\end{IEEEkeywords}
+% =============================================================================
+\section{Introduction}
+Inference energy is usually treated as a function of model size,
+hardware, and batch configuration~\cite{strubell2019energy,
+patterson2022carbon,samsi2023words}, with inference now exceeding
+training's share of lifetime energy for widely deployed
+models~\cite{wu2022sustainable,faiz2024llmcarbon}. The prompt itself
+is rarely treated as a variable. We ask a narrow, testable question:
+is a prompt's semantic instability---incoherence, ambiguity, internal
+contradiction---statistically associated with the energy cost of
+generating a response to it? A logically contradictory prompt forces
+a model to reconcile irreconcilable constraints while still producing
+an answer; whether that extra burden shows up as measurable energy is
+an empirical question, not one we assume the answer to.
+This paper's contribution is a framework for asking that question
+precisely, and a deliberately escalating test of it. \emph{Computational
+Entropy} $S_c$ (Section~\ref{sec:framework}) is a semantic-entropy-style
+theoretical construct; the \emph{Semantic Instability Index} (SII) is
+a single-pass proxy for it; the \emph{Mutation Engine} generates nine
+classes of controlled prompt perturbations; the \emph{Prompt Entropy
+Coefficient} (PEC) is the Spearman correlation between SII and
+measured energy-per-token (EPT). We evaluate this framework in three
+stages of increasing measurement fidelity: (1) a CPU timing-proxy
+protocol with a synthetic energy term, (2) the same protocol with the
+synthetic term removed and a real, from-scratch, untrained Transformer
+measured on real CPU timing, and (3) two real, open-weight,
+instruction-tuned models measured with real NVIDIA NVML GPU energy and
+an explicit length-matched control. We report all three honestly,
+including that the third and most rigorous stage does not confirm
+what the first two suggested. We consider that outcome, not a
+positive PEC value, to be this paper's central empirical result, and
+we return to why in Section~\ref{sec:discussion}.
+% =============================================================================
+\section{Related Work}
+Energy reporting for NLP and LLM systems has matured from
+training-only accounting~\cite{strubell2019energy,patterson2022carbon}
+to inference-focused benchmarking: Samsi et
+al.~\cite{samsi2023words} measured GPU power across batch sizes and
+model scales (our external sanity check for Section~\ref{sec:results}A);
+Faiz et al.'s \emph{LLMCarbon}~\cite{faiz2024llmcarbon} models
+end-to-end carbon footprint and gives comparable baseline EPT figures;
+Bannour et al.~\cite{bannour2021evaluating} surveyed energy-measurement
+tooling, including the CodeCarbon-style TDP-proxy approach our first
+protocol reuses. None of this literature treats prompt content itself
+as an independent variable---the gap we address.
+Our SII is conceptually downstream of \emph{semantic entropy}: Kuhn et
+al.~\cite{kuhn2023semantic} cluster sampled model responses by
+bidirectional NLI entailment and compute entropy over the resulting
+classes to detect hallucination; Farquhar et
+al.~\cite{farquhar2024detecting} extended this without ground-truth
+labels. Both measure entropy on the \emph{output} side for quality
+assessment; we adapt the same clustering construct as $S_c$
+(Section~\ref{sec:framework}A) and ask whether an \emph{input}-side
+proxy for it predicts compute cost, and separately (Section
+\ref{sec:results}C) whether SII tracks real output-side $S_c$ directly.
+Schwartz et al.'s Green AI agenda~\cite{schwartz2020green} argues
+efficiency should be a first-class, reported metric alongside
+accuracy; this paper is offered in that spirit, including in reporting
+a result that complicates rather than confirms its own premise.
+% =============================================================================
+\section{Framework: Computational Entropy and SII}
+\label{sec:framework}
+\subsection{Computational Entropy and Its Motivating Hypothesis}
+Given model $\mathcal{M}$ and prompt $x$, partition possible responses
+into equivalence clusters $\{C_1,\ldots,C_k\}$ under bidirectional NLI
+entailment, and let $P(C_i\mid x)$ be the probability mass in cluster
+$i$. \emph{Computational Entropy} is
+\begin{equation}
+  S_c(x) = -\sum_{i=1}^{k} P(C_i \mid x)\,\log_2 P(C_i \mid x).
+  \label{eq:sc}
+\end{equation}
+A coherent prompt concentrates mass on one cluster ($S_c\approx0$); a
+contradictory one spreads it across irreconcilable clusters. We
+connect $S_c$ to energy only as a stated hypothesis, not a derivation:
+Landauer's Principle~\cite{landauer1961irrev,berut2012experimental}
+ties irreversible bit-erasure to a thermodynamic energy floor, and
+Transformer decoding~\cite{vaswani2017attention} performs irreversible
+operations (softmax attention, logit sampling) at every step. \emph{If}
+the effective number of such steps scales with $S_c(x)$, higher
+semantic instability should raise measured energy. We say plainly that
+GPU/CPU dissipation exceeds the Landauer bound by roughly ten orders
+of magnitude, so this motivates a directional test, not a quantitative
+prediction, and Section~\ref{sec:results} is exactly that test.
+\subsection{Semantic Instability Index (SII)}
+Computing $S_c$ requires multiple generations and NLI clustering per
+prompt---too expensive for routine measurement. SII is a single-pass
+proxy:
+\begin{equation}
+  \mathrm{SII}(x,m,\alpha) = b_m\alpha + \gamma|\Delta F| +
+  \delta(1-\mathrm{LD}) + \varepsilon C_x,
+  \label{eq:sii}
+\end{equation}
+where $b_m$ is a stated base score per mutation type $m$
+(Table~\ref{tab:mutations}), $\alpha\in[0,1]$ is mutation intensity,
+$\Delta F$ is the change in Flesch Reading
+Ease~\cite{flesch1948readability} versus the baseline prompt,
+$\mathrm{LD}$ is lexical diversity (type-token ratio), and $C_x$ is
+mean-to-max sentence-length ratio. $\gamma=0.02,\delta=0.50,
+\varepsilon=0.30$ were tuned on a 12-prompt pilot, held fixed
+thereafter. $b_m$ is a stated design choice (surface noise scores low,
+contradiction scores highest, 2.50) validated only by whether
+measured energy tracks it---which Section~\ref{sec:results} tests at
+three fidelities, with different outcomes.
+\begin{table}[t]
+\caption{Mutation Types and SII Base Scores}
+\label{tab:mutations}
+\centering
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{@{}llc@{}}
+\toprule
+\textbf{Type} & \textbf{Operation} & $b_m$ \\
+\midrule
+\texttt{baseline} & Identity & 0.00 \\
+\texttt{noise\_typo} & Keyboard-adjacency character edits & 0.80 \\
+\texttt{noise\_verbose} & Filler-phrase insertion & 1.00 \\
+\texttt{formality\_shift} & Register-pair substitution & 1.20 \\
+\texttt{code\_switching} & Parenthetical L2 phrase insertion & 1.40 \\
+\texttt{ambiguity\_semantic} & Vague pronoun/quantifier injection & 1.50 \\
+\texttt{negation} & Negation insertion & 1.60 \\
+\texttt{reordering} & Word/sentence shuffle & 1.70 \\
+\texttt{ambiguity\_contradiction} & Contradictory clause injection & 2.50 \\
+\bottomrule
+\end{tabular}
+\end{table}
+The Mutation Engine applies these nine transformations to each base
+prompt with a uniqueness check (re-running with a fallback if a
+mutation leaves text unchanged) and, for the real-model replication in
+Section~\ref{sec:results}C, an additional length-matched variant per
+mutation: the mutated text truncated at a sentence boundary or padded
+with neutral filler until its token count under the target model's
+own tokenizer equals the baseline's. Algorithm~\ref{alg:sii} gives the
+SII computation.
+\begin{algorithm}[t]
+\caption{Semantic Instability Index}
+\label{alg:sii}
+\begin{algorithmic}[1]
+\REQUIRE Prompt $x$, baseline $x_0$, type $m$, intensity $\alpha$
+\ENSURE $\mathrm{SII}\in[0,5]$
+\STATE $\Delta F \gets \textsc{Flesch}(x)-\textsc{Flesch}(x_0)$
+\STATE $\mathrm{LD}\gets|\{\text{unique tokens in }x\}|/|\text{tokens in }x|$
+\STATE $C_x\gets\bar\ell(x)/\max\ell(x)$ \COMMENT{mean/max sentence length}
+\STATE $\mathrm{SII}\gets b_m\alpha+\gamma|\Delta F|+\delta(1-\mathrm{LD})+\varepsilon C_x$
+\RETURN $\min(\mathrm{SII},5.0)$
+\end{algorithmic}
+\end{algorithm}
+% =============================================================================
+\section{Three-Stage Experimental Protocol}
+\label{sec:protocol}
+All three stages share the same 60-prompt corpus (12 each across
+factual QA, instruction following, summarisation, code explanation,
+creative writing), the same nine mutation conditions at $\alpha=0.7$
+(chosen after a pilot: $\alpha=0.5$ under-mutated short prompts,
+$\alpha=0.9$ triggered ungrammatical early-exit artefacts), and the
+same statistical protocol: Spearman's PEC with $10{,}000$-resample
+bootstrap CIs, one-way ANOVA with $\eta^2/\omega^2$ and
+Kruskal--Wallis corroboration, Cohen's $d$, and (Stage 3 only) a
+paired Wilcoxon test between raw and length-matched EPT. Sample size
+follows an a priori power analysis (Cohen~\cite{cohen1988statistical},
+medium effect, 9 groups, $1-\beta=0.95$, $N\approx270$; Stages 1--2 use
+$N=540$ for pairwise as well as omnibus power).
+The three stages differ only in how energy and text generation are
+obtained. \textbf{Stage 1 (proxy)}: energy is $E=P_\text{TDP}f_\text{cpu}
+\tau_\text{wall}$ ($P_\text{TDP}=65$\,W, a nominal constant, not an
+instantaneous reading) plus a synthetic term
+$E_\text{sim}=\varepsilon_0(n_\text{in}+n_\text{out})\lambda$ calibrated
+against~\cite{samsi2023words,faiz2024llmcarbon}; generation is
+simulated. \textbf{Stage 2 (untrained real-hardware)}: $E_\text{sim}$
+is removed entirely; text is generated by an actual, from-scratch
+decoder-only Transformer implemented in NumPy (2 layers, 4 heads,
+$d_\text{model}=64$, KV-cached causal attention verified against an
+uncached reference to $10^{-15}$ precision), with randomly initialised
+(untrained) weights, run on this evaluation's real 2-core CPU; wall
+and CPU time are measured, not estimated. Weights are untrained
+because no pretrained model was reachable in that sandboxed
+environment (network egress to Hugging Face/PyTorch was blocked), so
+generated text is not semantically meaningful---this stage tests only
+the architecture's real compute-timing behaviour. \textbf{Stage 3
+(real models)}: two open-weight instruction-tuned models,
+\texttt{phi3.5:3.8b} (Phi-3.5-mini-instruct) and \texttt{gemma2:2b}
+(Gemma-2-2B-it), Q4\_0-quantised and served locally via Ollama on an
+NVIDIA RTX~3050 Laptop GPU (4\,GB VRAM, 30\,W cap; Intel i5-12500H;
+Windows~11), generate real text with natural EOS stopping (capped at
+96 tokens as a safety ceiling). Energy is real, hardware-measured GPU
+power: a background thread polls \texttt{nvmlDeviceGetPowerUsage}
+throughout each call and the trace is integrated by the trapezoidal
+rule,
+$E=\int_{t_0}^{t_1}P(t)\,dt\approx\sum_i\tfrac12(P_i+P_{i+1})(t_{i+1}-t_i)$,
+giving genuine joules for the GPU package (not a per-process
+partition; CPU energy is not covered, since Intel RAPL is unavailable
+without root/Linux access on this machine). Each model's own
+tokenizer supplies exact counts for the length-matched control. A
+stratified 15-prompt subset (3 per domain) was used to keep total
+run time near an hour per model, giving $N=255$ per model (135 raw
+$+$ 120 length-matched).
+% =============================================================================
+\section{Results}
+\label{sec:results}
+\subsection{Stage 1: Proxy-Simulated Protocol}
+\label{sec:results-stage1}
+Table~\ref{tab:stage-summary} (row 1) summarises $N=540$ measurements.
+PEC $=0.408$ ($p<0.001$, CI $[0.328,0.484]$); condition order follows
+the SII scale without inversion; ANOVA $F(8,531)=12.34$, $p<0.001$,
+$\eta^2=0.157$ ($\omega^2=0.144$; Kruskal--Wallis $H=94.2$, $p<0.001$).
+\texttt{ambiguity\_contradiction} shows a $+79.0\,\%$ EPT premium over
+baseline (Cohen's $d=1.42$), not explained by output token count
+(Spearman(tokens,EPT)$=0.09$, n.s.). Baseline EPT (12.4\,mJ/tok) is
+order-of-magnitude consistent with~\cite{samsi2023words,faiz2024llmcarbon},
+our only external check on this proxy's plausibility.
+\subsection{Stage 2: Untrained Real-Hardware Pilot}
+\label{sec:results-stage2}
+With the synthetic term removed and real CPU timing on an actually
+executing (if untrained) Transformer, the direction replicates at
+smaller magnitude: PEC $=0.252$ ($p<0.001$, CI $[0.171,0.329]$),
+ANOVA $\eta^2=0.086$ ($F(8,531)=6.23$, $p<0.001$). Critically, input
+prompt length correlates strongly with EPT here ($\rho=0.863$), and
+the partial SII--EPT correlation controlling for input length
+collapses to $-0.037$---indistinguishable from zero. A 200-draw
+coefficient-sensitivity sweep ($\pm30\,\%$ on $\gamma,\delta,
+\varepsilon,b_m$ jointly) keeps PEC positive throughout (mean
+$0.238$, SD $0.039$) but the mutation-by-mutation \emph{ordering}
+is far less stable (mean rank agreement with the a priori $b_m$ scale,
+$\rho=0.29$, occasionally negative). In short: on real but untrained
+hardware, most of the apparent effect is explainable by mutations
+changing prompt length, not by semantic content once length is held
+constant---a specific, testable confound that Stage 3 controls for
+directly.
+\begin{table}[t]
+\caption{PEC Across All Three Stages (bootstrap 95\,\% CI in brackets)}
+\label{tab:stage-summary}
+\centering
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrrl@{}}
+\toprule
+\textbf{Stage} & \textbf{PEC} & \textbf{$p$} & \textbf{ANOVA $\eta^2$ ($p$)} \\
+\midrule
+1: Proxy, simulated gen. & 0.408 & $<0.001$ & 0.157 ($<0.001$) \\
+2: Untrained, real timing & 0.252 & $<0.001$ & 0.086 ($<0.001$) \\
+3a: Phi-3.5, real NVML & $-0.043$ & 0.499 & 0.019 (0.779) \\
+3b: Gemma-2, real NVML & $-0.017$ & 0.784 & 0.036 (0.322) \\
+\bottomrule
+\end{tabular}
+\end{table}
+\subsection{Stage 3: Real Instruction-Tuned Models, Real GPU Energy}
+\label{sec:results-stage3}
+This is the paper's central result. Table~\ref{tab:stage-summary}
+(rows 3a--3b) and Table~\ref{tab:real-pec} give the full breakdown.
+For both Phi-3.5 and Gemma-2, PEC is statistically indistinguishable
+from zero, \emph{both before and after length matching}
+($|\rho|\le0.066$, all $p>0.4$; partial correlation controlling for
+input tokens likewise near zero, $-0.041$ and $-0.015$). ANOVA across
+the nine conditions is non-significant for both models
+(Kruskal--Wallis corroborates: $p=0.88$, $p=0.55$); Cohen's $d$
+between baseline and \texttt{ambiguity\_contradiction} is negligible
+($0.083$, $-0.059$). A 200-draw sensitivity sweep, identical in method
+to Stage 2's, confirms this null is stable: mean PEC stayed at
+$-0.032$ (Phi-3.5) and $-0.005$ (Gemma-2) under $\pm30\,\%$ joint
+coefficient perturbation, with 0\,\% of draws for either model
+exceeding $\rho=0.30$.
+\begin{table}[t]
+\caption{Stage 3: SII--EPT Correlation, Raw vs.\ Length-Matched}
+\label{tab:real-pec}
+\centering
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+\textbf{Model / subset} & \textbf{PEC ($\rho$)} & \textbf{$p$} \\
+\midrule
+Phi-3.5, raw ($n=135$) & $-0.050$ & 0.562 \\
+Phi-3.5, length-matched ($n=120$) & $-0.045$ & 0.602 \\
+Gemma-2, raw ($n=135$) & $-0.066$ & 0.445 \\
+Gemma-2, length-matched ($n=120$) & $+0.030$ & 0.734 \\
+\bottomrule
+\end{tabular}
+\end{table}
+The length-matched control was informative on its own terms even
+though PEC stayed null: a paired Wilcoxon test between raw and
+length-matched EPT for identical (prompt, mutation) pairs is
+significant for Phi-3.5 ($n=120$, $p=0.005$; raw higher by a mean
+29.9\,mJ/token) but not Gemma-2 ($p=0.307$). Prompt length can move
+EPT for at least one model---just not in a way that produces any
+corresponding SII--EPT correlation for either, since that correlation
+was already null before length was controlled.
+We also ran the $S_c$-validation pilot ($k=5$ samples/prompt,
+temperature 0.7, bidirectional-NLI clustering following
+Kuhn et al.~\cite{kuhn2023semantic}, cross-encoder/nli-deberta-v3-xsmall,
+10 prompts $\times$ 6 conditions, $n=60$ per model) that neither
+proxy stage could execute meaningfully. Results disagree by model:
+Spearman(SII,$S_c)=+0.345$ ($p=0.007$) for Gemma-2, but
+$-0.173$ ($p=0.187$, n.s.) for Phi-3.5. We flag a specific measurement
+concern rather than taking either number at face value: 50\,\% of
+Phi-3.5's records and 42\,\% of Gemma-2's hit the maximum possible
+cluster count ($k$ distinct clusters from $k$ samples, i.e.\ the
+entailment check never judged any two responses equivalent, even
+near-paraphrase answers to plain factual questions). This ceiling
+suggests the single-representative, threshold-0.5 clustering rule may
+over-fragment responses broadly, which would inflate $S_c$ toward
+near-uniform high values regardless of condition and could itself
+explain the cross-model disagreement, rather than a genuine
+architecture difference. We report both numbers but do not treat
+either as settling whether SII tracks real semantic entropy.
+% =============================================================================
+\section{Discussion}
+\label{sec:discussion}
+\subsection{Why Would a Proxy Show an Effect That Real Hardware Does Not?}
+Two mechanisms plausibly explain the gap. First, length confounding:
+Stage 2 showed directly that an untrained model's real compute cost
+tracks context length, and several mutations (verbose, contradiction)
+happen to lengthen prompts; Stage 1's synthetic term is also
+token-count-linear, so any length--condition association mechanically
+produces a PEC signal that need not involve semantics at all. Stage
+3's length-matched control was designed to rule this out for real
+models, and did: PEC stayed null even after equalising length, which
+means the Stage-1/2 signal is not simply "the same real effect,
+smaller." Second, trained models have redundant representational
+capacity and typically produce a fixed-shape output distribution per
+decoding step regardless of input coherence; a real decoder's
+per-token compute (matrix multiplications of fixed size, KV-cached
+attention over the current context) does not have a software hook for
+"the model is confused," whereas an untrained architecture's timing
+noise floor is more exposed to context-length effects precisely
+because there is no learned representation smoothing it out. We did
+not instrument attention activations directly in any stage, so this
+account is offered as a plausible explanation for the pattern
+observed across Table~\ref{tab:stage-summary}, not a confirmed
+mechanism.
+\subsection{Limitations}
+\label{sec:limits}
+\emph{Energy measurement.} Stages 1--2 use a nominal TDP or timing
+proxy, not an instantaneous power reading; Stage 3 uses real NVML
+power but integrates whole-GPU-package draw (not a per-process
+partition) and does not cover CPU energy at all, since Intel RAPL
+requires Linux root access unavailable on any machine used in this
+study. \emph{Scale.} Stage 3 used 15 stratified prompts and $N=255$
+per model (vs.\ 60 prompts/$N=540$ in Stages 1--2) to keep run time
+near an hour; Gemma-2's within-condition SDs are comparable in
+magnitude to its condition means, so this is a well-supported null at
+this scale, not an exhaustively powered one, though the point
+estimates already sit at zero rather than near a threshold that more
+power would likely push past. \emph{Generation capping.} 90\,\%
+(Phi-3.5) and 79\,\% (Gemma-2) of Stage-3 completions hit the 96-token
+safety ceiling rather than stopping at EOS, limiting how much natural
+output-length variation this replication could observe.
+\emph{Quantisation.} Both Stage-3 models are Q4\_0-quantised GGUF
+weights served via Ollama, not full-precision references; any null (or
+positive) finding describes this deployment configuration, not
+necessarily an unquantised one. \emph{Two models only.} Phi-3.5 and
+Gemma-2 disagreeing on the $S_c$ pilot (Section~\ref{sec:results-stage3})
+is itself evidence that model-to-model variance can be large; two
+data points cannot establish generality either way, and the
+clustering-ceiling concern noted above means that particular
+disagreement should not be over-interpreted before the clustering
+method itself is revisited (e.g., comparing against all cluster
+members rather than one representative, or a calibrated threshold).
+\subsection{What This Does and Does Not License}
+Pending broader replication, we think the framework---SII as a
+sub-millisecond, single-pass score; the Mutation Engine as a
+reproducible perturbation protocol; PEC as a rank-correlation
+statistic with the right robustness checks (bootstrap CI, sensitivity
+sweep, length-matched control)---is a reusable methodological
+contribution regardless of the sign of the result. What it does not
+license, on the evidence in this paper, is a claim that prompt
+semantic instability is a demonstrated, exploitable energy cost in
+real deployed models: contradiction screening, verbosity trimming, or
+any other "Green Prompt Engineering" intervention motivated by an
+SII--EPT relationship should be treated as unproven until shown on
+real hardware, for the specific model and quantisation in question,
+with a length-matched control---exactly the standard Stage 3 applied
+here and did not meet.
+% =============================================================================
+\section{Conclusion}
+We proposed a framework---Computational Entropy ($S_c$), its
+single-pass proxy SII, the Mutation Engine, and the Prompt Entropy
+Coefficient (PEC)---for testing whether prompt semantic instability
+predicts LLM inference energy, and evaluated it at three levels of
+measurement fidelity rather than one. A CPU timing-proxy protocol with
+simulated generation shows a significant association (PEC$=0.408$); a
+real, untrained Transformer measured with real CPU timing reproduces
+the direction at smaller magnitude but attributes most of it to prompt
+length rather than semantics (partial correlation $\approx0$ after
+controlling for length); two real, instruction-tuned models measured
+with real NVIDIA NVML GPU energy and an explicit length-matched
+control show no SII--EPT association at all, robust to a
+coefficient-sensitivity sweep. We treat this last result as the
+paper's main empirical finding: on the strongest evidence gathered
+here, prompt semantic instability is not a demonstrated correlate of
+per-token inference energy in real, deployed models, even though
+progressively weaker measurement setups suggested otherwise. The
+practical implication is a methodological one as much as a substantive
+one: energy claims about prompt properties should be distrusted until
+shown on real hardware with real models and a length-matched control,
+because proxy and untrained-model measurements can manufacture an
+association that does not survive that test. Priority follow-on work:
+RAPL-based CPU accounting on Linux hardware; a systematic sweep across
+more model families/scales than the two tested here; a revised
+$S_c$-clustering protocol addressing the ceiling effect noted in
+Section~\ref{sec:results-stage3}; and a larger Stage-3 sample to tighten
+the confidence intervals around what are currently statistically null,
+not precisely small-positive, results.
+% =============================================================================
+\balance
+\begin{thebibliography}{00}
+\bibitem{strubell2019energy}
+E.~Strubell, A.~Ganesh, and A.~McCallum,
+``Energy and policy considerations for deep learning in NLP,''
+in \textit{Proc.\ 57th Annu.\ Meet.\ Assoc.\ Comput.\ Linguist.\ (ACL)},
+Florence, Italy, Jul.~2019, pp.~3645--3650.
+DOI:~10.18653/v1/P19-1355.
+\bibitem{patterson2022carbon}
+D.~Patterson et al.,
+``Carbon emissions and large neural network training,''
+\textit{Commun.\ ACM}, vol.~65, no.~6, pp.~35--35, Jun.~2022.
+DOI:~10.1145/3522589.
+\bibitem{wu2022sustainable}
+C.-J.~Wu et al.,
+``Sustainable AI: Environmental implications, challenges,
+and opportunities,''
+in \textit{Proc.\ 5th Conf.\ Mach.\ Learn.\ Syst.\ (MLSys)},
+Santa Clara, CA, USA, 2022.
+arXiv:2111.00364.
+\bibitem{samsi2023words}
+S.~Samsi et al.,
+``From words to watts: Benchmarking the energy costs of large
+language model inference,''
+in \textit{Proc.\ IEEE High Perform.\ Extreme Comput.\ Conf.\
+(HPEC)}, Dedham, MA, USA, Sep.~2023, pp.~1--9.
+DOI:~10.1109/HPEC58863.2023.10363447.
+\bibitem{bannour2021evaluating}
+N.~Bannour, S.~Ghannay, A.~N\'ev\'eol, and A.-L.~Ligozat,
+``Evaluating the carbon footprint of NLP methods: A survey
+and analysis of existing tools,''
+in \textit{Proc.\ 2nd Workshop SustaiNLP (EMNLP)},
+Nov.~2021, pp.~11--21.
+DOI:~10.18653/v1/2021.sustainlp-1.2.
+\bibitem{faiz2024llmcarbon}
+A.~Faiz, S.~Kaneda, R.~Wang, R.~Osi, P.~Sharma, F.~Chen, and
+L.~Jiang,
+``LLMCarbon: Modeling the end-to-end carbon footprint of large
+language models,''
+in \textit{Proc.\ 12th Int.\ Conf.\ Learn.\ Represent.\ (ICLR)},
+Vienna, Austria, May~2024.
+arXiv:2309.14393.
+\bibitem{landauer1961irrev}
+R.~Landauer,
+``Irreversibility and heat generation in the computing process,''
+\textit{IBM J.~Res.\ Dev.}, vol.~5, no.~3,
+pp.~183--191, Jul.~1961.
+DOI:~10.1147/rd.53.0183.
+\bibitem{berut2012experimental}
+A.~B\'erut, A.~Arakelyan, A.~Petrosyan, S.~Ciliberto,
+R.~Dillenschneider, and E.~Lutz,
+``Experimental verification of Landauer's principle linking
+information and thermodynamics,''
+\textit{Nature}, vol.~483, no.~7388, pp.~187--189, Mar.~2012.
+DOI:~10.1038/nature10872.
+\bibitem{vaswani2017attention}
+A.~Vaswani et al.,
+``Attention is all you need,''
+in \textit{Adv.\ Neural Inf.\ Process.\ Syst.\ (NeurIPS)},
+vol.~30, Long Beach, CA, USA, Dec.~2017, pp.~5998--6008.
+arXiv:1706.03762.
+\bibitem{kuhn2023semantic}
+L.~Kuhn, Y.~Gal, and S.~Farquhar,
+``Semantic uncertainty: Linguistic invariances for uncertainty
+estimation in natural language generation,''
+in \textit{Proc.\ 11th Int.\ Conf.\ Learn.\ Represent.\ (ICLR)},
+Kigali, Rwanda, May~2023.
+arXiv:2302.09664.
+\bibitem{farquhar2024detecting}
+S.~Farquhar, J.~Kossen, L.~Kuhn, and Y.~Gal,
+``Detecting hallucinations in large language models using
+semantic entropy,''
+\textit{Nature}, vol.~630, no.~8017, pp.~625--630, Jun.~2024.
+DOI:~10.1038/s41586-024-07421-0.
+\bibitem{schwartz2020green}
+R.~Schwartz, J.~Dodge, N.~A.~Smith, and O.~Etzioni,
+``Green AI,''
+\textit{Commun.\ ACM}, vol.~63, no.~12, pp.~54--63, Dec.~2020.
+DOI:~10.1145/3381831.
+\bibitem{flesch1948readability}
+R.~Flesch,
+``A new readability yardstick,''
+\textit{J.~Appl.\ Psychol.}, vol.~32, no.~3, pp.~221--233,
+1948.
+DOI:~10.1037/h0057532.
+\bibitem{cohen1988statistical}
+J.~Cohen,
+\textit{Statistical Power Analysis for the Behavioral Sciences},
+2nd~ed. Hillsdale, NJ, USA: Lawrence Erlbaum Associates, 1988.
+\end{thebibliography}
+\end{document}

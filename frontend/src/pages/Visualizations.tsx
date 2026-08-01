@@ -40,7 +40,7 @@ import {
   Radar,
   Legend,
 } from 'recharts';
-import { experimentsApi, measurementsApi, demoApi } from '../services/api';
+import { experimentsApi, measurementsApi, demoApi, analysisApi } from '../services/api';
 import StatisticalSignificance from '../components/StatisticalSignificance';
 import LiveMonitor from '../components/LiveMonitor';
 
@@ -144,19 +144,15 @@ const Visualizations: React.FC = () => {
     return [];
   }, [measurementsData, selectedExperiment]);
 
+  // No Math.random() fallbacks: an empty array here renders the existing
+  // "no data available" empty state below, rather than silently showing
+  // fabricated data indistinguishable from a real chart.
   const timeData = React.useMemo(() => {
     const data = measurementsData as any;
-    if (!data?.measurements) {
-      // Generate sample time series data
-      return Array.from({ length: 30 }, (_, i) => ({
-        time: `${i}s`,
-        energy: 40 + Math.random() * 40 + Math.sin(i / 5) * 15,
-      }));
-    }
-    
+    if (!data?.measurements) return [];
     return data.measurements.slice(0, 30).map((m: any, i: number) => ({
       time: `${i}`,
-      energy: m.total_energy_joules || m.energy_joules || 50,
+      energy: m.total_energy_joules ?? m.energy_joules ?? 0,
     }));
   }, [measurementsData]);
 
@@ -169,68 +165,62 @@ const Visualizations: React.FC = () => {
         type: d.mutation_type || 'baseline',
       }));
     }
-    
+
     const data = measurementsData as any;
     if (data?.measurements) {
       return data.measurements.map((m: any) => ({
-        tokens: m.output_tokens || m.total_tokens || 100,
-        energy: m.total_energy_joules || 50,
+        tokens: m.output_tokens ?? m.total_tokens ?? 0,
+        energy: m.total_energy_joules ?? 0,
         type: 'measurement',
       }));
     }
-    
-    return Array.from({ length: 50 }, () => ({
-      tokens: Math.floor(50 + Math.random() * 200),
-      energy: 20 + Math.random() * 80,
-    }));
+
+    return [];
   }, [correlationData, measurementsData]);
 
   const pecDistribution: PecDistributionItem[] = React.useMemo(() => {
-    if (mutationData.length > 0) {
-      const total = mutationData.reduce((sum: number, d: MutationDataItem) => sum + d.count, 0);
-      return mutationData.map((d: MutationDataItem) => ({
-        name: d.mutation,
-        value: d.count,
-        percent: total > 0 ? ((d.count / total) * 100).toFixed(1) : 0,
-      }));
-    }
+    if (mutationData.length === 0) return [];
+    const total = mutationData.reduce((sum: number, d: MutationDataItem) => sum + d.count, 0);
+    return mutationData.map((d: MutationDataItem) => ({
+      name: d.mutation,
+      value: d.count,
+      percent: total > 0 ? ((d.count / total) * 100).toFixed(1) : 0,
+    }));
+  }, [mutationData]);
+
+  // Radar dimensions beyond Energy/Tokens/Time (Efficiency, Consistency)
+  // were previously fixed constants unconnected to any real measurement --
+  // removed rather than kept as fabricated filler.
+  const radarData = React.useMemo(() => {
+    if (mutationData.length < 2) return [];
+    const baseline = mutationData.find((d: MutationDataItem) => d.mutation.toLowerCase().includes('baseline'));
+    if (!baseline) return [];
+    const maxEnergy = Math.max(...mutationData.map((d: MutationDataItem) => d.avgEnergy)) || 1;
+    const maxTokens = Math.max(...mutationData.map((d: MutationDataItem) => d.avgTokens)) || 1;
+    const maxTime = Math.max(...mutationData.map((d: MutationDataItem) => d.avgTime)) || 1;
+
     return [
-      { name: 'Baseline', value: 25 },
-      { name: 'Noise Verbose', value: 25 },
-      { name: 'Ambiguity', value: 25 },
-      { name: 'Formality Shift', value: 25 },
+      { dimension: 'Energy', baseline: (baseline.avgEnergy / maxEnergy) * 100 },
+      { dimension: 'Tokens', baseline: (baseline.avgTokens / maxTokens) * 100 },
+      { dimension: 'Time', baseline: (baseline.avgTime / maxTime) * 100 },
     ];
   }, [mutationData]);
 
-  const radarData = React.useMemo(() => {
-    if (mutationData.length >= 2) {
-      const baseline = mutationData.find((d: MutationDataItem) => d.mutation.toLowerCase().includes('baseline'));
-      const maxEnergy = Math.max(...mutationData.map((d: MutationDataItem) => d.avgEnergy)) || 1;
-      const maxTokens = Math.max(...mutationData.map((d: MutationDataItem) => d.avgTokens)) || 1;
-      const maxTime = Math.max(...mutationData.map((d: MutationDataItem) => d.avgTime)) || 1;
-      
-      return [
-        { dimension: 'Energy', baseline: baseline ? (baseline.avgEnergy / maxEnergy * 100) : 50, average: 75 },
-        { dimension: 'Tokens', baseline: baseline ? (baseline.avgTokens / maxTokens * 100) : 50, average: 70 },
-        { dimension: 'Time', baseline: baseline ? (baseline.avgTime / maxTime * 100) : 50, average: 65 },
-        { dimension: 'Efficiency', baseline: 70, average: 55 },
-        { dimension: 'Consistency', baseline: 85, average: 60 },
-      ];
-    }
-    return [
-      { dimension: 'Energy', baseline: 65, average: 78 },
-      { dimension: 'Tokens', baseline: 70, average: 62 },
-      { dimension: 'Time', baseline: 80, average: 75 },
-      { dimension: 'Efficiency', baseline: 55, average: 68 },
-      { dimension: 'Consistency', baseline: 72, average: 85 },
-    ];
-  }, [mutationData]);
+  // Real correlation matrix (GET /analysis/experiment/{id}/correlations) --
+  // requires one specific experiment; "All Experiments (Aggregated)" has no
+  // single experiment_id to query against, so the matrix tab explains that
+  // rather than rendering Math.random() values as if they were real.
+  const { data: correlationMatrix, isLoading: correlationMatrixLoading } = useQuery({
+    queryKey: ['correlation-matrix', selectedExperiment],
+    queryFn: () => analysisApi.getCorrelations(parseInt(selectedExperiment), 'spearman').then(res => res.data),
+    enabled: selectedExperiment !== 'all',
+  });
 
   const tabs = [
-    { label: '📊 Overview', icon: '📊' },
-    { label: '📈 Statistical Analysis', icon: '📈' },
-    { label: '📡 Live Monitor', icon: '📡' },
-    { label: '🔥 Heatmaps', icon: '🔥' },
+    { label: 'Overview' },
+    { label: 'Statistical Analysis' },
+    { label: 'Live Monitor' },
+    { label: 'Heatmaps' },
   ];
 
   const experiments = experimentsData?.experiments || [];
@@ -244,10 +234,11 @@ const Visualizations: React.FC = () => {
       >
         <Box sx={{ mb: 4 }}>
           <Typography variant="h4" fontWeight={700} gutterBottom>
-            📊 Advanced Visualizations
+            Visualizations
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Comprehensive data visualization suite for computational entropy analysis
+            Real measurement data for the selected experiment -- charts show an explicit
+            empty state rather than placeholder data when there isn't enough to plot.
           </Typography>
         </Box>
       </motion.div>
@@ -339,24 +330,28 @@ const Visualizations: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
-                    ⚡ Energy Consumption Over Time
+                    Energy Consumption Over Time
                   </Typography>
-                  <Box sx={{ height: 300 }}>
-                    <ResponsiveContainer>
-                      <LineChart data={timeData}>
-                        <CartesianGrid strokeDasharray="3 3" stroke={chartGridColor} />
-                        <XAxis dataKey="time" stroke={chartAxisColor} />
-                        <YAxis stroke={chartAxisColor} />
-                        <RechartsTooltip 
-                          contentStyle={chartTooltipStyle}
-                          labelStyle={chartTooltipLabelStyle}
-                          itemStyle={chartTooltipItemStyle}
-                          formatter={(value: number) => [`${value.toFixed(2)} J`, 'Energy']}
-                        />
-                        <Line type="monotone" dataKey="energy" stroke="#6366f1" strokeWidth={2} dot={false} />
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </Box>
+                  {timeData.length > 0 ? (
+                    <Box sx={{ height: 300 }}>
+                      <ResponsiveContainer>
+                        <LineChart data={timeData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={chartGridColor} />
+                          <XAxis dataKey="time" stroke={chartAxisColor} />
+                          <YAxis stroke={chartAxisColor} />
+                          <RechartsTooltip
+                            contentStyle={chartTooltipStyle}
+                            labelStyle={chartTooltipLabelStyle}
+                            itemStyle={chartTooltipItemStyle}
+                            formatter={(value: number) => [`${value.toFixed(2)} J`, 'Energy']}
+                          />
+                          <Line type="monotone" dataKey="energy" stroke="#6366f1" strokeWidth={2} dot={false} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </Box>
+                  ) : (
+                    <Alert severity="info">No measurement data available for this experiment</Alert>
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -366,30 +361,34 @@ const Visualizations: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
-                    📊 Measurement Distribution
+                    Measurement Distribution
                   </Typography>
-                  <Box sx={{ height: 300 }}>
-                    <ResponsiveContainer>
-                      <PieChart>
-                        <Pie
-                          data={pecDistribution}
-                          cx="50%"
-                          cy="50%"
-                          innerRadius={60}
-                          outerRadius={100}
-                          paddingAngle={2}
-                          dataKey="value"
-                          label={({ name, percent }) => `${name}: ${percent}%`}
-                          labelLine={false}
-                        >
-                          {pecDistribution.map((_: PecDistributionItem, index: number) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                          ))}
-                        </Pie>
-                        <RechartsTooltip contentStyle={chartTooltipStyle} labelStyle={chartTooltipLabelStyle} itemStyle={chartTooltipItemStyle} />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  </Box>
+                  {pecDistribution.length > 0 ? (
+                    <Box sx={{ height: 300 }}>
+                      <ResponsiveContainer>
+                        <PieChart>
+                          <Pie
+                            data={pecDistribution}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={100}
+                            paddingAngle={2}
+                            dataKey="value"
+                            label={({ name, percent }) => `${name}: ${percent}%`}
+                            labelLine={false}
+                          >
+                            {pecDistribution.map((_: PecDistributionItem, index: number) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <RechartsTooltip contentStyle={chartTooltipStyle} labelStyle={chartTooltipLabelStyle} itemStyle={chartTooltipItemStyle} />
+                        </PieChart>
+                      </ResponsiveContainer>
+                    </Box>
+                  ) : (
+                    <Alert severity="info">No measurement data available for this experiment</Alert>
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -399,7 +398,7 @@ const Visualizations: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
-                    🔬 Energy by Mutation Type
+                    Energy by Mutation Type
                   </Typography>
                   {mutationData.length > 0 ? (
                     <Box sx={{ height: 300 }}>
@@ -437,21 +436,24 @@ const Visualizations: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
-                    🎯 Performance Radar
+                    Baseline Profile
                   </Typography>
-                  <Box sx={{ height: 300 }}>
-                    <ResponsiveContainer>
-                      <RadarChart data={radarData}>
-                        <PolarGrid stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'} />
-                        <PolarAngleAxis dataKey="dimension" stroke={chartAxisColor} />
-                        <PolarRadiusAxis stroke={chartAxisColor} />
-                        <Radar name="Baseline" dataKey="baseline" stroke="#6366f1" fill="#6366f1" fillOpacity={0.3} />
-                        <Radar name="Average" dataKey="average" stroke="#22d3ee" fill="#22d3ee" fillOpacity={0.3} />
-                        <Legend />
-                        <RechartsTooltip contentStyle={chartTooltipStyle} labelStyle={chartTooltipLabelStyle} itemStyle={chartTooltipItemStyle} />
-                      </RadarChart>
-                    </ResponsiveContainer>
-                  </Box>
+                  {radarData.length > 0 ? (
+                    <Box sx={{ height: 300 }}>
+                      <ResponsiveContainer>
+                        <RadarChart data={radarData}>
+                          <PolarGrid stroke={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'} />
+                          <PolarAngleAxis dataKey="dimension" stroke={chartAxisColor} />
+                          <PolarRadiusAxis stroke={chartAxisColor} />
+                          <Radar name="Baseline (% of max)" dataKey="baseline" stroke="#6366f1" fill="#6366f1" fillOpacity={0.3} />
+                          <Legend />
+                          <RechartsTooltip contentStyle={chartTooltipStyle} labelStyle={chartTooltipLabelStyle} itemStyle={chartTooltipItemStyle} />
+                        </RadarChart>
+                      </ResponsiveContainer>
+                    </Box>
+                  ) : (
+                    <Alert severity="info">Need at least 2 mutation types with measurement data for this experiment</Alert>
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -461,41 +463,45 @@ const Visualizations: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
-                    📈 Tokens vs Energy Correlation
+                    Tokens vs Energy
                   </Typography>
-                  <Box sx={{ height: 350 }}>
-                    <ResponsiveContainer>
-                      <ScatterChart>
-                        <CartesianGrid strokeDasharray="3 3" stroke={chartGridColor} />
-                        <XAxis 
-                          dataKey="tokens" 
-                          name="Tokens" 
-                          stroke={chartAxisColor}
-                          label={{ value: 'Output Tokens', position: 'bottom', fill: chartAxisColor }}
-                        />
-                        <YAxis 
-                          dataKey="energy" 
-                          name="Energy" 
-                          stroke={chartAxisColor}
-                          label={{ value: 'Energy (J)', angle: -90, position: 'insideLeft', fill: chartAxisColor }}
-                        />
-                        <RechartsTooltip 
-                          contentStyle={chartTooltipStyle}
-                          labelStyle={chartTooltipLabelStyle}
-                          itemStyle={chartTooltipItemStyle}
-                          formatter={(value: number, name: string) => [
-                            name === 'energy' ? `${value.toFixed(2)} J` : value,
-                            name
-                          ]}
-                        />
-                        <Scatter data={scatterData} fill="#6366f1">
-                          {scatterData.map((_: ScatterDataItem, index: number) => (
-                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} fillOpacity={0.7} />
-                          ))}
-                        </Scatter>
-                      </ScatterChart>
-                    </ResponsiveContainer>
-                  </Box>
+                  {scatterData.length > 0 ? (
+                    <Box sx={{ height: 350 }}>
+                      <ResponsiveContainer>
+                        <ScatterChart>
+                          <CartesianGrid strokeDasharray="3 3" stroke={chartGridColor} />
+                          <XAxis
+                            dataKey="tokens"
+                            name="Tokens"
+                            stroke={chartAxisColor}
+                            label={{ value: 'Output Tokens', position: 'bottom', fill: chartAxisColor }}
+                          />
+                          <YAxis
+                            dataKey="energy"
+                            name="Energy"
+                            stroke={chartAxisColor}
+                            label={{ value: 'Energy (J)', angle: -90, position: 'insideLeft', fill: chartAxisColor }}
+                          />
+                          <RechartsTooltip
+                            contentStyle={chartTooltipStyle}
+                            labelStyle={chartTooltipLabelStyle}
+                            itemStyle={chartTooltipItemStyle}
+                            formatter={(value: number, name: string) => [
+                              name === 'energy' ? `${value.toFixed(2)} J` : value,
+                              name
+                            ]}
+                          />
+                          <Scatter data={scatterData} fill="#6366f1">
+                            {scatterData.map((_: ScatterDataItem, index: number) => (
+                              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} fillOpacity={0.7} />
+                            ))}
+                          </Scatter>
+                        </ScatterChart>
+                      </ResponsiveContainer>
+                    </Box>
+                  ) : (
+                    <Alert severity="info">No measurement data available for this experiment</Alert>
+                  )}
                 </CardContent>
               </Card>
             </Grid>
@@ -522,7 +528,7 @@ const Visualizations: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
-                    🔥 Energy Heatmap by Mutation Type
+                    Energy Heatmap by Mutation Type
                   </Typography>
                   {mutationData.length > 0 ? (
                     <Box sx={{ overflowX: 'auto' }}>
@@ -570,42 +576,63 @@ const Visualizations: React.FC = () => {
               <Card>
                 <CardContent>
                   <Typography variant="h6" fontWeight={600} gutterBottom>
-                    📊 Correlation Matrix
+                    Correlation Matrix
                   </Typography>
-                  <Box sx={{ p: 2 }}>
-                    <Grid container spacing={1}>
-                      {['Energy', 'Tokens', 'Time', 'Words'].map((row, i) => (
-                        <Grid item xs={12} key={row}>
-                          <Box sx={{ display: 'flex', gap: 1 }}>
-                            <Typography sx={{ width: 80, fontWeight: 600 }}>{row}</Typography>
-                            {['Energy', 'Tokens', 'Time', 'Words'].map((col, j) => {
-                              const correlation = i === j ? 1 : (0.3 + Math.random() * 0.6) * (Math.random() > 0.5 ? 1 : -1);
-                              return (
-                                <Box
-                                  key={col}
-                                  sx={{
-                                    flex: 1,
-                                    height: 60,
-                                    borderRadius: 1,
-                                    bgcolor: correlation > 0 
-                                      ? `rgba(99, 102, 241, ${Math.abs(correlation)})` 
-                                      : `rgba(239, 68, 68, ${Math.abs(correlation)})`,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                  }}
-                                >
-                                  <Typography variant="body2" fontWeight={600} color="white">
-                                    {correlation.toFixed(2)}
-                                  </Typography>
-                                </Box>
-                              );
-                            })}
-                          </Box>
-                        </Grid>
-                      ))}
-                    </Grid>
-                  </Box>
+                  {selectedExperiment === 'all' ? (
+                    <Alert severity="info">
+                      Select a specific experiment above to view its real correlation matrix
+                      (the underlying statistic requires one experiment's measurements, not an
+                      aggregate across all of them).
+                    </Alert>
+                  ) : correlationMatrixLoading ? (
+                    <Box display="flex" justifyContent="center" py={4}>
+                      <CircularProgress size={28} />
+                    </Box>
+                  ) : correlationMatrix?.variables?.length ? (
+                    <Box sx={{ p: 2, overflowX: 'auto' }}>
+                      <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1.5 }}>
+                        Spearman correlation, n={correlationMatrix.n_samples} measurements. Real data
+                        from GET /analysis/experiment/{'{'}id{'}'}/correlations.
+                      </Typography>
+                      <Grid container spacing={1} sx={{ minWidth: 560 }}>
+                        {correlationMatrix.variables.map((row: string, i: number) => (
+                          <Grid item xs={12} key={row}>
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                              <Typography sx={{ width: 140, fontWeight: 600, fontSize: '0.8rem' }}>
+                                {row.replace(/_/g, ' ')}
+                              </Typography>
+                              {correlationMatrix.variables.map((col: string, j: number) => {
+                                const correlation = correlationMatrix.correlation_matrix[i][j];
+                                return (
+                                  <Box
+                                    key={col}
+                                    title={`${row} vs ${col}: r=${correlation.toFixed(3)}`}
+                                    sx={{
+                                      flex: 1,
+                                      height: 50,
+                                      borderRadius: 1,
+                                      bgcolor: correlation > 0
+                                        ? `rgba(99, 102, 241, ${Math.abs(correlation)})`
+                                        : `rgba(239, 68, 68, ${Math.abs(correlation)})`,
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                    }}
+                                  >
+                                    <Typography variant="body2" fontWeight={600} color="white">
+                                      {correlation.toFixed(2)}
+                                    </Typography>
+                                  </Box>
+                                );
+                              })}
+                            </Box>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </Box>
+                  ) : (
+                    <Alert severity="info">Not enough measurement data in this experiment to compute a correlation matrix</Alert>
+                  )}
                 </CardContent>
               </Card>
             </Grid>

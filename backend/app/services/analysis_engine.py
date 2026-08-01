@@ -192,11 +192,17 @@ class AnalysisEngine:
         x = np.asarray(x, dtype=float)
         y = np.asarray(y, dtype=float)
 
-        # Align to shortest length if callers passed mismatched arrays.
         if len(x) != len(y):
-            n_common = min(len(x), len(y))
-            x = x[:n_common]
-            y = y[:n_common]
+            # Raise rather than silently truncating to min(len(x), len(y))
+            # -- x/y are meant to be paired by index (same row), so
+            # blindly slicing both to the same length when they're
+            # actually misaligned would pair the wrong SII with the
+            # wrong EPT value with no warning to the caller.
+            raise ValueError(
+                f"correlation_with_ci: x and y must be the same length "
+                f"(got {len(x)} and {len(y)}) -- they must already be "
+                f"paired by index, not independently filtered."
+            )
 
         # Remove NaN pairs
         mask = ~(np.isnan(x) | np.isnan(y))
@@ -349,7 +355,9 @@ class AnalysisEngine:
                 "significance_level": "α = 0.05 (95% confidence)",
                 "what_it_means": (
                     "PEC measures how consistently energy increases as semantic instability increases. "
-                    f"A value of {pec:.3f} means changes in instability explain approximately {(pec**2)*100:.1f}% of variance in energy consumption."
+                    f"rho^2 = {(pec**2):.3f} is a rough, non-rigorous magnitude indicator here, not a "
+                    "true 'percent variance explained' figure -- that R^2-style interpretation is only "
+                    "strictly valid for a Pearson linear-model r^2, not a Spearman rank correlation."
                 )
             },
             "alternative_correlations": {
@@ -795,8 +803,19 @@ Between Groups & {anova_data.get('df_between', 'N/A')} & {anova_data.get('f_stat
         return tables
     
     @staticmethod
-    async def run_full_analysis(experiment_id: int, include_bayesian: bool = False):
-        """Run complete analysis and store results (background task)."""
+    async def run_full_analysis(experiment_id: int):
+        """Run complete analysis and store results (background task).
+
+        Note: this previously accepted an `include_bayesian` parameter
+        that was silently never used -- no Bayesian hypothesis testing
+        was ever implemented anywhere in this class despite
+        AnalysisType.BAYESIAN existing as an enum value and the API
+        endpoint's docstring advertising it. Rather than ship a rushed
+        Bayesian implementation as part of an unrelated cleanup pass, the
+        parameter and the "Optionally: Bayesian hypothesis testing" claim
+        have been removed -- not implementing a feature is more honest
+        than implementing it in a way that hasn't been carefully checked.
+        """
         from app.core.database import async_session_maker
         
         async with async_session_maker() as db:

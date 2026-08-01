@@ -12,7 +12,10 @@ from typing import List, Optional
 
 from app.core.database import get_db
 from app.models import Prompt, MutationType, Experiment
-from app.schemas import PromptCreate, PromptResponse, PromptValidation, PromptList
+from app.schemas import (
+    PromptCreate, PromptResponse, PromptValidation, PromptList,
+    PromptMutateRequest, MutationPreviewResponse,
+)
 from app.services.mutation_engine import MutationEngine
 
 router = APIRouter()
@@ -175,45 +178,53 @@ async def get_prompt(
     return PromptResponse.model_validate(prompt)
 
 
-@router.post("/mutate", response_model=PromptResponse)
+@router.post("/mutate", response_model=MutationPreviewResponse)
 async def mutate_prompt(
-    original_text: str,
-    mutation_type: str,
-    intensity: float = Query(0.5, ge=0.0, le=1.0),
+    request: PromptMutateRequest,
     db: AsyncSession = Depends(get_db)
 ):
     """
     Apply a mutation to a prompt text.
-    
+
     Returns the mutated text without storing it in the database.
     Useful for previewing mutations before running experiments.
     """
-    mt = normalize_mutation_type(mutation_type)
+    mt = normalize_mutation_type(request.mutation_type)
     if not mt:
         raise HTTPException(
             status_code=400,
-            detail=f"Invalid mutation type: {mutation_type}. "
+            detail=f"Invalid mutation type: {request.mutation_type}. "
                    f"Valid types: {[e.value for e in MutationType]}"
         )
-    
+
     engine = MutationEngine()
-    mutated_text, params = engine.mutate(original_text, mt, intensity)
-    
-    # Create a temporary prompt object for response
+    mutated_text, params = engine.mutate(request.original_text, mt, request.intensity)
+
+    # A transient, unpersisted Prompt is used only to reuse
+    # compute_linguistic_metrics's logic -- it is never added to the
+    # session/flushed, so it must not be round-tripped through
+    # PromptResponse (which requires a real, DB-assigned created_at).
     temp_prompt = Prompt(
-        id=0,
-        experiment_id=0,
         text=mutated_text,
-        original_text=original_text,
+        original_text=request.original_text,
         mutation_type=mt,
-        mutation_intensity=intensity,
-        mutation_params=params
+        mutation_intensity=request.intensity,
+        mutation_params=params,
+        word_count=len(mutated_text.split()),
     )
-    
-    # Compute linguistic metrics
     engine.compute_linguistic_metrics(temp_prompt)
-    
-    return PromptResponse.model_validate(temp_prompt)
+
+    return MutationPreviewResponse(
+        text=mutated_text,
+        original_text=request.original_text,
+        mutation_type=mt.value,
+        mutation_intensity=request.intensity,
+        word_count=temp_prompt.word_count,
+        semantic_instability_index=temp_prompt.semantic_instability_index,
+        flesch_reading_ease=temp_prompt.flesch_reading_ease,
+        lexical_diversity=temp_prompt.lexical_diversity,
+        mutation_params=params,
+    )
 
 
 @router.post("/validate", status_code=201)
@@ -333,11 +344,16 @@ async def get_prompt_statistics(
         .group_by(Prompt.mutation_type)
     )
     
-    type_counts_dict = {str(t): c for t, c in type_counts.all()}
-    
+    # .value, not str(t) -- MutationType(str, enum.Enum)'s __str__ returns
+    # "MutationType.BASELINE", not "baseline", which previously made these
+    # dict keys silently disagree with the lowercase string keys used
+    # everywhere else in the API/JSON layer (any frontend code expecting
+    # counts_by_type["baseline"] would get undefined).
+    type_counts_dict = {t.value: c for t, c in type_counts.all()}
+
     ambiguity_stats = {}
     for row in avg_ambiguity.all():
-        ambiguity_stats[str(row[0])] = {
+        ambiguity_stats[row[0].value] = {
             "avg_ambiguity_score": row[1],
             "avg_word_count": row[2],
             "avg_semantic_instability": row[3]

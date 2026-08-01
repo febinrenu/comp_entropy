@@ -18,6 +18,18 @@ from app.services.analysis_engine import AnalysisEngine
 router = APIRouter()
 
 
+async def _require_experiment(experiment_id: int, db: AsyncSession) -> Experiment:
+    """Raise 404 if the experiment doesn't exist. Several endpoints below
+    previously skipped this check entirely and would return HTTP 200 with
+    an ad hoc {"error": ...} payload for a bogus experiment_id instead of
+    a proper 404 -- inconsistent with the endpoints that did check."""
+    result = await db.execute(select(Experiment).where(Experiment.id == experiment_id))
+    experiment = result.scalar_one_or_none()
+    if not experiment:
+        raise HTTPException(status_code=404, detail="Experiment not found")
+    return experiment
+
+
 @router.get("/experiment/{experiment_id}", response_model=List[AnalysisResponse])
 async def list_analysis_results(
     experiment_id: int,
@@ -60,39 +72,35 @@ async def list_analysis_results(
 async def run_analysis(
     experiment_id: int,
     background_tasks: BackgroundTasks,
-    include_bayesian: bool = False,
     db: AsyncSession = Depends(get_db)
 ):
     """
     Run full statistical analysis on an experiment.
-    
+
     This includes:
     - Correlation analysis (Pearson, Spearman, Kendall)
     - ANOVA with post-hoc tests
     - Effect size calculations
-    - Bootstrap confidence intervals
-    - Optionally: Bayesian hypothesis testing
     """
     # Verify experiment exists and has data
     exp_result = await db.execute(
         select(Experiment).where(Experiment.id == experiment_id)
     )
     experiment = exp_result.scalar_one_or_none()
-    
+
     if not experiment:
         raise HTTPException(status_code=404, detail="Experiment not found")
-    
+
     if experiment.total_measurements < 10:
         raise HTTPException(
             status_code=400,
             detail="Insufficient data for analysis. Need at least 10 measurements."
         )
-    
+
     # Run analysis in background
     background_tasks.add_task(
         AnalysisEngine.run_full_analysis,
         experiment_id,
-        include_bayesian
     )
     
     return {
@@ -113,6 +121,8 @@ async def get_pec_analysis(
     PEC measures the correlation between semantic instability
     and energy consumption.
     """
+    await _require_experiment(experiment_id, db)
+
     # Get correlation analysis for PEC
     query = (
         select(AnalysisResult)
@@ -163,6 +173,7 @@ async def get_correlation_matrix(
     - output_length
     - human_ambiguity_score
     """
+    await _require_experiment(experiment_id, db)
     engine = AnalysisEngine()
     matrix = await engine.compute_correlation_matrix(experiment_id, method, db)
     return matrix
@@ -176,6 +187,8 @@ async def get_anova_results(
     """
     Get ANOVA results comparing mutation types.
     """
+    await _require_experiment(experiment_id, db)
+
     query = (
         select(AnalysisResult)
         .where(AnalysisResult.experiment_id == experiment_id)
@@ -218,6 +231,7 @@ async def get_effect_sizes(
     """
     Get effect size comparisons between mutation types.
     """
+    await _require_experiment(experiment_id, db)
     engine = AnalysisEngine()
     effect_sizes = await engine.compute_effect_sizes(experiment_id, db)
     return effect_sizes
@@ -260,6 +274,7 @@ async def get_latex_tables(
     
     - **table_type**: Which tables to generate
     """
+    await _require_experiment(experiment_id, db)
     engine = AnalysisEngine()
     tables = await engine.generate_latex_tables(experiment_id, table_type, db)
     
@@ -277,6 +292,7 @@ async def get_recommendations(
     """
     Get data-driven recommendations based on analysis.
     """
+    await _require_experiment(experiment_id, db)
     engine = AnalysisEngine()
     recommendations = await engine.generate_recommendations(experiment_id, db)
     

@@ -13,11 +13,26 @@ const api = axios.create({
 export interface DashboardStats {
   total_experiments: number;
   completed_experiments: number;
+  running_experiments: number;
   total_prompts: number;
   total_measurements: number;
   total_energy_kwh: number;
   total_carbon_kg: number;
   avg_pec_score: number | null;
+}
+
+// GET /dashboard/recent-experiments only returns these six fields --
+// using the full Experiment type here previously implied fields
+// (num_prompts, model_name, total_energy_kwh, etc.) that were never
+// actually present in the response.
+export interface RecentExperimentSummary {
+  id: number;
+  name: string;
+  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+  progress: number;
+  pec_score: number | null;
+  total_measurements: number;
+  created_at: string;
 }
 
 export interface Experiment {
@@ -85,6 +100,8 @@ export interface Measurement {
   output_tokens: number | null;
   energy_per_token_mj: number | null;
   tokens_per_second: number | null;
+  measurement_source?: 'nvml_real' | 'tdp_proxy' | 'synthetic_simulation' | null;
+  variant?: 'raw' | 'length_matched' | null;
   is_valid: boolean;
   created_at: string;
   // Additional fields used by Measurements page
@@ -93,6 +110,18 @@ export interface Measurement {
   inference_time?: number;
   total_tokens?: number;
   gpu_power_watts?: number;
+}
+
+export interface MutationPreviewResponse {
+  text: string;
+  original_text: string;
+  mutation_type: string;
+  mutation_intensity: number;
+  word_count: number | null;
+  semantic_instability_index: number | null;
+  flesch_reading_ease: number | null;
+  lexical_diversity: number | null;
+  mutation_params: Record<string, any> | null;
 }
 
 export interface MeasurementListResponse {
@@ -155,8 +184,8 @@ export interface AnalysisReport {
 // API Functions
 export const dashboardApi = {
   getStats: () => api.get<DashboardStats>('/dashboard/stats'),
-  getRecentExperiments: (limit = 5) => 
-    api.get<Experiment[]>(`/dashboard/recent-experiments?limit=${limit}`),
+  getRecentExperiments: (limit = 5) =>
+    api.get<RecentExperimentSummary[]>(`/dashboard/recent-experiments?limit=${limit}`),
   getRunningExperiments: () => 
     api.get<Experiment[]>('/dashboard/running-experiments'),
   getEnergyTimeline: (days = 30) =>
@@ -165,6 +194,26 @@ export const dashboardApi = {
     api.get('/dashboard/mutation-comparison'),
   getSystemStatus: () =>
     api.get('/dashboard/system-status'),
+  getRealtimePower: () =>
+    api.get<{
+      timestamp: number;
+      power_watts: number;
+      cpu_power_watts: number;
+      gpu_power_watts: number;
+      cpu_utilization: number;
+      gpu_utilization: number;
+      gpu_memory_mb: number;
+      gpu_temp_c: number;
+      gpu_power_source: 'nvml_real' | 'idle_estimate';
+    }>('/dashboard/realtime-power'),
+};
+
+// WebSocket base URL derived from the same REACT_APP_API_URL used for
+// REST calls (http(s) -> ws(s), stripping the /api suffix which the
+// dashboard router adds back itself via the "/dashboard/ws" path).
+export const getWebSocketUrl = () => {
+  const httpBase = API_BASE_URL.replace(/\/api\/?$/, '');
+  return httpBase.replace(/^http/, 'ws') + '/api/dashboard/ws';
 };
 
 export const experimentsApi = {
@@ -198,8 +247,15 @@ export const promptsApi = {
   create: (data: { text: string; mutation_type: string }) =>
     api.post<Prompt>('/prompts/', data),
   delete: (id: number) => api.delete(`/prompts/${id}`),
+  // POST /prompts/mutate now takes a JSON body (see PromptMutateRequest
+  // backend-side) and returns a MutationPreviewResponse, not a Prompt --
+  // a preview is never persisted, so it has no id/created_at/experiment.
   mutate: (text: string, mutationType: string, intensity = 0.5) =>
-    api.post<Prompt>(`/prompts/mutate?original_text=${encodeURIComponent(text)}&mutation_type=${mutationType}&intensity=${intensity}`),
+    api.post<MutationPreviewResponse>('/prompts/mutate', {
+      original_text: text,
+      mutation_type: mutationType,
+      intensity,
+    }),
   submitValidation: (data: { prompt_id: number; ambiguity_score: number; clarity_score: number }) =>
     api.post('/prompts/validate', data),
   getForValidation: (experimentId: number, limit = 10) =>
@@ -230,8 +286,11 @@ export const analysisApi = {
     if (analysisType) url += `?analysis_type=${analysisType}`;
     return api.get(url);
   },
-  runAnalysis: (experimentId: number, includeBayesian = false) =>
-    api.post(`/analysis/experiment/${experimentId}/run?include_bayesian=${includeBayesian}`),
+  // include_bayesian was removed backend-side -- it was accepted but
+  // silently never used (no Bayesian test was ever implemented), so
+  // keeping it here would advertise a feature that doesn't exist.
+  runAnalysis: (experimentId: number) =>
+    api.post(`/analysis/experiment/${experimentId}/run`),
   getPEC: (experimentId: number) =>
     api.get(`/analysis/experiment/${experimentId}/pec`),
   getCorrelations: (experimentId: number, method = 'spearman') =>
@@ -264,6 +323,8 @@ export const exportApi = {
 // Settings API
 export interface Settings {
   provider: string;
+  ollama_host: string;
+  ollama_model: string;
   openai_model: string;
   anthropic_model: string;
   has_openai_key: boolean;
@@ -274,6 +335,8 @@ export interface Settings {
 
 export interface SettingsUpdate {
   provider?: string;
+  ollama_host?: string;
+  ollama_model?: string;
   openai_api_key?: string;
   openai_model?: string;
   anthropic_api_key?: string;
@@ -294,8 +357,9 @@ export const settingsApi = {
   get: () => api.get<Settings>('/settings/'),
   update: (data: SettingsUpdate) => api.patch<Settings>('/settings/', data),
   getProviders: () => api.get<{ providers: Provider[] }>('/settings/providers'),
-  testConnection: (provider: string) => 
-    api.post<{ success: boolean; message: string }>(`/settings/test-connection?provider=${provider}`),
+  // Body, not a query param -- matches the backend's TestConnectionRequest.
+  testConnection: (provider: string) =>
+    api.post<{ success: boolean; message: string }>('/settings/test-connection', { provider }),
 };
 
 // Demo API
@@ -310,8 +374,11 @@ export interface DemoStats {
   total_experiments: number;
   total_measurements: number;
   key_finding: {
-    elaborate_increase: number;
-    simplify_decrease: number;
+    // Matches the backend's actual field names (demo.py) -- both are
+    // nullable: None when there isn't yet data for that mutation type,
+    // rather than a fabricated-looking placeholder number.
+    highest_energy_increase: number | null;
+    lowest_energy_increase: number | null;
     correlation_coefficient: number;
     p_value: number;
     effect_size: number;
@@ -339,9 +406,10 @@ export interface QuickExperimentResult {
 export const demoApi = {
   seedData: () => api.post('/demo/seed'),
   getStats: () => api.get<DemoStats>('/demo/stats'),
-  runQuickExperiment: (prompt: string, mutationType?: string) => 
-    api.post<QuickExperimentResult>('/demo/quick-experiment', null, {
-      params: { prompt, mutation_type: mutationType || 'all' }
+  runQuickExperiment: (prompt: string, mutationType?: string) =>
+    api.post<QuickExperimentResult>('/demo/quick-experiment', {
+      prompt,
+      mutation_type: mutationType || 'all',
     }),
   getCorrelationData: () => api.get('/demo/correlation-data'),
 };

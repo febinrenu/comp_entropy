@@ -1,0 +1,23 @@
+# Real-hardware SII-EPT replication -- dependencies
+# Primary generation backend is Ollama (external process, not a pip
+# package) -- see README.md for `ollama pull` instructions.
+
+numpy
+scipy
+requests
+
+# Used for the models' real tokenizers (length-matching / token counts)
+# and kept installed as a documented fallback path if Ollama+NVML
+# integration is ever blocked (see run_experiment_real.py docstring).
+# CPU-only wheel is sufficient since torch is not used for generation.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+transformers
+
+# Real GPU energy measurement (NVML). Note: pynvml is deprecated upstream
+# in favor of nvidia-ml-py (same API) -- pynvml still works as of this
+# writing and is what was installed/tested for this replication.
+pynvml
+
+# Real NLI entailment clustering for sc_pilot_real.py
+sentence-transformers

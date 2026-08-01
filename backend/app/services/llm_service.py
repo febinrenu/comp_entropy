@@ -3,30 +3,37 @@ LLM Service - Multi-Provider Support
 ====================================
 
 Supports multiple LLM providers:
+- Ollama (default): real local open-weight models via a running Ollama
+  server -- real generation, pairs with real NVML GPU energy measurement
+  in experiment_runner.py.
 - OpenAI (GPT-3.5, GPT-4)
 - Anthropic (Claude)
-- Simulation mode (for testing without API keys)
+- Simulation mode: an explicit, clearly-labeled synthetic fallback (no
+  real model, no real energy) for testing without any provider available.
 """
 
 import asyncio
 import time
 import random
 from typing import Dict, Any, Optional
-from app.core.logger import logger
 
+import httpx
+
+from app.core.logger import logger
 from app.core.config import settings
 
 
 class LLMService:
     """
     Multi-provider LLM inference service.
-    
+
     Supports:
+    - Ollama (default; real local models)
     - OpenAI API
     - Anthropic API
-    - Simulation mode (no API needed)
+    - Simulation mode (no provider needed; synthetic output/energy)
     """
-    
+
     def __init__(
         self,
         provider: Optional[str] = None,
@@ -35,19 +42,21 @@ class LLMService:
     ):
         """
         Initialize LLM service.
-        
+
         Args:
-            provider: "openai", "anthropic", or "simulation"
-            api_key: API key for the provider
+            provider: "ollama", "openai", "anthropic", or "simulation"
+            api_key: API key for the provider (openai/anthropic only)
             model: Model name to use
         """
         self.provider = provider or settings.LLM_PROVIDER
         self.api_key = api_key
         self.model = model
         self.client = None
-        
+
         # Set defaults based on provider
-        if self.provider == "openai":
+        if self.provider == "ollama":
+            self.model = self.model or settings.OLLAMA_MODEL
+        elif self.provider == "openai":
             self.api_key = self.api_key or settings.OPENAI_API_KEY
             self.model = self.model or settings.OPENAI_MODEL
         elif self.provider == "anthropic":
@@ -56,12 +65,19 @@ class LLMService:
         else:
             self.provider = "simulation"
             self.model = "simulation-model"
-        
+
         self._initialize_client()
-    
+
     def _initialize_client(self):
         """Initialize the appropriate client based on provider."""
-        if self.provider == "openai" and self.api_key:
+        if self.provider == "ollama":
+            # httpx client reused across calls; a connection failure here
+            # only means the server isn't reachable *right now* -- it's
+            # checked for real per-request in generate(), not assumed.
+            self.client = httpx.AsyncClient(base_url=settings.OLLAMA_HOST, timeout=120.0)
+            logger.info(f"Ollama client configured: {settings.OLLAMA_HOST}, model={self.model}")
+
+        elif self.provider == "openai" and self.api_key:
             try:
                 import openai
                 self.client = openai.AsyncOpenAI(api_key=self.api_key)
@@ -72,7 +88,7 @@ class LLMService:
             except Exception as e:
                 logger.warning(f"Failed to initialize OpenAI client: {e}. Using simulation mode.")
                 self.provider = "simulation"
-                
+
         elif self.provider == "anthropic" and self.api_key:
             try:
                 import anthropic
@@ -88,7 +104,7 @@ class LLMService:
             if self.provider in ["openai", "anthropic"] and not self.api_key:
                 logger.info(f"No API key configured for {self.provider}. Using simulation mode")
             self.provider = "simulation"
-            logger.info("Using simulation mode (no API key configured)")
+            logger.info("Using simulation mode (no provider available)")
     
     async def generate(
         self,
@@ -107,43 +123,95 @@ class LLMService:
             - inference_time: Time taken in seconds
             - model_name: Name of model used
             - provider: Provider used
+            - used_simulation_fallback: True if a real-provider call
+              failed and this result is actually synthetic simulation
+              output -- always check this field before treating a
+              real-provider measurement as real.
         """
-        max_tokens = max_tokens or settings.MAX_TOKENS
-        temperature = temperature or settings.TEMPERATURE
-        
+        max_tokens = max_tokens if max_tokens is not None else settings.MAX_TOKENS
+        temperature = temperature if temperature is not None else settings.TEMPERATURE
+
         start_time = time.time()
-        
+
         try:
-            if self.provider == "openai":
+            if self.provider == "ollama":
+                result = await self._generate_ollama(prompt, max_tokens, temperature)
+            elif self.provider == "openai":
                 result = await self._generate_openai(prompt, max_tokens, temperature)
             elif self.provider == "anthropic":
                 result = await self._generate_anthropic(prompt, max_tokens, temperature)
             else:
                 result = await self._generate_simulation(prompt, max_tokens)
-            
+
             result["inference_time"] = time.time() - start_time
             result["provider"] = self.provider
+            result["used_simulation_fallback"] = self.provider == "simulation"
             return result
-            
+
+        except (httpx.ConnectError, httpx.TimeoutException, ConnectionError, TimeoutError) as e:
+            # Only connection-level failures fall back to simulation --
+            # the provider/server genuinely wasn't reachable, which is a
+            # meaningfully different situation from a bug in our own
+            # request-building code (caught below, not silently masked).
+            error_msg = str(e)
+            logger.error(
+                f"{self.provider} unreachable ({error_msg}); falling back to simulation. "
+                f"This measurement is SYNTHETIC, not from {self.provider}."
+            )
+            result = await self._generate_simulation(prompt, max_tokens)
+            result["inference_time"] = time.time() - start_time
+            result["provider"] = self.provider
+            result["used_simulation_fallback"] = True
+            result["fallback_reason"] = error_msg
+            return result
+
         except Exception as e:
             error_msg = str(e)
             logger.error(f"Generation error with {self.provider}: {error_msg}")
-            
-            # Check for specific API errors
             if "invalid_api_key" in error_msg.lower() or "401" in error_msg:
                 logger.error("API Key is invalid or expired")
             elif "rate_limit" in error_msg.lower():
-                logger.error("Rate limit exceeded - using simulation fallback")
+                logger.error("Rate limit exceeded")
             elif "authentication" in error_msg.lower():
                 logger.error("Authentication failed - check your API key")
-            
-            # Fall back to simulation on error
-            result = await self._generate_simulation(prompt, max_tokens)
-            result["inference_time"] = time.time() - start_time
-            result["provider"] = f"{self.provider} (fallback to simulation)"
-            result["error"] = error_msg
-            return result
+            # Re-raise: an error here is a real bug (bad request, API
+            # misuse, our own parsing issue) rather than "provider
+            # unreachable" -- silently substituting simulated numbers for
+            # it would hide the bug and corrupt the measurement data with
+            # no way to tell afterward.
+            raise
     
+    async def _generate_ollama(
+        self,
+        prompt: str,
+        max_tokens: int,
+        temperature: float
+    ) -> Dict[str, Any]:
+        """Generate using a local Ollama server. Real model, real output --
+        pair with energy_monitor (NVML) around this call at the caller
+        level to get real GPU energy for the measurement."""
+        response = await self.client.post(
+            "/api/generate",
+            json={
+                "model": self.model,
+                "prompt": prompt,
+                "stream": False,
+                "options": {
+                    "num_predict": max_tokens,
+                    "temperature": temperature,
+                },
+            },
+        )
+        response.raise_for_status()
+        data = response.json()
+
+        return {
+            "text": data.get("response", ""),
+            "input_tokens": data.get("prompt_eval_count", 0),
+            "output_tokens": data.get("eval_count", 0),
+            "model_name": self.model,
+        }
+
     async def _generate_openai(
         self,
         prompt: str,
@@ -196,7 +264,16 @@ class LLMService:
         max_tokens: int
     ) -> Dict[str, Any]:
         """
-        Simulate LLM generation with physically-grounded energy model.
+        Simulate LLM generation with a hand-tuned synthetic heuristic.
+
+        This is NOT a physically-grounded energy model -- it is a
+        keyword/pattern scorer keyed on the same lexical cues (ambiguity
+        words, filler phrases, contradiction markers, typo lists) that
+        mutation_engine.py's mutators themselves insert, tuned by hand so
+        that its output roughly tracks the research hypothesis below. Any
+        result produced by this path should be labeled/treated as
+        synthetic (see `used_simulation_fallback` in generate()'s return
+        value), never as a measurement of a real model's real energy use.
 
         The simulation models the key research hypothesis:
         Higher semantic instability → more computational work → more energy.

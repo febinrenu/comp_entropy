@@ -17,7 +17,7 @@ from app.schemas import (
     ExperimentCreate, ExperimentUpdate, ExperimentResponse,
     ExperimentSummary, ExperimentList
 )
-from app.services.experiment_runner import run_experiment_pipeline
+from app.services.experiment_runner import run_experiment_pipeline, cancel_experiment as cancel_experiment_pipeline
 
 router = APIRouter()
 
@@ -64,15 +64,25 @@ async def list_experiments(
     - **page_size**: Items per page (default: 20)
     - **status**: Filter by status (optional)
     """
-    query = select(Experiment).order_by(Experiment.created_at.desc())
-    
+    status_enum = None
     if status:
-        query = query.where(Experiment.status == status)
-    
+        try:
+            status_enum = ExperimentStatus(status)
+        except ValueError:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid status: {status}. Valid values: {[s.value for s in ExperimentStatus]}"
+            )
+
+    query = select(Experiment).order_by(Experiment.created_at.desc())
+
+    if status_enum:
+        query = query.where(Experiment.status == status_enum)
+
     # Get total count
     count_query = select(func.count(Experiment.id))
-    if status:
-        count_query = count_query.where(Experiment.status == status)
+    if status_enum:
+        count_query = count_query.where(Experiment.status == status_enum)
     total_result = await db.execute(count_query)
     total = total_result.scalar()
     
@@ -249,24 +259,28 @@ async def cancel_experiment(
 ):
     """
     Cancel a running experiment.
+
+    Delegates to experiment_runner.cancel_experiment(), which
+    run_experiment()'s loop actually polls for periodically -- this
+    previously reimplemented the same status flip inline without going
+    through the function the run loop checks, and (separately, now fixed
+    in experiment_runner.py) the run loop never re-checked status at all,
+    so cancellation had no real effect on an in-progress run.
     """
     result = await db.execute(
         select(Experiment).where(Experiment.id == experiment_id)
     )
     experiment = result.scalar_one_or_none()
-    
+
     if not experiment:
         raise HTTPException(status_code=404, detail="Experiment not found")
-    
+
     if experiment.status != ExperimentStatus.RUNNING:
         raise HTTPException(status_code=400, detail="Experiment is not running")
-    
-    experiment.status = ExperimentStatus.CANCELLED
-    experiment.current_step = "Cancelled by user"
-    
-    await db.commit()
+
+    await cancel_experiment_pipeline(experiment_id)
+
     await db.refresh(experiment)
-    
     return ExperimentResponse.model_validate(experiment)
 
 

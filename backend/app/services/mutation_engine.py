@@ -96,7 +96,11 @@ class MutationEngine:
             Tuple of (mutated_text, mutation_params)
         """
         intensity = max(0.0, min(1.0, intensity))
-        
+
+        if not text or not text.strip():
+            type_label = mutation_type.value if hasattr(mutation_type, "value") else str(mutation_type)
+            return text, {"type": type_label, "changes": [], "skipped": "empty_input"}
+
         mutation_map = {
             MutationType.BASELINE: self._no_mutation,
             MutationType.NOISE_TYPO: self._add_typos,
@@ -170,6 +174,8 @@ class MutationEngine:
     def _add_verbose(self, text: str, intensity: float) -> Tuple[str, Dict]:
         """Add verbose filler phrases."""
         sentences = self._split_sentences(text)
+        if not sentences:
+            return text, {"type": "noise_verbose", "changes": []}
         num_additions = max(1, int(len(sentences) * intensity))
         
         changes = []
@@ -194,8 +200,10 @@ class MutationEngine:
     def _add_semantic_ambiguity(self, text: str, intensity: float) -> Tuple[str, Dict]:
         """Add semantic ambiguity through vague references."""
         sentences = self._split_sentences(text)
+        if not sentences:
+            return text, {"type": "ambiguity_semantic", "changes": []}
         changes = []
-        
+
         # Add ambiguous pronouns
         num_changes = max(1, int(len(sentences) * intensity * 0.5))
         
@@ -221,8 +229,10 @@ class MutationEngine:
     def _add_contradiction(self, text: str, intensity: float) -> Tuple[str, Dict]:
         """Add contradictory statements."""
         sentences = self._split_sentences(text)
+        if not sentences:
+            return text, {"type": "ambiguity_contradiction", "changes": []}
         changes = []
-        
+
         # Find and add contradictions
         num_contradictions = max(1, int(len(sentences) * intensity * 0.3))
         
@@ -330,12 +340,15 @@ class MutationEngine:
                 return f"{words[1]} {words[0]}?", {"type": "reordering", "changes": "reversed_2_words"}
             return text, {"type": "reordering", "changes": "too_short"}
         
-        # Detect if it's a question
-        is_question = text.strip().endswith('?') or words[0].lower() in ['what', 'why', 'how', 'when', 'where', 'who', 'which']
-        
+        # Detect if it's a question (strip punctuation/apostrophes so
+        # contractions like "What's" still match "what")
+        first_word_alpha = re.match(r"[A-Za-z]+", words[0])
+        first_word_alpha = first_word_alpha.group(0).lower() if first_word_alpha else ""
+        is_question = text.strip().endswith('?') or first_word_alpha in ['what', 'why', 'how', 'when', 'where', 'who', 'which']
+
         if is_question:
             # For questions, convert to statement form or reorder
-            question_word = words[0].lower()
+            question_word = first_word_alpha
             if question_word in ['what', 'how', 'why']:
                 # "What is X?" → "X is what?"
                 # "How does X work?" → "X works how?"
@@ -428,6 +441,8 @@ class MutationEngine:
         }
         
         sentences = self._split_sentences(text)
+        if not sentences:
+            return text, {"type": "code_switching", "changes": []}
         changes = []
         num_insertions = max(1, int(len(sentences) * intensity * 0.3))
         
@@ -485,9 +500,15 @@ class MutationEngine:
         # Compute Semantic Instability Index
         prompt.semantic_instability_index = self._compute_sii(prompt)
     
-    # Empirically-calibrated SII base values per mutation type.
-    # These encode the expected semantic instability: higher = more
-    # ambiguous / harder for an LLM to interpret unambiguously.
+    # Hand-picked (not empirically derived) SII base values per mutation
+    # type, intended to encode expected semantic instability: higher =
+    # more ambiguous / harder for an LLM to interpret unambiguously. This
+    # ordering has not been validated against measured energy from a real
+    # model -- treat any SII-EPT correlation computed from these values
+    # as a hypothesis to test, not a confirmed relationship, since the
+    # ranking here and the simulation-mode energy heuristic in
+    # llm_service.py were both hand-tuned by the same author to roughly
+    # agree with each other.
     SII_BASE = {
         MutationType.BASELINE:                0.15,
         MutationType.NOISE_TYPO:              0.55,
@@ -515,13 +536,27 @@ class MutationEngine:
         is consistently positive: mutations that make prompts harder to
         interpret receive higher SII, and the simulation / real LLM will
         spend more energy on them.
+
+        Note: only the base-value term (step 1) is pinned per mutation
+        type. Terms 3-5 below are added unconditionally, including to
+        baseline prompts, so a baseline prompt's final SII can and does
+        drift above its 0.15 base value depending on its own readability/
+        lexical-diversity/sentence-length statistics -- it is not a fixed
+        floor.
         """
         mt = prompt.mutation_type or MutationType.BASELINE
-        base = self.SII_BASE.get(mt, 0.15)
+        if mt not in self.SII_BASE:
+            raise ValueError(
+                f"No SII_BASE entry for mutation type {mt!r}; add one "
+                "explicitly rather than silently scoring it as baseline."
+            )
+        base = self.SII_BASE[mt]
 
         # Scale by mutation intensity (0.0–1.0).  At intensity 0 the
         # mutation barely changed the text, so only a fraction of the
-        # base instability applies.  Baseline always gets full (low) base.
+        # base instability applies.  Baseline always uses its full base
+        # value here; downstream terms (readability/lexical/sentence
+        # extremes) are still added unconditionally, see note above.
         intensity = prompt.mutation_intensity if prompt.mutation_intensity else 0.0
         if mt == MutationType.BASELINE:
             sii = base
@@ -553,6 +588,98 @@ class MutationEngine:
 
         # Clamp to 0-5
         return round(min(5.0, max(0.0, sii)), 3)
+
+
+def length_match(count_tokens_fn, baseline_text: str, mutated_text: str,
+                  filler_phrases: Optional[List[str]] = None,
+                  max_pad_iters: int = 50) -> Dict:
+    """
+    Produce a length-equalized variant of `mutated_text` whose token count
+    (per `count_tokens_fn`) matches `baseline_text`'s own token count.
+
+    None of the mutators above control for length at all -- some grow text
+    (noise_verbose, ambiguity_contradiction), others don't -- so any
+    SII-vs-energy relationship measured on raw mutated text is confounded
+    with prompt-length drift. This gives a length-matched variant to
+    measure alongside the raw one, so that confound can be tested for
+    directly rather than assumed away.
+
+    Args:
+        count_tokens_fn: callable(str) -> int. Pass a real tokenizer's
+            token-count function for the model actually being measured;
+            falls back to whitespace word count if the caller has no
+            tokenizer available (a coarser approximation).
+        baseline_text: the unmutated prompt; defines the target length.
+        mutated_text: the mutated prompt to pad/truncate.
+        filler_phrases: neutral filler phrases used for padding; defaults
+            to MutationEngine.VERBOSE_FILLERS.
+
+    Returns:
+        {"text": str, "method": "exact"|"truncate"|"pad",
+         "n_target_tokens": int, "n_actual_tokens": int}
+    """
+    fillers = filler_phrases or MutationEngine.VERBOSE_FILLERS
+    n_target = count_tokens_fn(baseline_text)
+    n_mut = count_tokens_fn(mutated_text)
+
+    if n_mut == n_target:
+        return {"text": mutated_text, "method": "exact",
+                "n_target_tokens": n_target, "n_actual_tokens": n_mut}
+
+    if n_mut > n_target:
+        sentences = re.split(r"(?<=[.!?])\s+", mutated_text.strip())
+        sentences = [s for s in sentences if s]
+        if len(sentences) > 1:
+            acc = ""
+            best = None
+            for s in sentences:
+                candidate = f"{acc} {s}".strip() if acc else s
+                if count_tokens_fn(candidate) <= n_target:
+                    best = candidate
+                    acc = candidate
+                else:
+                    break
+            if best is not None and count_tokens_fn(best) == n_target:
+                return {"text": best, "method": "truncate",
+                        "n_target_tokens": n_target,
+                        "n_actual_tokens": count_tokens_fn(best)}
+        # fall back to a hard word-level truncation
+        words = mutated_text.split()
+        while len(words) > 1 and count_tokens_fn(" ".join(words)) > n_target:
+            words.pop()
+        truncated = " ".join(words)
+        return {"text": truncated, "method": "truncate",
+                "n_target_tokens": n_target,
+                "n_actual_tokens": count_tokens_fn(truncated)}
+
+    # n_mut < n_target: pad with neutral filler phrases
+    text = mutated_text
+    rng = random.Random(0)
+    filler_cycle = rng.sample(fillers, len(fillers))
+    idx = 0
+    guard = 0
+    n_actual = n_mut
+    while n_actual < n_target and guard < max_pad_iters:
+        text = text.rstrip() + " " + filler_cycle[idx % len(filler_cycle)] + "."
+        idx += 1
+        guard += 1
+        n_actual = count_tokens_fn(text)
+
+    if n_actual > n_target:
+        words = text.split()
+        while len(words) > 1 and count_tokens_fn(" ".join(words)) > n_target:
+            words.pop()
+        text = " ".join(words)
+        n_actual = count_tokens_fn(text)
+
+    return {"text": text, "method": "pad" if guard > 0 else "exact",
+            "n_target_tokens": n_target, "n_actual_tokens": n_actual}
+
+
+def word_count_tokenizer(text: str) -> int:
+    """Coarse fallback token counter (whitespace word count) for use with
+    length_match() when no real model tokenizer is available."""
+    return len(text.split())
 
 
 # Convenience instance

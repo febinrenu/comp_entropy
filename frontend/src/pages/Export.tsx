@@ -22,7 +22,6 @@ import {
 } from '@mui/material';
 import {
   Download as DownloadIcon,
-  PictureAsPdf as PdfIcon,
   TableChart as CsvIcon,
   Code as JsonIcon,
   Article as LatexIcon,
@@ -57,7 +56,7 @@ const exportOptions: ExportOption[] = [
     id: 'analysis',
     label: 'Analysis Report',
     description: 'Export statistical analysis results and visualizations',
-    icon: <PdfIcon />,
+    icon: <LatexIcon />,
     formats: ['json', 'latex'],
   },
   {
@@ -253,7 +252,6 @@ const Export: React.FC = () => {
                     >
                       {format === 'csv' && <CsvIcon sx={{ fontSize: 32, mb: 1, color: 'success.main' }} />}
                       {format === 'json' && <JsonIcon sx={{ fontSize: 32, mb: 1, color: 'warning.main' }} />}
-                      {format === 'pdf' && <PdfIcon sx={{ fontSize: 32, mb: 1, color: 'error.main' }} />}
                       {format === 'latex' && <LatexIcon sx={{ fontSize: 32, mb: 1, color: 'info.main' }} />}
                       {format === 'zip' && <DownloadIcon sx={{ fontSize: 32, mb: 1, color: 'secondary.main' }} />}
                       <Typography variant="subtitle2" textTransform="uppercase" fontWeight={600}>
@@ -386,12 +384,6 @@ const Export: React.FC = () => {
                     </Alert>
                   )}
 
-                  {selectedFormat === 'pdf' && (
-                    <Alert severity="info" sx={{ mt: 2 }}>
-                      PDF report includes visualizations, statistical analysis, and formatted results.
-                    </Alert>
-                  )}
-
                   {selectedFormat === 'zip' && (
                     <Alert severity="info" sx={{ mt: 2 }}>
                       ZIP bundle includes raw data, replication summaries, and the human-rater appendix protocol.
@@ -421,9 +413,6 @@ const Export: React.FC = () => {
                 </Typography>
                 <Typography component="li" variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                   Use <strong>JSON</strong> for programmatic access
-                </Typography>
-                <Typography component="li" variant="body2" color="text.secondary" sx={{ mb: 1 }}>
-                  Use <strong>PDF</strong> for reports and presentations
                 </Typography>
                 <Typography component="li" variant="body2" color="text.secondary">
                   Use <strong>LaTeX</strong> for academic papers

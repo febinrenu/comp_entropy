@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Box,
   Card,
@@ -13,121 +13,134 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopIcon from '@mui/icons-material/Stop';
-import PauseIcon from '@mui/icons-material/Pause';
-import SpeedIcon from '@mui/icons-material/Speed';
 import MemoryIcon from '@mui/icons-material/Memory';
+import SpeedIcon from '@mui/icons-material/Speed';
 import BoltIcon from '@mui/icons-material/Bolt';
 import ThermostatIcon from '@mui/icons-material/Thermostat';
 import { RealTimeChart } from './Charts';
+import { dashboardApi, experimentsApi, getWebSocketUrl } from '../services/api';
 
-interface LiveMetrics {
-  timestamp: number;
-  power: number;
-  cpu: number;
-  gpu: number;
-  memory: number;
-  temperature: number;
-  tokensPerSec: number;
-}
-
-interface ExperimentStatus {
-  id: number;
+interface ExperimentProgress {
+  experimentId: number;
   name: string;
-  status: 'running' | 'paused' | 'completed' | 'error';
+  status: string;
   progress: number;
-  currentPrompt: number;
-  totalPrompts: number;
-  currentRun: number;
-  runsPerPrompt: number;
-  currentMutation: string;
-  elapsedTime: number;
-  estimatedTimeRemaining: number;
-  totalEnergyConsumed: number;
-  metrics: LiveMetrics[];
+  currentStep: string | null;
+  totalMeasurements: number;
+  lastSii: number | null;
+  lastEptMj: number | null;
+  lastTokensPerSecond: number | null;
+  lastMeasurementSource: string | null;
 }
 
+/**
+ * Real-time monitor: experiment progress arrives over the backend's real
+ * WebSocket (/api/dashboard/ws, fed by broadcast_experiment_update in
+ * experiment_runner.py); power/CPU/GPU numbers are polled from the real
+ * /api/dashboard/realtime-power endpoint (energy_monitor.get_realtime_stats()).
+ * Previously this entire component was `setInterval` + `Math.random()`
+ * and never touched the network at all.
+ */
 const LiveMonitor: React.FC<{ experimentId?: number }> = ({ experimentId }) => {
   const [isMonitoring, setIsMonitoring] = useState(false);
-  const [status, setStatus] = useState<ExperimentStatus | null>(null);
+  const [progress, setProgress] = useState<ExperimentProgress | null>(null);
   const [powerHistory, setPowerHistory] = useState<{ time: string; power: number }[]>([]);
   const [cpuHistory, setCpuHistory] = useState<{ time: string; cpu: number }[]>([]);
-  const [memoryHistory, setMemoryHistory] = useState<{ time: string; memory: number }[]>([]);
+  const [gpuHistory, setGpuHistory] = useState<{ time: string; gpu: number }[]>([]);
   const [tokensHistory, setTokensHistory] = useState<{ time: string; tokens: number }[]>([]);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [gpuPowerSource, setGpuPowerSource] = useState<string>('idle_estimate');
+  const wsRef = useRef<WebSocket | null>(null);
+  const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const simulateMetrics = () => {
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString();
-
-    // Simulate realistic metrics
-    const basePower = 150 + Math.random() * 50;
-    const baseCpu = 45 + Math.random() * 30;
-    const baseMemory = 60 + Math.random() * 20;
-    const baseTokens = 25 + Math.random() * 15;
-
-    setPowerHistory((prev) => [...prev.slice(-29), { time: timeStr, power: basePower }]);
-    setCpuHistory((prev) => [...prev.slice(-29), { time: timeStr, cpu: baseCpu }]);
-    setMemoryHistory((prev) => [...prev.slice(-29), { time: timeStr, memory: baseMemory }]);
-    setTokensHistory((prev) => [...prev.slice(-29), { time: timeStr, tokens: baseTokens }]);
-
-    if (status) {
-      setStatus((prev) => {
-        if (!prev) return prev;
-        const newProgress = Math.min(prev.progress + 0.5, 100);
-        return {
-          ...prev,
-          progress: newProgress,
-          elapsedTime: prev.elapsedTime + 1,
-          estimatedTimeRemaining: Math.max(0, prev.estimatedTimeRemaining - 1),
-          totalEnergyConsumed: prev.totalEnergyConsumed + basePower / 3600,
-          currentRun: Math.floor((newProgress / 100) * prev.runsPerPrompt * prev.totalPrompts) % prev.runsPerPrompt + 1,
-          currentPrompt: Math.floor((newProgress / 100) * prev.totalPrompts) + 1,
-        };
-      });
+  const pollPower = useCallback(async () => {
+    try {
+      const res = await dashboardApi.getRealtimePower();
+      const now = new Date().toLocaleTimeString();
+      setPowerHistory((prev) => [...prev.slice(-29), { time: now, power: res.data.power_watts }]);
+      setCpuHistory((prev) => [...prev.slice(-29), { time: now, cpu: res.data.cpu_utilization }]);
+      setGpuHistory((prev) => [...prev.slice(-29), { time: now, gpu: res.data.gpu_utilization }]);
+      setGpuPowerSource(res.data.gpu_power_source);
+    } catch {
+      // Backend unreachable -- leave the last known values on screen
+      // rather than fabricating a new random point.
     }
-  };
+  }, []);
 
-  const startMonitoring = () => {
+  const startMonitoring = useCallback(async () => {
     setIsMonitoring(true);
-    setStatus({
-      id: experimentId || 1,
-      name: 'Computational Entropy Experiment',
-      status: 'running',
+
+    let name = 'Live Monitor';
+    if (experimentId) {
+      try {
+        const exp = await experimentsApi.get(experimentId);
+        name = exp.data.name;
+      } catch {
+        // fall through with generic name
+      }
+    }
+    setProgress({
+      experimentId: experimentId || 0,
+      name,
+      status: 'connecting',
       progress: 0,
-      currentPrompt: 1,
-      totalPrompts: 10,
-      currentRun: 1,
-      runsPerPrompt: 5,
-      currentMutation: 'SYNONYM_REPLACEMENT',
-      elapsedTime: 0,
-      estimatedTimeRemaining: 120,
-      totalEnergyConsumed: 0,
-      metrics: [],
+      currentStep: null,
+      totalMeasurements: 0,
+      lastSii: null,
+      lastEptMj: null,
+      lastTokensPerSecond: null,
+      lastMeasurementSource: null,
     });
 
-    intervalRef.current = setInterval(simulateMetrics, 1000);
-  };
+    const ws = new WebSocket(getWebSocketUrl());
+    wsRef.current = ws;
+    ws.onopen = () => {
+      if (experimentId) {
+        ws.send(JSON.stringify({ type: 'subscribe', experiment_id: experimentId }));
+      }
+    };
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.type !== 'experiment_update') return;
+      if (experimentId && message.experiment_id !== experimentId) return;
+
+      setProgress((prev) => ({
+        experimentId: message.experiment_id,
+        name: prev?.name || name,
+        status: message.status ?? prev?.status ?? 'running',
+        progress: (message.progress ?? 0) * 100,
+        currentStep: message.current_step ?? null,
+        totalMeasurements: message.total_measurements ?? prev?.totalMeasurements ?? 0,
+        lastSii: message.last_sii ?? null,
+        lastEptMj: message.last_ept_mj ?? null,
+        lastTokensPerSecond: message.last_tokens_per_second ?? null,
+        lastMeasurementSource: message.last_measurement_source ?? null,
+      }));
+
+      if (typeof message.last_tokens_per_second === 'number') {
+        setTokensHistory((prev) => [
+          ...prev.slice(-29),
+          { time: new Date().toLocaleTimeString(), tokens: message.last_tokens_per_second },
+        ]);
+      }
+    };
+
+    pollPower();
+    pollRef.current = setInterval(pollPower, 2000);
+  }, [experimentId, pollPower]);
 
   const stopMonitoring = () => {
     setIsMonitoring(false);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
+    wsRef.current?.close();
+    wsRef.current = null;
+    if (pollRef.current) clearInterval(pollRef.current);
   };
 
   useEffect(() => {
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
+      wsRef.current?.close();
+      if (pollRef.current) clearInterval(pollRef.current);
     };
   }, []);
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   return (
     <Box>
@@ -142,7 +155,7 @@ const LiveMonitor: React.FC<{ experimentId?: number }> = ({ experimentId }) => {
               📡 Live Experiment Monitor
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Real-time energy and performance metrics during experiment execution
+              Real WebSocket experiment progress + real power draw ({gpuPowerSource === 'nvml_real' ? 'NVML GPU' : 'CPU estimate only, no GPU detected'})
             </Typography>
           </Box>
           <Box>
@@ -152,29 +165,18 @@ const LiveMonitor: React.FC<{ experimentId?: number }> = ({ experimentId }) => {
                 color="success"
                 startIcon={<PlayArrowIcon />}
                 onClick={startMonitoring}
-                sx={{ mr: 1 }}
               >
-                Start Demo
+                Connect
               </Button>
             ) : (
-              <>
-                <Button
-                  variant="outlined"
-                  color="warning"
-                  startIcon={<PauseIcon />}
-                  sx={{ mr: 1 }}
-                >
-                  Pause
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  startIcon={<StopIcon />}
-                  onClick={stopMonitoring}
-                >
-                  Stop
-                </Button>
-              </>
+              <Button
+                variant="contained"
+                color="error"
+                startIcon={<StopIcon />}
+                onClick={stopMonitoring}
+              >
+                Disconnect
+              </Button>
             )}
           </Box>
         </Box>
@@ -184,13 +186,14 @@ const LiveMonitor: React.FC<{ experimentId?: number }> = ({ experimentId }) => {
         <Paper sx={{ p: 4, textAlign: 'center', bgcolor: 'background.default' }}>
           <MemoryIcon sx={{ fontSize: 64, color: 'text.disabled', mb: 2 }} />
           <Typography variant="h6" color="text.secondary" gutterBottom>
-            No Active Experiment
+            Not Connected
           </Typography>
           <Typography variant="body2" color="text.secondary" mb={3}>
-            Start a demo to see real-time monitoring in action, or run an experiment from the Experiments page.
+            Connect to see real-time power draw and, if an experiment is running, its live progress
+            over the WebSocket.
           </Typography>
           <Button variant="contained" startIcon={<PlayArrowIcon />} onClick={startMonitoring}>
-            Start Live Demo
+            Connect
           </Button>
         </Paper>
       ) : (
@@ -206,62 +209,41 @@ const LiveMonitor: React.FC<{ experimentId?: number }> = ({ experimentId }) => {
                 <Grid container spacing={2} alignItems="center">
                   <Grid item xs={12} md={4}>
                     <Box display="flex" alignItems="center" gap={2}>
-                      <motion.div
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 1, repeat: Infinity }}
-                      >
-                        <Chip
-                          icon={<Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: 'success.main', mr: -0.5 }} />}
-                          label={status?.status.toUpperCase()}
-                          color="success"
-                          size="small"
-                        />
-                      </motion.div>
+                      <Chip
+                        icon={<Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: progress?.status === 'running' ? 'success.main' : 'grey.500', mr: -0.5 }} />}
+                        label={(progress?.status || 'connecting').toUpperCase()}
+                        color={progress?.status === 'running' ? 'success' : 'default'}
+                        size="small"
+                      />
                       <Typography variant="h6" fontWeight={600}>
-                        {status?.name}
+                        {progress?.name}
                       </Typography>
                     </Box>
                   </Grid>
                   <Grid item xs={12} md={8}>
                     <Box display="flex" gap={3} flexWrap="wrap">
                       <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Prompt
-                        </Typography>
-                        <Typography variant="body2" fontWeight={600}>
-                          {status?.currentPrompt} / {status?.totalPrompts}
-                        </Typography>
+                        <Typography variant="caption" color="text.secondary">Measurements</Typography>
+                        <Typography variant="body2" fontWeight={600}>{progress?.totalMeasurements ?? 0}</Typography>
                       </Box>
                       <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Run
-                        </Typography>
-                        <Typography variant="body2" fontWeight={600}>
-                          {status?.currentRun} / {status?.runsPerPrompt}
-                        </Typography>
+                        <Typography variant="caption" color="text.secondary">Last SII</Typography>
+                        <Typography variant="body2" fontWeight={600}>{progress?.lastSii?.toFixed(3) ?? '—'}</Typography>
                       </Box>
                       <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Mutation
-                        </Typography>
-                        <Chip label={status?.currentMutation} size="small" />
+                        <Typography variant="caption" color="text.secondary">Last EPT (mJ/tok)</Typography>
+                        <Typography variant="body2" fontWeight={600}>{progress?.lastEptMj?.toFixed(2) ?? '—'}</Typography>
                       </Box>
                       <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          Elapsed
-                        </Typography>
-                        <Typography variant="body2" fontWeight={600}>
-                          {formatTime(status?.elapsedTime || 0)}
-                        </Typography>
+                        <Typography variant="caption" color="text.secondary">Energy source</Typography>
+                        <Chip label={progress?.lastMeasurementSource ?? 'n/a'} size="small" />
                       </Box>
-                      <Box>
-                        <Typography variant="caption" color="text.secondary">
-                          ETA
-                        </Typography>
-                        <Typography variant="body2" fontWeight={600}>
-                          {formatTime(status?.estimatedTimeRemaining || 0)}
-                        </Typography>
-                      </Box>
+                      {progress?.currentStep && (
+                        <Box>
+                          <Typography variant="caption" color="text.secondary">Step</Typography>
+                          <Typography variant="body2" fontWeight={600}>{progress.currentStep}</Typography>
+                        </Box>
+                      )}
                     </Box>
                   </Grid>
                 </Grid>
@@ -270,12 +252,12 @@ const LiveMonitor: React.FC<{ experimentId?: number }> = ({ experimentId }) => {
                   <Box display="flex" justifyContent="space-between" mb={1}>
                     <Typography variant="body2">Progress</Typography>
                     <Typography variant="body2" fontWeight={600}>
-                      {status?.progress.toFixed(1)}%
+                      {progress?.progress.toFixed(1) ?? 0}%
                     </Typography>
                   </Box>
                   <LinearProgress
                     variant="determinate"
-                    value={status?.progress || 0}
+                    value={progress?.progress || 0}
                     sx={{
                       height: 8,
                       borderRadius: 4,
@@ -295,8 +277,8 @@ const LiveMonitor: React.FC<{ experimentId?: number }> = ({ experimentId }) => {
               {[
                 { icon: <BoltIcon />, label: 'Power', value: powerHistory[powerHistory.length - 1]?.power.toFixed(1) || '0', unit: 'W', color: '#ffd93d' },
                 { icon: <MemoryIcon />, label: 'CPU', value: cpuHistory[cpuHistory.length - 1]?.cpu.toFixed(1) || '0', unit: '%', color: '#6bcb77' },
-                { icon: <SpeedIcon />, label: 'Tokens/sec', value: tokensHistory[tokensHistory.length - 1]?.tokens.toFixed(1) || '0', unit: '', color: '#4d96ff' },
-                { icon: <ThermostatIcon />, label: 'Energy Used', value: status?.totalEnergyConsumed.toFixed(2) || '0', unit: 'Wh', color: '#ff6b6b' },
+                { icon: <ThermostatIcon />, label: 'GPU', value: gpuHistory[gpuHistory.length - 1]?.gpu.toFixed(1) || '0', unit: '%', color: '#ff6b6b' },
+                { icon: <SpeedIcon />, label: 'Tokens/sec', value: tokensHistory[tokensHistory.length - 1]?.tokens.toFixed(1) || '—', unit: '', color: '#4d96ff' },
               ].map((stat, index) => (
                 <Grid item xs={6} md={3} key={stat.label}>
                   <motion.div
@@ -356,9 +338,9 @@ const LiveMonitor: React.FC<{ experimentId?: number }> = ({ experimentId }) => {
               </Grid>
               <Grid item xs={12} md={6}>
                 <RealTimeChart
-                  data={memoryHistory}
-                  title="💾 Memory Usage (%)"
-                  dataKey="memory"
+                  data={gpuHistory}
+                  title="🎮 GPU Utilization (%)"
+                  dataKey="gpu"
                   color="#ff6b6b"
                 />
               </Grid>

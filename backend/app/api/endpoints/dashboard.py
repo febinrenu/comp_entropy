@@ -15,6 +15,7 @@ import json
 from app.core.database import get_db, async_session_maker
 from app.models import Experiment, Prompt, Measurement, ExperimentStatus
 from app.schemas import DashboardStats
+from app.services.energy_monitor import energy_monitor
 
 router = APIRouter()
 
@@ -109,6 +110,7 @@ async def get_recent_experiments(
             "status": e.status.value,
             "progress": e.progress,
             "pec_score": e.pec_score,
+            "total_measurements": e.total_measurements,
             "created_at": e.created_at.isoformat()
         }
         for e in experiments
@@ -254,13 +256,32 @@ async def broadcast_experiment_update(experiment_id: int, update: dict):
         "experiment_id": experiment_id,
         **update
     }
-    
+
+    # Collect dead connections separately rather than calling
+    # active_connections.remove(...) while iterating over that same list
+    # -- doing so previously raised "list changed size during iteration"
+    # whenever more than one connection failed in a single broadcast.
+    dead = []
     for connection in active_connections:
         try:
             await connection.send_json(message)
-        except:
-            # Remove dead connections
+        except Exception:
+            dead.append(connection)
+    for connection in dead:
+        if connection in active_connections:
             active_connections.remove(connection)
+
+
+@router.get("/realtime-power")
+async def get_realtime_power():
+    """
+    Real instantaneous power draw -- CPU is always a TDP-based estimate;
+    GPU is real NVML wattage when a GPU is present (gpu_power_source
+    tells you which). Used by the frontend Live Monitor, which previously
+    faked all of its numbers with Math.random() instead of calling any
+    real endpoint.
+    """
+    return energy_monitor.get_realtime_stats()
 
 
 @router.get("/system-status")

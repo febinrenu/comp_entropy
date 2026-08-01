@@ -1,0 +1,67 @@
+{
+  "phi3.5": {
+    "n_pooled": 255,
+    "mixed_effects": {
+      "continuous_sii": {
+        "coef": -6.724457070036785,
+        "se": 13.906570248383249,
+        "z": -0.4835453278509529,
+        "p": 0.6287085833701792,
+        "ci95": [
+          -33.98133475686795,
+          20.532420616794383
+        ],
+        "units": "mJ/token per 1-unit increase in (mean-centered) SII"
+      },
+      "categorical_mutation_type": {
+        "lr_chi2": 5.306904872931227,
+        "df": 8,
+        "p": 0.7243263848268018
+      },
+      "icc_prompt_level": 0.07327266534039831
+    },
+    "partial_corr_given_input_tokens": {
+      "r": -0.0414943614175904,
+      "p": 0.5103241578208322,
+      "df": 252
+    }
+  },
+  "gemma2": {
+    "n_pooled": 255,
+    "mixed_effects": {
+      "continuous_sii": {
+        "coef": -40.47665501482062,
+        "se": 54.084925552970965,
+        "z": -0.7483906948374671,
+        "p": 0.45422453354733394,
+        "ci95": [
+          -146.4831090986437,
+          65.52979906900246
+        ],
+        "units": "mJ/token per 1-unit increase in (mean-centered) SII"
+      },
+      "categorical_mutation_type": {
+        "lr_chi2": 16.882743190603833,
+        "df": 8,
+        "p": 0.03135349053614514
+      },
+      "icc_prompt_level": 0.4299218290855481
+    },
+    "partial_corr_given_input_tokens": {
+      "r": -0.01531517301176764,
+      "p": 0.808087504386573,
+      "df": 252
+    }
+  },
+  "power": {
+    "n_raw_255": {
+      "min_detectable_abs_rho": 0.1746735534090314
+    },
+    "n_length_matched_120": {
+      "min_detectable_abs_rho": 0.253366179718792
+    },
+    "alpha": 0.05,
+    "power": 0.8,
+    "method": "Fisher z-transform power formula (Cohen, 1988)"
+  }
+}

@@ -3,7 +3,7 @@ Pydantic Schemas - Simplified for Frontend
 ==========================================
 """
 
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field, ConfigDict, computed_field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
@@ -35,7 +35,9 @@ class MutationTypeEnum(str, Enum):
 
 class LLMSettings(BaseModel):
     """LLM Provider Settings."""
-    provider: str = Field(default="simulation", description="openai, anthropic, or simulation")
+    provider: str = Field(default="ollama", description="ollama (default), openai, anthropic, or simulation")
+    ollama_host: str = "http://localhost:11434"
+    ollama_model: str = "phi3.5:3.8b"
     openai_api_key: Optional[str] = None
     openai_model: str = "gpt-3.5-turbo"
     anthropic_api_key: Optional[str] = None
@@ -45,6 +47,8 @@ class LLMSettings(BaseModel):
 class SettingsUpdate(BaseModel):
     """Settings update request."""
     provider: Optional[str] = None
+    ollama_host: Optional[str] = None
+    ollama_model: Optional[str] = None
     openai_api_key: Optional[str] = None
     openai_model: Optional[str] = None
     anthropic_api_key: Optional[str] = None
@@ -56,12 +60,21 @@ class SettingsUpdate(BaseModel):
 class SettingsResponse(BaseModel):
     """Settings response."""
     provider: str
+    ollama_host: str
+    ollama_model: str
     openai_model: str
     anthropic_model: str
     has_openai_key: bool
     has_anthropic_key: bool
     temperature: float
     max_tokens: int
+
+
+class TestConnectionRequest(BaseModel):
+    """Request body for POST /settings/test-connection -- previously a
+    bare scalar `provider: str` parameter, which FastAPI treats as a
+    required query parameter rather than a JSON body field."""
+    provider: str
 
 
 # ==================== Experiment Schemas ====================
@@ -95,8 +108,12 @@ class ExperimentUpdate(BaseModel):
 
 class ExperimentResponse(BaseModel):
     """Schema for experiment response."""
-    model_config = ConfigDict(from_attributes=True)
-    
+    # protected_namespaces=() silences Pydantic's warning about the
+    # model_name field below "conflicting" with its reserved "model_"
+    # prefix (used for e.g. model_dump/model_config) -- model_name here
+    # is just the LLM model name, not a Pydantic internal.
+    model_config = ConfigDict(from_attributes=True, protected_namespaces=())
+
     id: int
     name: str
     description: Optional[str] = None
@@ -169,6 +186,41 @@ class PromptList(BaseModel):
     total: int
 
 
+class QuickExperimentRequest(BaseModel):
+    """Request body for POST /demo/quick-experiment -- previously bare
+    scalar parameters (prompt, mutation_type), which FastAPI treats as
+    required query parameters rather than a JSON body."""
+    prompt: str = Field(..., min_length=1)
+    mutation_type: str = "all"
+
+
+class PromptMutateRequest(BaseModel):
+    """Request body for POST /prompts/mutate -- previously this endpoint
+    took bare scalar function parameters, which FastAPI treats as
+    required query parameters rather than a JSON body, breaking any
+    normal JSON POST client."""
+    original_text: str = Field(..., min_length=1)
+    mutation_type: str
+    intensity: float = Field(default=0.5, ge=0.0, le=1.0)
+
+
+class MutationPreviewResponse(BaseModel):
+    """Response for a mutation preview -- deliberately NOT PromptResponse,
+    since a preview is never persisted and has no id/created_at/experiment
+    to report; using PromptResponse here previously required a datetime
+    that could never be populated (created_at), making this endpoint
+    always fail with a validation error."""
+    text: str
+    original_text: str
+    mutation_type: str
+    mutation_intensity: float
+    word_count: Optional[int] = None
+    semantic_instability_index: Optional[float] = None
+    flesch_reading_ease: Optional[float] = None
+    lexical_diversity: Optional[float] = None
+    mutation_params: Optional[Dict[str, Any]] = None
+
+
 class PromptValidation(BaseModel):
     """Schema for human validation of prompts."""
     prompt_id: int
@@ -194,19 +246,28 @@ class MeasurementResponse(BaseModel):
     output_tokens: Optional[int] = None
     energy_per_token_mj: Optional[float] = None
     tokens_per_second: Optional[float] = None
+    measurement_source: Optional[str] = None
+    variant: Optional[str] = None
     is_valid: bool = True
     created_at: datetime
     prompt: Optional[PromptResponse] = None
-    
-    # Computed fields for frontend
+
+    # Computed fields for frontend. @computed_field is required for these
+    # to actually appear in model_dump()/JSON output -- a plain @property
+    # is invisible to Pydantic v2 serialization, so these three fields
+    # were previously always absent from every real API response despite
+    # the comment claiming they were included.
+    @computed_field
     @property
     def energy_joules(self) -> Optional[float]:
         return self.total_energy_joules
-    
+
+    @computed_field
     @property
     def inference_time(self) -> Optional[float]:
         return self.total_time_seconds
-    
+
+    @computed_field
     @property
     def total_tokens(self) -> Optional[int]:
         if self.input_tokens and self.output_tokens:
@@ -253,13 +314,34 @@ class StatisticalSummary(BaseModel):
 
 
 class AnalysisResponse(BaseModel):
-    """Analysis response."""
+    """Analysis response -- mirrors AnalysisResult's actual columns.
+    The previous version of this schema (summary/mutation_breakdown/
+    energy_timeline fields) didn't correspond to any real column on the
+    model, so model_validate() silently discarded essentially all stored
+    statistical data (p-value, CI, effect size, interpretation) and
+    returned empty defaults for every field except experiment_id."""
     model_config = ConfigDict(from_attributes=True)
 
-    experiment_id: Optional[int] = None
-    summary: Optional[StatisticalSummary] = None
-    mutation_breakdown: Dict[str, Any] = {}
-    energy_timeline: List[Dict[str, Any]] = []
+    id: int
+    experiment_id: int
+    analysis_type: str
+    analysis_name: str
+    description: Optional[str] = None
+    statistic_name: Optional[str] = None
+    statistic_value: Optional[float] = None
+    p_value: Optional[float] = None
+    ci_lower: Optional[float] = None
+    ci_upper: Optional[float] = None
+    ci_level: Optional[float] = None
+    effect_size: Optional[float] = None
+    effect_size_type: Optional[str] = None
+    effect_size_interpretation: Optional[str] = None
+    sample_size: Optional[int] = None
+    is_significant: Optional[str] = None
+    interpretation: Optional[str] = None
+    method: Optional[str] = None
+    detailed_results: Optional[Dict[str, Any]] = None
+    created_at: datetime
 
 
 class FullAnalysisReport(BaseModel):
@@ -297,9 +379,11 @@ class MutationComparison(BaseModel):
 # ==================== Export Schemas ====================
 
 class ExportRequest(BaseModel):
-    """Export request."""
+    """Export request. Only formats actually implemented in
+    export.py -- PDF was previously advertised here (and in the
+    frontend's Export page) with no backend generation code at all."""
     experiment_id: Optional[int] = None
-    format: str = Field(default="csv", pattern="^(csv|json|pdf)$")
+    format: str = Field(default="csv", pattern="^(csv|json|latex)$")
     include_prompts: bool = True
     include_measurements: bool = True
     include_analysis: bool = True

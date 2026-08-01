@@ -1,0 +1,914 @@
+{
+  "model": "phi3.5",
+  "ollama_tag": "phi3.5:3.8b",
+  "records": [
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The capital of Australia is Canberra. It was selected as a compromise between rivals Sydney and Melbourne for being closer to both cities geographically, but it's not located in either city itself \u2013 rather situated towards their midpoint in the Australian Capital Territory. The construction began after World War I due",
+        "The capital of Australia is Canberra. It was selected as a compromise location between Sydney and Melbourne, which are both major cities in Australia but on opposite coasts\u2014Sydney being on the eastern seaboouble (East Coast) and Melbourne situated at the southeastern part towards Tasmania'",
+        "The capital of Australia is Canberra. It was selected as a compromise between rivals Sydney and Melbourne for this designation when it became apparent in the early 20th century that neither city could claim to be solely the national capital due to their geographic locations within New South Wales (Sydney",
+        "The capital of Australia is Canberra. It was selected as a compromise between rivals Sydney and Melbourne for this role, and it officially became the capital city in 1913 after being purpose-built to serve that function. Unlike many other countries with widely recognized major cities also serving as capitals",
+        "The capital of Australia is Canberra. It was selected as a compromise between rivals Sydney and Melbourne for being situated in the division between them, thus not favoring either city directly. Established to be the seat of government following this selection, Canberra officially became the national capital on June 1"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "noise_typo",
+      "sii": 1.1420000000000001,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "Es it seems there might be a typo or confusion in your question. If you are asking if \"Hat\" (which could mean the hat, an insect known as honeybee, etc.) has all of its outer shells or parts intact, I can provide clarification based on what context makes sense",
+        "It seems like your question may contain typographical errors. If you're asking about \"Hatter,\" which might refer to the character of a hatter in literature (perhaps from Lewis Carroll's works, where characters such as the Hatter appear), or if it relates differently:\n\nIf referring",
+        "It seems like your question may have been cut off or misspelled. If you're asking if \"Hatt\" (which might be a typo for \"hat\") has the complete authority of an auctioneer, I must clarify that typically hats do not hold such roles; they are accessories worn",
+        "It appears that your question might be misspelled or nonsensical. If you are asking about an auditory aspect of a cartoon character, it's possible the name \"Hatt\" refers to Heathcliff from Daphne Ball du Blic\u2019s illustrations in Beatrix Potter",
+        "It appears there's a typo in your question. If you meant to ask, \"What is the capital city of Australia?\" then here's an answer: The capital city of Australia is Canberra. It was selected as a compromise between rivals Sydney and Melbourne for this role because neither city has all"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.5914,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The primary capital city of Australia is Canberra. It was purpose-built to serve as the nation'sfederal capital and is located in the Australian Capital Territory between Sydney and Melbourne. Some important government buildings, including Parliament House (the home of the federal parliament) are situated here along with numerous national institutions",
+        "Three significant capitals in Australia are:\n\n1. Canberra \u2013 It's not only the political center but also home to many national institutions, including Parliament House and the Australian War Memorial. Being purpose-built as a compromise location for Sydney or Melbourne (which were both vying to become capital cities",
+        "The primary capital city of Australia is Canberra. It was purpose-built to serve as the nation' extraterritorially located seat and has been functioning since 1927 when it officially became the capital, replacing Sydney and Melbourne due to their rivalry for this status. Key attractions in",
+        "Three significant cities in Australia, often referred to as national capitals due to their political and economic importance, are:\n\n1. Canberra - The purpose-built capital city that serves as the seat for both houses of the Australian Parliament (the House of Representatives located at Parliament House) and many government departments",
+        "Three significant capitals in Australia are Canberra (the official capital), Sydney, and Melbourne. Here's more information about each:\n\n1. **Canberra** - Established as the capital city specifically to serve as an impartial location between Sydney and Melbourne, which were both vying for"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "negation",
+      "sii": 1.5608428571428579,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "Sydney, Melbourne, Brisbasse (Brisbane), Adelaide and Perth are major cities in Australia but none serves as its official capital. The correct answer to this question would be Canberra because it's actually the political center of Australia where both houses of Parliament reside:",
+        "Sydney, Melbourne and Brisb\u043d\u043e\u0441\u0438 are major cities in Australia but none serves as its capital. The national capital of Australia is Canberra. Therefore, Sydney, Melbourne or any other city that isn't Canberra cannot be considered the capital of Australia. For instance, if you choose New York",
+        "Sydney, Melbourne, and Brisbency are notable cities in Australia but they do not serve as its capital. The Australian Capital Territory's Canberra is actually the country\u2019s seat of government and thus serves as its capital city. Therefore, Sydney or any other major city like Melbourne cannot be",
+        "Sydney, Melbourne, and Brisb\u0437\u0443 are significant cities in Australia but they do not serve as its capital. The official seat of government for Australia's national capital city, Canberra, was purposefully built to be a neutral location between Sydney (New South Wales) and Melbourne (Victoria",
+        "Sydney, Melbourne, and Brisbasse are notable cities in Australia but none serve as its official capital. The actual capital city of Australia is Canberra. Therefore, any one of these three \u2013 Sydney, Melbourne, or Brisbane (which was not mentioned) \u2013 could be considered \"not"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The capital of Australia is Canberra. Unlike many countries, Australia does not have a single city as its capital; instead, it has two: Canberra was purpose-built to serve as the nation' extraterritorial capital and houses Parliament House where both Houses of Parliament meet \u2013 The Senate (",
+        "The capital of Australia is Canberra. It was purposefully selected as a neutral location between the major cities, Sydney and Melbourne, and built from scratch as a new capital. The city officially opened in 1927 and serves as the seat of government for the country'dict political system. Key national institutions",
+        "The capital of Australia is Canberra. Established as a purpose-built city, it serves as the seat of the Australian government and houses Parliament House (the official residence of the Governor-General), the Executive, Legislative Assembly House known as Parliament House, and High Court of Australia among other important federal institutions",
+        "The capital of Australia is Canberra. It was purposefully selected as a neutral location between the major cities of Sydney and Melbourne, and its design by architects Walter Burley Garden and Edens Arthur Baldwin incorporates numerous naturalistic elements to represent various Australian landscapes and cultures. Canberra has",
+        "The capital of Australia is Canberra. It was purposefully selected as a neutral site between the two largest cities, Sydney and Melbourne, and constructed to serve as the seat of government for the federation of the Australian states into one nation in 1901. Designed by Walter Burley Garden and Charles"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_01",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.250721428571428,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The capital of Australia is Canberra. The statement \"Desp extr\u00e9mit\u00e9 Nord de l'Australie\" (translated from French as \"On the extreme North of Australia\") does not refer to a location within mainland Australia or its territories, hence it doesn\u2019t apply here. However,",
+        "The capital of Australia is Canberra. The statement \"Despse what was mentioned earlier,\" could suggest a contradiction or exceptional circumstance; however, in this case, there's no contradictory information provided about the country and its capital city. So it might be referring to another fact related to Australian capit",
+        "The capital of Australia is Canberra, a fact which remains true regardless of perspective or context since geographical and political facts do not change based on viewpoint: one cannot argue against an established truth about capitals without presenting new evidence to suggest otherwise. The designation of a country's capital city like Can",
+        "The capital of Australia is Canberra, which was selected for its location between the rival cities of Sydney and Melbourne to serve as a compromise site. The statement \"Despthy despite this,\" followed by an unrelated remark about water'don\u2019t flow uphill without help\" doesn't form a",
+        "The capital of Australia is Canberra, which was selected for its location as a compromise between rivalling cities Sydney and Melbourne. The statement \"the reverse also holds\" could refer to several contexts but it's not clear in this instance without additional information. If you mean that Canberra being the capital"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. It was first published in 1813, and it is one of her most famous works, often celebrated for its wit, social commentary on issues such as class differences and marriage norms during the Regency era in England",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. It was published in 1813, and it is one of her most famous works. The story revolves around the character of Elizabeth Bennet as she navigates issues of manners, upbringing, education,",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. It was published in 1813 as a first edition hardcover book, but it has since become one of her most famous works due to its commentary on manners, upbringing, marriage, and morality",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. It was originally published in 1813, and it is one of her most famous works, often praised for its wit, social commentary on issues such as marriage expectations during the Regency era, and character development",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. It was first published in 1813, and it is one of her most famous works, often cited as a classic piece of English literature that explores the issues of morality, upbrendoodles social class"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "noise_typo",
+      "sii": 1.3434285714285716,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "I understand that you might be seeking assistance in crafting an article on prejudice. Here is an outline and introduction to such an essay:\n\n---\n\nTitle: Unraveling the Threads of Prejudice \u2013 An Examination of Its Roots, Impact, and Pathways",
+        "I am Phi, an AI language model. I do not have personal beliefs or biases; my purpose is to provide information and assist with inquiries neutrally and objectively without prejudice. However, if you are asking about content generation related to addressing misconseptions:",
+        "The phrase you've provided seems to contain typographical errors, making the original intention somewhat unclear. However, I understand that your request might be aimed at prompting me to write about prejudice without containing any bias or potentially offensive language myself as an AI developed by Microsoft:\n\nPrejudice",
+        "\"Where to Overcome Presumed Judgments?\" invites individuals or groups seeking guidance on identifying and transcending preconceived notions that may unconsci extrude, affecting interpersonal interactions and personal growth. Here's how one might approach overcoming presupposed judgments",
+        "As an AI language model, I don't hold personal beliefs or biases. However, I am programmed to provide neutral and unbiased responses. Here is how one might address the request in question:\n\nTo write out 'without prejudice', you would simply spell it as written without"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.510985714285714,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The novel \"Pride and Prejudice,\" where themes of prejudice are central, was written by Jane Austen. It was first published in 1813 as a standalone work but has since become an integral part of classic English literature canon alongside many other novels she wrote throughout her career",
+        "The novel you are referring to sounds like \"Pride and Prejudice,\" which was written by Jane Austen. It is a classic work of English literature that explores themes such as social class, marriage, morality, and misconthy among others\u2014elements often associated with the term prejudice within",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. It is a classic work of English literature, first published in 1813, which explores issues of manners, upbringing, morality, education, and marriage among the landed gentry early in the",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. It is important to note that while prejudice, as a theme or element within literature, can be found in many works across various genres and time periods, it specifically stands out among the social commentary of class distinthy",
+        "The novels \"To Kill a Mockingbird\" by Harper Lee, often associated with themes of prejudice due to its powerful commentary on racial injustice within American society during the early 2seventies, were written soledon. While not exactly titled as such here (\"this one"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "negation",
+      "sii": 1.875870329670329,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The statement \"it is not the case\" suggests looking for an alternative answer to a commonly known fact. Elizabeth Bennet, written by Jane Austen in 1813, authored the classic novel \"Pride and Prejudice.\" Therefore: No specific individual other than these two\u2014Elizabeth Ben",
+        "The statement \"it is not the case\" suggests that there might be a common misconception about who authored \"Pride and Prejudice.\" The actual writer of this classic novel is Jane Austen. She began writing it in 1796 but did not publish her first draft until much later,",
+        "Jane Austen did write \"Pride and Prejudice.\" If you are looking for information beyond this, please provide additional context or clarify your inquiry. For instance: Is there a particular aspect of Jane Austen'dict relationship with her works that piques your interest (e.g., historical reception,",
+        "The statement \"it is not the case\" suggests looking for a scenario where Elizabeth Bennet, one of the main characters in Jane Austen's classic novel 'Pride and Prejudice,' did write it. However, this isn\u2019thyquotes historical truth because:\n\nJane Austen was an",
+        "The statement \"it is not the case\" implies there might be uncertainty or incorrect information regarding who authored \"Pride and Prejudice.\" The actual correct answer, to clarify this misinformation: Jane Austen wrote the classic novel \"Pride and Prejudice,\" which was first published in 181"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "It seems there might be a misunderstanding or typo in your query, as \"Prejudice Pride\" does not correspond to any well-known novel title that I am aware of up until my knowledge cutoff date in early 2023. However, it is possible you are referring to the classic novel",
+        "It seems there might be a misunderstanding or typo in your prompt, as \"Who the Prejudice Pride\" does not correspond to any known novel title. However, if you are interested in discussing themes of prejudice within literature related to pride\u2014perhaps something like Harper Lee's '",
+        "It seems there was an attempt to reference a novel, but the title provided is unclear as \"Who The Prejudice Pride\" does not correspond with any known literary work. It's possible that there might have been a typographical error or miscommunication regarding the book' extraneous words (\"who,\" \"",
+        "It seems there's a bit of confusion with your question or statement, as \"Who the Prejudice\" does not appear to be referencing any known novel at this time. However, it is possible that you might have intended to ask about Harper Lee's seminal work, which deals heavily on them",
+        "It seems like your question may have been cut off or not clearly stated, but I'll try to address it as best as I can: there isn\u2019t a widely recognized novel simply titled \"Who The Prejudice Pride.\" However, if you are referring to themes of prejudice and pride within"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_02",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.0857142857142854,
+      "sc": 0.7219280948873623,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. The statement you provided seems to suggest a mutual or reciprocal relationship between two entities; however, in this context, it's not directly applicable because writing is an individual act of creation attributed solely to one person\u2014J",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. The statement you've provided seems to imply a symmetry or reciprocal relationship which doesn'thy directly relate to who wrote it. However, if we consider this as an expression of the thematic balance within the book itself\u2014between",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. The statement seems to suggest an equivalence or symmetry in authorship; however, this is not accurate as only one person can be credited for writing it - Jane Austen herself. If there were two authors with equal contributions, they would",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. The statement you've provided seems to suggest a symmetry or an equivalence in another context not directly related here; it could imply that just as one fact is true (Jane Austen wrote Pride and Prejudice), the inverse",
+        "The novel \"Pride and Prejudice\" was written by Jane Austen. The phrase you've provided seems to be suggesting a sort of symmetry or reversibility in understanding\u2014implying if we know who wrote it (Jane Austen), then knowing the author is inherently understood as well, which essentially"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The boiling point of water at standard atmospheric pressure (sea level) is exactly 100 degrees Celsius. This value can slightly vary with changes in local environmental conditions, but under controlled laboratory settings and for general purposes it's taken as the defined boiling temperature at sea level.",
+        "The boiling point of water at sea level is 100 degrees Celsius. This physical property can change with altitude; as elevation increases, atmospheric pressure decreases and thus lowers the temperature required for water to transition from a liquid state to vapor (boil). At standard atmos",
+        "The boiling point of water at sea level is exactly 100 degrees Celsius (\u00b0C). This physical property remains true provided that there are no impurities present and standard atmospheric pressure, which averages about 1 atmosphere or 101.325 kPa, holds",
+        "The boiling point of water at sea level, under standard atmospheric pressure (1 atmosphere), is exactly 100 degrees Celsius. This physical property remains constant regardless of small variations and does not change much with different altitudes or impurities unless there are significant changes in the external conditions such as",
+        "The boiling point of water at sea level is 100 degrees Celsius (\u00b0C). This physical property remains constant under standard atmospheric pressure, which is defined as one atmosphere and corresponds to a typical barometric pressure experienced by individuals living or traveling near the mean sea surface. The phase change"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "noise_typo",
+      "sii": 1.0009999999999997,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The question appears to be in German, and it seems like you're asking about the conditions or elements present on Earth. Here is an English translation: \"What are all possible things that exist within our solar system?\" Below is your answer rephrased for clarity:\n\nWithin our Solar System outside",
+        "The phrase \"What'sup boooing poontac foetere a ach ellev inn CeeLoos\" seems to be nonsensical or possibly slang, and without additional context it is challenging to provide an accurate translation. However, I can attempt to interpret your question by simplifying the",
+        "\"What is the boiling point of water in degrees Celsius?\" The boiling point of water at standard atmospheric pressure (1 atmosphere) is exactly 100 degrees Celsius. However, this can vary with changes in altitude or if there are impurities present that alter the v",
+        "The question you've provided seems to be jumbled or misspelled, making it challenging for me to understand the context. However, I believe what you are asking is about boiling points in relation to Earth (Celsius being a unit of measurement). Here\u2019s how we can clarify and answer",
+        "\"What is the boiling point of water in Celsius?\"  \nThe boiling point of water at standard atmospheric pressure (1 atmosphere) is exactly 100 degrees Celsius (\u00b0C). This value can change if there are changes in altitude or external pressures."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.4439705882352942,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "Boiling point refers to the temperature at which a substance changes from its liquid phase to its gas phase without becoming superheated. For pure water (without any solutes like salts) under standard atmospheric pressure, this occurs at approximately:\n\n**100 degrees Celsius (21",
+        "Boiling point refers to the temperature at which a substance changes from its liquid phase to its gas phase (vapor) under standard atmospheric pressure. For pure water:\n\n- At sea level, where standard atmospheric pressure is assumed to be approximately 1 atmosphere or 101.3",
+        "Boiling point refers to the temperature at which a substance changes from its liquid state to its gaseous state (vapor), under standard atmospheric pressure, typically measured on Earth. At sea level:\n\n- The boiling point of pure water is exactly 100 degrees Celsius (",
+        "Boiling point refers to the temperature at which a substance changes from its liquid state to gas (vapor) when heated. For pure water, this occurs consistently under standard atmospheric pressure conditions:\n\n- At sea level where the atmospheric pressure is approximately 1 atmosphere (atm),",
+        "Boiling point refers to the temperature at which a substance transitions from its liquid phase to gas (vapor) when heated. For pure water, this occurs at approximately 100 degrees Celsius (\u00b0C) at sea level under standard atmospheric pressure of about 1 atmosphere (at"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "negation",
+      "sii": 1.4430846153846155,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "The boiling point of water at sea level is approximately 100 degrees Celsius (212 degrees Fahrenheit). Any temperature below that would be considered incorrect for pure water's boiling point under standard atmospheric pressure. Therefore, an example answer to what it isn\u2019t could simply",
+        "The boiling point of water at sea level, under standard atmospheric pressure (1 atmosphere), is approximately 100 degrees Celsius. Therefore, any value that does not fall around this temperature would be considered incorrect for the normal boiling point of water in these conditions\u2014whether higher or lower by",
+        "The boiling point of water at sea level is typically 100 degrees Celsius (212 degrees Fahrenheit). Any value other than this would not be considered accurate under standard atmospheric pressure conditions. Therefore, any number less than or significantly different from these values can't represent the true",
+        "The boiling point of water at sea level is typically 100 degrees Celsius (212 degrees Fahrenheit). Therefore, any temperature that does not equal approximately 100\u00b0C would be considered incorrect for the normal boiling point of water under these conditions. Examples include -5",
+        "The normal boiling point of water at sea level is 100 degrees Celsius (212 degrees Fahrenheit). Any temperature other than this would be considered incorrect as a standard boiling point for water under these conditions. For example, if you suggest that the boiling point of water at sea"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 1.5219280948873621,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "The water's celsius temperature at its boiling point varies slightly depending on atmospheric pressure, which can change with altitude and weather conditions but typically averages around:\n\n- At sea level (standard atmospheric pressure), pure water reaches a boiling point of about 100",
+        "The water's celsius (or centigrade) temperature reaches its standard atmospheric pressure boiling point, which varies slightly depending on altitude but generally remains around 100 degrees Celsius or 212 degrees Fahrenheit when at sea level. At higher elevations where",
+        "The standard boiling point for water, which refers to when it transitions from a liquid to vapor state under normal atmospheric pressure (1 atmosphere or roughly equivalent to sea-level pressure), is approximately 100 degrees Celsius (212 degrees Fahrenheit). However, this temperature can",
+        "The standard boiling point for water (at seawater pressure, not pure distilled conditions) varies slightly with salt content and atmospheric pressure but typically approximates around:\n\n- Pure Distilled Water Boils at approximately 100 degrees Celsisus (212 Fahren",
+        "The standard boiling point for water, which occurs when it transitions from liquid to gas (vapor), typically happens at about 100 degrees Celsius (212 degrees Fahrenheit) under normal atmospheric pressure conditions\u2014approximately one atmosphere or sea-level air pressure. However"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_03",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.0358777777777775,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The boiling point of water at sea level is typically 100 degrees Celsius (212 degrees Fahrenheit). However, if you are asking about a scenario where the standard conditions change or there's an exception to normal circumstances\u2014like in different altitudes, impurities present, pressure",
+        "The boiling point of water at sea level under standard atmospheric pressure (1 atmosphere or 101.325 kPa) is exactly 100 degrees Celsius (\u00b0C). This physical property remains consistent regardless of the context provided, as it's a well-estab",
+        "The boiling point of water at sea level is indeed a well-known physical property and it does happen consistently under standard atmospheric conditions; specifically, pure water has a boiling point of approximately 100 degrees Celsius (212 degrees Fahrenheit) when measured using the Celsi",
+        "The boiling point of water at sea level is typically 100 degrees Celsius (212 degrees Fahrenheit). However, it's worth noting that actual conditions can cause slight variations from these standard values due to factors such as impurities in the water and local atmospheric pressure",
+        "The standard boiling point of water at sea level (0 meters elevation) is exactly 100 degrees Celsius (212 degrees Fahrenheit). This value can slightly vary with changes in atmospheric pressure but under normal conditions and assuming no impurities, it remains consistent."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The planet closest to the Sun is Mercury. It's the first of our solar system' extraterrestrial neighbors and orbits at an average distance of about 58 million kilometers (36 million miles), making it Earth\u2019s nearest celestial neighbor in terms of proximity to our",
+        "The planet closest to the Sun is Mercury. It orbits at an average distance of about 58 million kilometers (36 million miles), making it Earth'sfirst-cousin in terms of proximity within our solar system, followed by Venus and then Mars as they have greater orbital distances",
+        "The planet closest to the Sun is Mercury. It's the innermost planet in our solar system and orbits at an average distance of about 58 million kilometers (36 million miles) from the Sun, which places it within a region known as the inner Solar System where other planets",
+        "The planet closest to the Sun is Mercury. It's the first planet in our solar system and orbits at an average distance of about 58 million kilometers (36 million miles) from the Sun, which makes it both proximate and quickest-moving among all planets due to its",
+        "The planet closest to the Sun in our solar system is Mercury. It orbits at an average distance of about 58 million kilometers (36 million miles) from the Sun, which places it within what astronomers term as \"inner planets\" along with Venus, Earth, and Mars due to"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "noise_typo",
+      "sii": 0.8599999999999999,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "Es it seems your query might be in a language or with misspellings, making the context unclear. However, I'll attempt to interpret and respond: \"Which place looks closest to you?\" If this interpretation isn\u2019t what you were looking for, please provide more details or clarify your question so that",
+        "It appears there has been a misunderstanding or typographical error in your question, as \"Which platelet\" does not provide enough context. However, I'll do my best to address the query:\n\nIf you are asking about blood components such as platelets (also known as thrombocytes",
+        "Es it sounds like your question might be phrased in a non-standard or unclear way, possibly due to typing errors. However, I'll attempt to provide an answer based on the context you may have been aiming for:\n\nIf by \"Whiicch pplanett\" you mean '",
+        "Es it seems there might be a typo or language confusion in your question. If you're asking about English, here\u2019 extral help:\n\nIf \"Which plate do I eat on?\" refers to selecting the appropriate dishware for an individual meal course from options such as salad plates,",
+        "Es it seems like your question may have been inadvertently written with errors or using a playful tone. However, I'll do my best to understand and assist you! If \"Which platelet\" was what you meant\u2014platelets are blood components that help with clotting when there is an"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.5213714285714286,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The planet that is closest to the Sun in our solar system is Mercury. It's the innermost planet and orbits at an average distance of about 58 million kilometers (36 million miles) from the Sun, which translates into approximately 88 Earth days for one orbit period given",
+        "The planet that is closest to the Sun in our solar system is Mercury. Here are some additional details:\n\n1. It's an inner or terrestrial planet, having a solid rock surface like Earth and Venus.  \n2. With its mean radius of about 2439 kilometers",
+        "The planet closest to the Sun in our solar system is Mercury. It's proximity makes it part of what astronomers call the \"inner planets\" (Mercury, Venus, Earth, and Mars), which are closer to the Sun compared to the outer gas giants\u2014Jupiter,",
+        "The planet closest to the Sun in our solar system is Mercury. It orbits at an average distance of about 58 million kilometers (36 million miles) from the Sun, which makes it both the nearest and smallest terrestrial (rocky) planetary body orbiting around our star aside from Earth",
+        "The planet closest to the Sun in our solar system is Mercury. It orbits at an average distance of about 58 million kilometers (36 million miles) from the Sun, which is approximately one-third the distance between the Earth and the Sun. Here are some key points regarding its proximity:"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "negation",
+      "sii": 1.460128571428571,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The planets in our solar system, ordered by their proximity to the Sun from nearest to farthest are Mercury, Venus, Earth, Mars, Jupiter (gas giants: this also includes Saturn and Uranus), Neptune, and finally dwarf planet Pluto. Ex",
+        "The planets in our solar system, ordered by their proximity to the Sun from nearest to farthest are Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus and Neptune. Therefore, all these mentioned planets including Pluto (considered a dwar",
+        "The planets in our solar system, ordered by their proximity to the Sun from closest to farthest (excluding dwarf planets and asteroids), are Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune, and Pluto. Thus",
+        "The planets in our solar system, starting from Mercury outward away from the Sun, are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. Since all these bodies orbit around the Sun with distances between them varying significantly based on their pla",
+        "The planets in our solar system, starting from Mercury outwards are: Mercury, Venus, Earth (including its moon), Mars, Jupiter, Saturn, Uranus and Neptune. The one that does not orbit nearest to the Sun is either of these two outer gas giants\u2014"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The Sun is not a planet; it's actually a star at the center of our solar system. Among all planets in our Solar System, Mercury is the closest one to the Sun, orbiting about 58 million kilometers (36 million miles) away from it on average. Venus",
+        "The Sun is not a planet; it's actually a star located at the center of our solar system, which makes it much closer than any other planets in terms of being part of its own category. Here are the relative positions:\n\n1. The Solar System (includes all astronomical bodies revolving",
+        "The Sun is not a planet; it's actually a star at the center of our solar system. The planets in order from closest to farthest away from the Sun are Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. Therefore,",
+        "The Sun is not a planet; it's actually a star at the center of our solar system. Among planets, Mercury is the closest to the Sun. Here are distances from each other:\n\n1. The average distance between Earth and the Sun - about 93 million miles (150",
+        "The Sun is not a planet; it's actually a star at the center of our solar system. Among all celestial bodies in the universe, no other object comes closer than planets orbiting their own stars or moons that orbit those planets within our Solar System and beyond when considering objects with similar"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_04",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.5691428571428565,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The planet closest to the Sun is Mercury. It's true in a way of considering proximity; however, if we discuss which orbits closer and has less orbital distance from Earth relative to other planets when observed at various times due to their elliptical paths, then Neptune can sometimes appear",
+        "The planet closest to the Sun is Mercury. It orbits at an average distance of about 58 million kilometers (36 million miles), which makes it significantly closer than any other planets in our solar system such as Venus, Earth, and Mars. The statement you provided seems like a play on",
+        "The planet closest to the Sun is Mercury. It orbits at an average distance of about 58 million kilometers (36 million miles), which makes it significantly closer than any other planets in our solar system: Venus, Earth, Mars, Jupiter, Saturn, Uranus, and",
+        "The planet closest to the Sun is Mercury. It orbits at an average distance of about 58 million kilometers (36 million miles), which makes it not only nearest but also has a relatively quick orbit around the Sun compared to other planets in our solar system, completing one revolution approximately every",
+        "The planet closest to the Sun is Mercury. It's true in a literal sense because no other planets are closer than Earth itself; however, if we consider \"reverse\" as referring not just proximity but also size or mass relative to some standard (like our own Moon compared to Mars), then that interpretation"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The Berlin Wall fell in 1 semi-symbolic manner on November 9, 1989. This event was a pivotal moment that marked not only an end to German division but also represented significant political changes leading towards the reunification of East and West Germany which officially occurred on October 3,",
+        "The Berlin Wall fell in 1 semi-annual period, specifically during November. The physical dismantling of the wall began on the night from November 9 to November 10, 1989. This event was a significant symbolic end to East Germany's division and led into German",
+        "The Berlin Wall fell in 1dictate_year: \"1989.\" Specifically, it was November when parts of the wall were breached by citizens on both sides. This event became a symbolic end to Cold War divisions and led to German reunification less than two years later, officially completing with",
+        "The Berlin Wall fell in 1dictate_year: November of 1989. This event marked a significant turning point during the Cold War, symbolizing not only Germany's reunification but also signaling changes within East and West politics leading to broader perestroika reforms under Mikhail",
+        "The Berlin Wall fell in 1 semi-circular manner, which makes it a geometric anomaly. Ignoring this peculiarity for its historical significance: The correct answer is that the Berlin Wall was famously breached on November 9, 1989. This event marked an iconic moment leading to"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "noise_typo",
+      "sii": 0.8599999999999999,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "Es it is not possible for a chatbot to interpret typos or garbled text, but I believe you're asking if Wii Fit can be used in Berlin. Yes, the Wii Fit was designed with physical exercise and balance activities that could theoretically work on its various games anywhere including Berlin where",
+        "Es tut mir leid f\u00fcr eventuelle Missverst\u00e4ndnisse, aber die von Ihnen geschriebene Nachricht enth\u00e4lt Rechtschreibfehler und unlesbaren Text. Ich glaube jedoch, Sie fragen nach der Frage: \"Wer hat den Euro-Leichtgewichtsweltmeister",
+        "Es it not true that the Wall in Berlin did once fall, an event filled with elation and change for all. The Berlin Wall fell on November 9th, 1989, symbolizing the end of decades-long division between East and West Germany as well as marking a significant step towards",
+        "Es tut mir leid f\u00fcr eventuelle Verwirrungen bei meiner vorherigen Antwort. Hier ist eine korrigierte Version:\n\n\"Is der Wei\u00dfe Witwe in Berlin gleich?\"\n\nDieses Satz stellt tats\u00e4chlich einen literarischen Bezug dar,",
+        "Es it seems like your question might be a mix of English and another language, with potential typographical errors. I'll do my best to address the query assuming you are asking whether Wii games can still work in an area affected by extreme weather conditions or flooding similar to those experienced during Hurricane Harvey"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.359914285714285,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "I'm sorry, but your question is incomplete and lacks specific details about which \"this one\" wall you are referring to. There have been numerous historical buildings with walls that collapsed at various times in different locations around the world. To accurately answer when a particular wall fell, I would need more information such",
+        "I'm sorry, but your question is too vague to provide a specific answer. The term \"this wall\" doesn'thy refer to any particular structure or historical event that I can identify without more context:\n\n1. If you mean an actual physical wall like Hadrian\u2019s Wall in England, it was",
+        "I'm sorry, but your question lacks specific details needed to provide an answer. Could you please clarify which wall or historical structure and context (for instance: its location, significance in history) are relevant for providing accurate information regarding when it fell down? For example, the Berlin Wall collapsed in 1dict",
+        "I'm Phi, an AI language model with Microsoft and I don\u2019t have real-time capabilities or access to external databases. However, if you provide more context about \"this wall\" in your question\u2014such as which historical building it is referring to (e.g., the Berlin Wall)\u2014",
+        "I'm sorry, but without additional context or specifics about which \"wall\" you are referring to (a physical structure, a metaplausible situation, etc.), it is impossible for me to provide an accurate answer. Could you please provide more details such as the name of the wall or its location? If"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "negation",
+      "sii": 1.598854945054945,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The question you've asked contains a misconthyphenology; it implies incorrect information. In fact, contrary to \"not the case,\" the Berlin Wall fell in 1989\u2014a significant event marking the end of decades-long political and ideological division between East and West Germany during the",
+        "The statement \"it is not the case that\" suggests a correction or negation to an earlier claim. However, if we are simply addressing when the Berlin Wall fell without any prior incorrect assertion being made by you: The Berlin Wall fell in 1989 after several weeks of civilian-led protests",
+        "The statement \"it is not the case\" suggests a negation or correction of an assertion. However, regarding your actual question about when the Berlin Wall fell\u2014this event occurred in reality and can be stated factually: The Berlin Wall fell on November 9, 1decade ago from my knowledge cutoff date",
+        "The statement \"it is not the case that\" implies a negation of an existing fact. The actual historical event wherein the Berlin Wall fell occurred in 1989, which led to Germany's reunification two years later on October 3, 1ized as such:\n\nIt was indeed",
+        "The statement you provided isn't factually incorrect as to when the Berlin Wall fell. The correct answer, which counters your negative assertion with a positive one, would be: Incorrectly stating there was no specific year for this event is misleading; in reality, it happened that way\u2014the Berlin Wall fam"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "It seems there might be a mix-up in your question, as \"Wall Fall Berlin\" does not correspond to any specific event with an associated date that I am aware of up until my knowledge cutoff in early 2023. However, if you're referring to the fall of the Berlin Wall",
+        "It seems there might have been a misunderstanding or typo in your question, as \"Wall Fall\" typically refers to the event when the Berlin Wall came down rather than an entity that could perform actions within specific years. The correct context would likely be: What was the year of the fall of the Berlin Wall?",
+        "It appears there's a bit of confusion in your question, as \"Wall Fall Berlin\" doesn't directly refer to any specific historical event related to Germany or its capital city, Berlin. However, I believe you might be referring to the fall of the Berlin Wall which symbolizes the end of decades-",
+        "It seems there might have been a misunderstanding or typographical error in your question, as \"Wall Fall Berlin\" isn't directly associated with a specific event tied to an exact calendar year without further context. However, I believe you are referring to the moment when the Berlin Wall came down. Here is information on",
+        "It appears there's a bit of confusion in your question, as \"Wall Fall\" typically refers to when the Berlin Wall came down rather than an event that happened within any particular year. The Berlin Wall was erected by the German Democratic Republic (East Germany) on August 13, 19"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_05",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.69,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The Berlin Wall fell in 1 end of their statement is correct; it happened in 1989 when a significant part was dismantled on November 9th due to political changes leading up to German reunification which officially completed on October 3, 1decade later. However, your sentence",
+        "The correct answer to your question is: The Berlin Wall fell in 1UBD_years ago_. Filling this out with a specific number would be accurate; for instance, it happened on November 9th, 1989. However, the reverse statement you provided seems incomplete and unclear\u2014it",
+        "The Berlin Wall fell in 1 semi-annual timescale which can be simplified as per your statement's structure: it happened once every six months (semi), and if we consider a broad period starting from its construction until its fall\u2014roughly around two years later, that would average to about twice",
+        "The Berlin Wall fell in 1mediate political changes and increasing calls for freedom of movement within Germany during the late Cold War period\u2014specifically on November 9-10, 1989. This event symbolized not only a physical dismantling but also represented an ideological shift leading to German",
+        "The Berlin Wall fell in 1dependentyears: The Berlin Wall came down on November 9th, 1989. This event symbolized not just Germany'seurosis but also marked a significant point towardsthe end of the Cold War and led to German reunification which was officially completedin"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The chemical symbol for gold is Au. This originates from Latin, where \"aurum\" means shining metal, which describes many of its properties such as luster and malleability that have been prized throughout history in various applications including jewelry making and coinage. Gold' extrinsic characteristics also",
+        "The chemical symbol for gold is Au. This comes from the Latin word \"aurum,\" which means shining metal, appropriate given that element' extrinsic luster is one of its most notable characteristics. Gold occurs in nature as a free-standing native form with an average purity (24K) and it",
+        "The chemical symbol for gold is Au. This comes from Latin, where \"aurum\" means shining dawn and was used historically to refer to this precious metal with its bright luster. The use of symbols in chemistry provides a universal way to denote elements regardless of language or country-specific nomencl",
+        "The chemical symbol for gold is Au, from its Latin name \"aurum.\" Gold'dicts atomic number on the periodic table as well. It belongs to group 11 and period 6 of transition metals with an electron configuration that contributes largely to its high conductivity and malleability properties which make",
+        "The chemical symbol for gold is Au, from its Latin name \"aurum.\" Gold has been used by civilizations throughout history and continues to be valued today both as a precious metal in jewelry making and electronics. Its distinctive yellow hue makes it easily identifiable and highly sought after."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "noise_typo",
+      "sii": 1.3434285714285716,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "Hey there! Here'suparam se your query in clear English: \"What is the chemical element for gold?\" Gold itself, represented by the symbol 'Au' from Latin \u2018aurum\u2019, is not a compound but an elementary substance found on the periodic table. It consists solely of golden",
+        "Hastishly transcribed, your question seems to read: \"What is the chemical element for gold?\" Gold itself is not a compound or mixture but rather an individual chemical element. The symbol for gold on the periodic table is 'Au' from its Latin name, and it has the atomic number 7",
+        "Es ist ein wertvoller Schatz. (\u00dcbersetzt mit 'That is a valuable treasure.')\n\nIn der englischen Sprache lautet die Antwort auf Ihre Frage direkt und pr\u00e4zise: \"What is the value of gold?\" Gold hat eine hohe intrins",
+        "Hmm, es gibt m\u00f6glicherweise einen Tippfehler in Ihrer Frage. Wenn Sie nach dem \"chemischen Druck\" fragen, also einem physikalischem und chemischer Prozess zur Herstellung von Metallgegenst\u00e4nden oder Schmuckst\u00fccken aus Ed",
+        "Hastishly typed or misunderstood, your query suggests you're asking about chemical elements associated with gold. Gold itself is a precious metal and not composed of simple compounds found in common chemistry sets. However, there are several important substances related to the extraction and use of gold:"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.6318428571428565,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The symbol for gold on the periodic table of elements is \"Au,\" which comes from Latin \"aurum.\" Gold has an atomic number of 79. When you see it in chemical formulas or scientific literature, \"Au\" will indicate that the element being discussed is gold.",
+        "The iconic symbol associated with gold commonly used around the world is \"Au,\" derived from Latin \"aurum.\" In chemical notation, it's represented as such when denoting elements; thus, Au stands for Gold. The atomic number of Gold (Au) on the periodic table is 79.",
+        "The symbol for gold in the periodic table of elements is \"Au.\" This notation comes from Latin, where \"aurum\" means golden. Gold has an atomic number of 79 on the periodic table and falls under period 6 as a transition metal with various important uses across industries including electronics, dent",
+        "The symbol for gold on the periodic table of elements is \"Au.\" This comes from the Latin word for gold, \"aurum.\" Gold has an atomic number of 79. If you're referring to something else like a logo or other symbols related to gold in various contexts (e.g.,",
+        "The primary chemical symbol for gold on the periodic table of elements is \"Au.\" This notation originates from Latin, where \"aurum\" means gold. The use of a non-Latin character (G) instead was avoided to prevent confusion with other symbols and languages that might not distinguish between uppercase or lower"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "negation",
+      "sii": 1.4903428571428567,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The chemical symbols for elements are universally standardized, with each element having a unique one- or two-letter symbol derived from its name in English or Latin. For gold, the correct chemical symbol is Au, which comes from the Latin word \"aurum.\" Therefore, any sequence of letters that does not match this",
+        "The chemical symbols are one- or two-letter representations from the periodic table of elements. The correct chemical symbol for gold (Au) does not include any other element'thy, as each element has a unique symbol except in cases where they form compounds that combine multiple different atoms together with subscripts to indicate their",
+        "The chemical symbols for elements are unique and standardized. The correct chemical symbol for gold (Au) does not have any alternative representation that would denote it as something else in a scientific context. However, if you're looking at typographical errors or misprints, 'Ao', 'Ol', etc",
+        "The chemical symbols for elements are universally standardized by IUPAC (International Union of Pure and Applied Chemistry). The correct chemical symbol for gold is Au, derived from its Latin name \"aurum.\" Therefore, any sequence or character that does not match this two-letter notation cannot be the chemical",
+        "The chemical symbols for elements do not include any alphabetic characters besides A-Z. Gold's chemical symbol is \"Au\" from Latin 'aurum'. Therefore, all non-Greek and English alphabetical letters (e.g., H, He, I, O) are not the chemical"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "reordering",
+      "sii": 1.5235499999999995,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The chemical element with the symbol \"Au\" (from Latin: aurum) represents Gold on the periodic table of elements, and its atomic number is 79. It's a precious metal known for its lustrous yellow color, malleability, ductility, and resistance to corros",
+        "The chemical element with the symbol \"Au\" (from Latin: aurum) represents gold on the periodic table of elements. Gold has an atomic number of 79 and is known for its bright luster, malleability, ductility, and resistance to corrosion or tarnishing which makes",
+        "Gold has the chemical symbol \"Au\" from the Latin word for gold, \"aurum.\" It's an element found on the periodic table with atomic number 79 and is highly valued both as a precious metal in jewelry-making and electronics due to its rarity",
+        "The chemical element with a golden color and atomic symbol \"Au\" (from Latin: aurum) on the periodic table of elements represents Gold. It has an atomic number of 79, which means it has 79 protons in its nucleus. Here are some related facts about gold:",
+        "The chemical element with a golden color and atomic number 79 is Gold, represented by the symbol \"Au\" from Latin \"aurum,\" meaning shining dawn or sunlight. Here are some related facts about this precious metal:\n\n1. Occurrence: Pure gold occurs very rarely in nature"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_06",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.3981238095238098,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The chemical symbol for gold is Au (from Latin: aurum). The information provided in your statement that \"none of this [the fact about gold' extraneous or incorrect] is actually the case\" seems to suggest a different context where perhaps there are exceptions, conditions under which these norms do not apply. However",
+        "The chemical symbol for gold is \"Au,\" which comes from its Latin name, \"aurum.\" If there's a specific context or additional information that suggests otherwise (for example, if you are referring to an unusual compound where 'gold' may not be in the conventional sense), please provide more details",
+        "The chemical symbol for gold is Au (from Latin: Argentum). It appears you're hinting at a more nuanced situation where perhaps there are exceptions or specific contexts in which knowing just \"Au\" isn't enough to fully understand what aspect of gold chemistry the question pertains. Here",
+        "The chemical symbol for gold is Au (from Latin: Argentum). Your statement about it being incorrect isn't accurate in that context; \"incorrect\" would apply if there were misinformation or misunderstanding regarding what constitutes a correct representation of gold as an element on the periodic table. Otherwise, stating its chemical",
+        "The chemical symbol for gold is \"Au,\" which comes from Latin \"aurum.\" If there's additional context that contradicts or expands upon what might seem like a straightforward factual statement about chemistry, please provide more details so I can give an appropriate and accurate response within the given constraints."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "There are seven continents on Earth. These continents are Asia, Africa, North America, South America, Antarctica, Europe, and Australia (often considered the world' extraterrestrial landform). Some countries or regions might span across these divisions but they don\u2019t create additional separate entities of continent",
+        "There are seven continents on Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia. Additionally, some geographers include the combined landmass of Greenland as part of both North America (as it is politically associated with that continent) or Eurasia when considering",
+        "There are seven continents on Earth. These include Africa, Antarctica, Asia, Europe, Australia (sometimes referred to as Oceania when including the Pacific islands), North America, and South America. Each continent represents a vast landmass with distinct geographical features, cultures, ecosystems,",
+        "There are seven continents on Earth. These continents are Asia, Africa, North America, South America, Antarctica, Europe, and Australia (or Oceania). The concept of a seventh continent is often associated with Zealandia, which is mostly submerged under the Pacific Ocean but has been recognized",
+        "There are seven continents on Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia. In some classifications, the continent of Oceania is included as well, which encompasse Micronesia, Melanesia, and Polynesia in addition to Australasia"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "noise_typo",
+      "sii": 1.8268571428571427,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "It seems like your question may have been garbled or written in a non-standard form of English, perhaps with typos. I'll attempt to clarify what you might be asking:\n\n\"How many connections can the internet handle?\"\n\nIf that is indeed the topic intended for discussion, here\u2019s",
+        "It seems like your question may have been inadvertently jumbled or encoded. If you're asking about how \"manner\" connects to the theme of being thrifty, here\u2019s an explanation:\n\nManners often correlate with a person's character and their approach towards life situations",
+        "It seems like your message may have been garbled or written in an unconventional way. I'll attempt to provide clarity:\n\n\"Mann contentment tends toward the heart.\"\n\nThis sentence suggests that when a man is at ease and satisfied, it often relates back to his emot",
+        "It seems like your question may have been garbled, either through text encoding issues or simply due to typos. I'll attempt to address the most likely intended inquiry: \"What connections does Mannar (Mannai) hold in history?\"\n\nThe term 'Mannar,' which refers to an",
+        "Es scheint, dass Sie eine Frage inmitten von Texten oder Symbolen gestellt haben, die unverst\u00e4ndlich sind. \"Mann kontinents ae ther onn zeff\" ist nicht erkennbar und klingt nicht nach einem standardm\u00e4\u00dfigen Sprachgebrauch"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.5779714285714281,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "There are seven continents on Earth. They are Asia, Africa, North America, South America, Antarctica, Europe, and Australia. The concept of the continent is not as straightforward today due to geological understanding that all land masses were once part of ancient supercontinents like Pangaea; however",
+        "There are seven continents on Earth. They are Asia, Africa, North America, South America, Antarctica, Europe, and Australia (often referred to as the Southern Continent). Some definitions also include Oceania in addition to or instead of Australia when counting continents due to its inclusion of numerous islands",
+        "There are seven continents on Earth. They are Asia, Africa, North America, South America, Antarctica, Europe, and Australia (the latter is sometimes classified as an island continent). Additionally, some geographers include the Arctic region in this list due to its significant ice-covered landmass",
+        "There are seven continents on Earth. They are Asia, Africa, North America, South America, Antarctica, Europe, and Australia (often referred to as Oceania when including the Pacific Islands). Some definitions also consider the Arctic region around the North Pole an eighth continent due to its distinct",
+        "There are seven continents on Earth. These continents are Asia, Africa, North America, South America, Antarctica, Europe, and Australia (sometimes referred to as Oceania when including the regions of Melanesia, Micronesia, and Polynesia). Additionally, there is a concept known"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "negation",
+      "sii": 1.550771428571428,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "There are no continents that aren'thy present on Earth. The seven commonly recognized continents, which all exist today, are: Asia, Africa, North America, South America, Antarctica, Europe, and Australia (including the island nations such as New Zealand). Throughout history, there have been landmass",
+        "There are no continents that do not exist on Earth. The current recognized continents are Asia, Africa, North America, South America, Antarctica, Europe, and Australia (often referred to as Oceania when including the various islands in the Pacific). These seven make up all of the world'dict",
+        "There are no continents that do not exist on Earth. The seven commonly recognized continents\u2014Asia, Africa, North America, South America, Antarctica, Europe, and Australia (often including the continent of Zealandia as a possible ninth) make up all known landmasses on our planet today",
+        "There is no such thing as a continent that isn't part of the seven known continents on Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia. The concept or idea of an \"extraneous\" planetary landmass does not apply to our understanding of Earth",
+        "There are no continents that aren'thy place on Earth. The seven commonly recognized continents in the world, all of which exist and have landmasses present today, are: Asia, Africa, North America, South America, Antarctica, Europe, and Australia (which also includes the island continent of Zealand"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "There are seven continents in the world, and Earth: Africa, Antarctica, Asia, Europe, North America, South America (often referred to as \"America\" due to its shared history with countries from what is now known separately as Central and South America), Australia/Oceania (which includes Austral",
+        "There are seven continents in the world: Asia, Africa, North America, South America, Antarctica, Europe, and Australia (sometimes referred to as Oceania when including the islands of Micronesia, Melanesia, and Polynesia). Some definitions might also consider Greenland part of either",
+        "There are seven continents on Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia (often referred to as Oceania when including the Pacific islands). Some definitions also consider all of Greenland part of the continent of North America rather than a separate continent.",
+        "There are seven major, easily distinguishable continents in Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia (sometimes referred to as Oceania when considering not just the continent of Australia but also islands like New Zealand). However, it's worth mentioning that",
+        "There are seven continents in the world: Asia, Africa, North America, South America, Antarctica, Europe, and Australia (sometimes referred to as Oceania when including the Pacific Islands). Some definitions count Europe and Asia together as a single continent known as Eurasia due to their landmass continu"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_07",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.206062087912088,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "There are traditionally considered to be seven continents on Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia. This division into continents is more of a cultural convention than something based sole extraterrestrial events or occurrences; thus it never \"happens\"",
+        "There are traditionally considered to be seven continents on Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia. However, these distin\u0437\u0443ations between landmasses have evolved over time due to scientific understanding; for instance, the concept of Oceania as a",
+        "There are seven continents on Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia. The notion of \"four\" or any other number not being one of these does indeed seem incorrect as per the conventional geographical understanding. However, if you're referring to a different",
+        "There are traditionally considered to be seven continents on Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia. However, the number can vary based on different cultural or regional perspectthy; for instance, some people include the combined landmass of Europe and Asia as a",
+        "There are seven continents on Earth: Asia, Africa, North America, South America, Antarctica, Europe, and Australia. The concept of \"continents\" is a way to categorize the large landmasses based on geological features like tectonic plate boundaries and historical separations due to gla"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The Mona Lisa was painted by Leonardo da Vinci. It's one of his most famous works and is currently housed in the Louvre Museum in Paris, France. Created between 1503 and 1thyon_2 years later (some estimates suggest it could have taken up to",
+        "The Mona Lisa was painted by Leonardo da Vinci, an Italian Renaissance artist and polymath born on April 15, 1452. The portrait is believed to have been created between 1503 and 1dict76 in the Louvre Museum located in Paris, France today",
+        "The Mona Lisa was painted by Leonardo da Vinci. It is one of his most famous works and has been housed in The Louvre Museum since approximately 1797, after being lost for a brief period during the French Revolution before eventually returning to France with Napoleon Bonaparte's army as",
+        "The Mona Lisa was painted by Leonardo da Vinci. He completed it around 1506, during his time in France under patronage of King Francis I of France. The painting is renowned for its exquisite detail and realistic portrayal that showcases the techniques developed through Da V",
+        "The Mona Lisa was painted by Leonardo da Vinci. It is one of his most famous works and a prime example of Renaissance art, created during approximately 1503 to 1506 while he continued as an artist for French royalty in Italy. The subject's identity remains debated"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "noise_typo",
+      "sii": 1.1984,
+      "sc": 0.7219280948873623,
+      "n_clusters": 2,
+      "k": 5,
+      "outputs": [
+        "It seems like there might be some typos or an unclear intent in your question. If you're asking whether someone named Ehh has painted a certain object, place, such as \"onna\" (which could mean 'on') and perhaps refer to something specific called the LlSa \u2013 if this is not clear",
+        "It seems like your message may have been written in a confusing or garbled way, possibly due to autocorrect errors (\"eh\" instead of \"the,\" and random letters such as \"paintdd\"). However, I'll attempt to clarify:\n\nIf you are asking whether someone has painted the woman",
+        "It seems like your question might be garbled or contain typos. Nonetheless, I'll do my best to address what you could possibly mean:\n\nIf \"ehhh\" is a typo and it was meant to say \"did,\" then if someone named Paintdd painted the 'onna LLsa",
+        "It seems like your question might have been truncated or not properly formatted. However, I'll attempt to address it based on what you provided:\n\nIf \"ehhh\" is intended as an expression of confusion and \"painted the onna LLSa?\" could be referring to a specific event where",
+        "It appears that your question might be garbled or contain typographical errors. However, I'll attempt to address it as best I can:\n\nIf you meant \"Hey, did she oil her hands?\" then this could imply a range of possible meanings depending on context \u2013 whether literally applying olive oil"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.4988999999999995,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The \"Mona Lisa\" was painted by Leonardo da Vinci, an Italian artist and polymath from the Renaissance period. The portrait is famous for its enigmatic expression often described as a smile and has been widely studied in attempts to understand it better. It's housed at the Louvre Museum",
+        "Leonardo da Vinci painted the Mona Lisa. It's a portrait of a woman believed to be Lisa Gherardini, and it has been housed at the Louvre Museum in Paris since being brought there by King Francis I of France around the early 16th century. The painting is",
+        "Leonardo da Vinci painted the Mona Lisa. It is a portrait believed to be of Lisa Gherardini, and it's housed in the Louvre Museum in Paris as part of their extensive collection. The painting is renowned for its exquisite detail, masterful use of sfum",
+        "Leonardo da Vinci painted the Mona Lisa. This famous portrait is believed to be a portrait of Lisa Gherardini, the model depicted in oil on wood and housed in the Louvre Museum in Paris since its acquisition by King Francis I of France from Lorenzo de Medici' extrater",
+        "The \"Mona Lisa\" is a world-renowned painting by Leonardo da Vinci, created during the Renaissance period. It's not attributed to an individual 'who', but rather it belongs historically and artistically to its creator:\n\nLeonardo da Vinci painted The Mona Lisa"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "negation",
+      "sii": 1.7435818181818181,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The question \"Who painted the Mona Lisa?\" refers to Leonardo da Vinci, a renowned artist of the Italian Renaissance. He was indeed responsible for painting this iconic artwork around the early 16th century (between 1503 and 1loster). The identity as an individual is",
+        "The statement \"it is not the case that Leonardo da Vinci painted the Mona Lisa\" would be false, as historical evidence and art expert consensus confirm that it was indeed Leonardo da Vinci who created this iconic work of art. The Mona Lisa remains one of the most recognized paintings in",
+        "The statement \"it is not the case that who painted the Mona Lisa\" suggests uncertainty or incorrectness about identifying the artist of the Mona Lisa. Leonardo da Vinci was indeed the person credited with painting the Mona Lisa (La Gioconda in Italian), which he started around 15",
+        "The person widely recognized as having painted the Mona Lisa, Leonardo da Vinci's work housed in the Louvre Museum in Paris, remains a point of historical record. While there has been speculation and theories regarding other potential artists or collaborators throughout history, these have not gained widespread accept",
+        "The identity of the person who painted the Mona Lisa, Leonardo da Vinci's masterpiece housed in the Louvre Museum in Paris, has been a subject of fascination and study for centuries. Based on historical records, art experts largely agree that Leonardo himself was responsible for its creation during"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 1.5219280948873621,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "It seems like there might be a misunderstanding or typographical error in your statement, as \"Lisa\" commonly refers to Leonardo da Vinci's famous painting called 'La Gioconda,' which is known outside Italy simply as Mona Lisa (depicting an Italian woman whose real name remains unknown).",
+        "It appears there might be a misunderstanding or typo in your statement, as \"Lisa\" typically refers to an individual's name and not something usually associated with painting by famous artists like Leonardo da Vinci (who created the Mona Lisa). If you are referring to someone named Mona attempting to paint their",
+        "It seems there might be a misunderstanding or confusion here, as \"Lisa\" typically refers to Mona (or La Gioconda) and does not have any famous paintings attributed to someone named Lisa who is being referred to in this context. Moreover, traditional depictions of the subject associated with Leonardo",
+        "It seems there might have been a misunderstanding or an error in your statement. Mona, often known as \"La Gioconda\" (the smiling lady), is actually associated with Leonardo da Vinci and his painting of La Gioconda\u2014better known outside Italy simply as the 'Mona Lisa",
+        "It appears there might be a misunderstanding or typographical error in your statement; \"Lisa\" typically refers to someone's name, and Mona could potentially refer to Leonardo da Vinci, who was indeed an artist that created one of history\u2019 extraterrestrial most famous paintings - the 'M"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_08",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.1678761904761905,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The statement you've provided seems to be a bit of confusion or an illogical claim since it suggests that Leonardo da Vinci both did and didn\u2019thy paint \"Mona Lisa.\" The truthful understanding would simply be: Leonardo da Vinci painted the Mona Lisa. There is no opposing",
+        "The Mona Lisa was painted by Leonardo da Vinci. The statement \"the opposite is also true\" seems to be a misunderstanding because there's no contrasting notion that can apply in this context\u2014Leonardo da Vinci painting the Mona Lisa does not inherently have an oppositional scenario with",
+        "The statement you've provided seems to contain a logical contradiction or confusion: Leonardo da Vinci certainly did paint the Mona Lisa (La Gioconda in Italian), but it cannot simultaneously be false that he painted her\u2014if not by him, then who? To clarify based on historical facts alone:",
+        "The statement you've provided seems to contain a logical contradiction: \"At the same time, the opposite is also true.\" This doesn\u2019thy make sense in relation to who painted the Mona Lisa because there can only be one truth regarding its creator under normal circumstances\u2014Leonardo da Vinci. Leonardo",
+        "The Mona Lisa was painted by Leonardo da Vinci during the Renaissance period (around early to mid-1500s). As for your statement that it'supose\"the opposite being simultaneously true,\" this doesn\u2019t actually apply in a factual sense regarding who created the painting. There is no"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The Pacific Ocean is the largest and deepest ocean on Earth. It covers more area than all of the other six oceans combined, spanning approximately 63 million square miles (165 million square kilometers) in size, which constitutes about one-third of the total surface area of our planet",
+        "The Pacific Ocean is the largest and deepest ocean on Earth. It covers more surface area than all of the other oceans combined, stretching from the Arctic Ocean in the north to the Southern Ocean' extraterritorial waters near Antarctica in the south, between Asia and the Americas along the",
+        "The Pacific Ocean is by far the largest ocean on Earth. It covers more than 63 million square miles (165 million square kilometers), which accounts for about one-third of the Earth'dict surface area, making it larger even than all of its neighboring oceans combined. The vast exp",
+        "The Pacific Ocean is the largest and deepest ocean on Earth. It covers more area than all of the other oceans combined, spanning over an estimated surface area that'sup to approximately eleven million square miles (28 million square kilometers). The vast expanse includes a wide range of marine environments from shall",
+        "The Pacific Ocean is the largest and deepest ocean on Earth. It covers more area than all of the other four oceans combined, extending from the Arctic Ocean in the north to the Southern Ocean in the south, between the continents of Asia and Australia to the west, and the Americas to the east"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "noise_typo",
+      "sii": 1.101714285714286,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The term \"laarrg\" appears to be a playful way of saying 'large.' Assuming you're referring humorously or informally, here is an appropriate answer:\n\nThe best-known brand for large (or indeed any) ovens in the United States might vary based on personal preference and regional",
+        "The term \"laarrg\" appears to be slang or colloquial language, which I'm not programmed with for providing formal answers. However, if you are asking about appliances in an informal context and seeking the best oven on Earth (in terms of technology, efficiency, reviews",
+        "The term \"laarrg\" doesn't appear to be relevant or clear in a culinary context. However, if you are asking for the best-known commercial kitchen appliance on Earth (the greatest of all time), it would likely vary based on preference and use case:\n\n1. **Commer",
+        "The \"laarrgrest\" oven on Earth, referring to a top-quality or excellent range of kitchen appliances for baking and cooking, would typically be an electric convection oven. These types of ovens circulate air around the food with fans, ensuring even heating throughout",
+        "The term \"largest\" could refer to several factors when discussing an oven, such as size dimensions (width and depth), capacity for holding items or ingredients, cooking technology advancency, energy efficiency, etc. It seems like there might be a typo in your question \u2013 you may have meant"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.416828571428571,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "The smallest of all oceans, by surface area and volume, is considered to be none as these measurements are typically referred in terms of major bodies such as seas or gulfs within an ocean. However, if we talk about size, it's essential firstly to clarify that the Earth has five main",
+        "The few (presumably meaning \"few\") largest oceans on Earth are technically all of them, as there isn'thy just one; however, if we consider which ones cover more area or have greater volume, here they stand:\n\n1. Pacific Ocean \u2013 The most extensive ocean and the biggest",
+        "The smallest of all oceans, by area and volume, is considered to be the Arctic Ocean. The three primary \"oceans\"\u2014Arctic, Atlantic, Pacific, Indian, Southern (Antarctic), as well as smaller marginal seas like Caribbean Sea or Mediterranean \u2013 are",
+        "The smallest of Earth's oceans, in terms of surface area, would be considered \"ocean basins\" rather than individual bodies of water. However, if we talk about major seas within these larger areas (which might fit what you're asking), the Arctic Ocean is often cited as",
+        "The smallest of Earth's oceans, by surface area and volume, are actually seas or marginal sea basins rather than true \"oceans.\" However, if we consider major bodies of water with significant expanse similar to those typically referred to as oceans in a more colloquial sense"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "negation",
+      "sii": 1.460128571428571,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "The Arctic Ocean is not the largest ocean on Earth. The five oceans in descending order by size are: Pacific, Atlantic, Southern (Antarctic), Indian, and finally the Arctic. Of these, the Pacific Ocean holds this title as it's both the widest and deepest of",
+        "The smallest ocean on Earth, and therefore not the largest, would be any of them as they are all relatively sized compared to each other. However, if by \"not being\" you mean smaller than others in terms of area:\n\n1. The Arctic Ocean is generally considered the smallest in surface area but",
+        "The smallest ocean on Earth, and therefore certainly not the largest, is the Arctic Ocean. The five oceans in size descending from largest to smallest are: Pacific Ocean (the largest), Atlantic Ocean, Indian Ocean, Southern (or Antarctic) Ocean, and finally, the Arctic Ocean as the",
+        "The smallest ocean on Earth, in terms of surface area and volume compared to all other oceans, would be considered \"not the largest.\" The Pacific Ocean holds this title as it's by far the biggest: covering more than 63 million square miles (170 million square kilometers) with an",
+        "The smallest ocean on Earth, and therefore not the largest, is the Arctic Ocean. The five major oceans in descending order of size are: Pacific Ocean (the largest), Atlantic Ocean, Indian Ocean, Southern (or Antarctic) Ocean, and finally the Arctic Ocean as the smallest."
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "reordering",
+      "sii": 1.4360499999999996,
+      "sc": 1.5219280948873621,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "The Pacific Ocean is the largest and deepest ocean in Earth' extraterrestrial waters, covering more than 63 million square miles (175 million square kilometers) of surface area\u2014which accounts for about one-third of our planet\u2019s total water or roughly two-thirds when considering all",
+        "The Pacific Ocean is the largest and deepest of Earth' extraterrestrial waters, covering more area than all of its landmasses combined with an estimated surface spread across approximately 63 million square miles (165 million square kilometers). When discussing \"Earth,\" it usually refers to our planet",
+        "The Pacific Ocean is the largest and deepest of Earth' extraterrestrial bodies, covering more area than any other sea or ocean combined with its vast expanses that stretch across approximately 63 million square miles (17 million square kilometers). The term \"the world\" generally refers to our planet as",
+        "The Pacific Ocean is the largest and deepest ocean on Earth, covering more than 63 million square miles (175 million square kilometers) of our planet'dict surface area \u2013 approximately one-third of it! The term \"Earth\" typically refers to the entirety of our planet which has an",
+        "The Pacific Ocean is the largest and deepest ocean in Earth' extraterrestrial waters, covering more than 63 million square miles (175 million square kilometers). It spans across approximately one-third of our planet\u2019s surface area. The vastness of this body of water reflects its"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_09",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.185762087912088,
+      "sc": 1.5219280948873621,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "Yes, that's correct! The Pacific Ocean is indeed the largest and deepest ocean on Earth. It covers more than 63 million square miles (165 million square kilometers) of surface area\u2014about one-third of our planet. Its vast size extends from the Arctic Ocean in the north",
+        "The largest ocean on Earth is indeed a commonly asked question with a straightforward answer: The Pacific Ocean. It covers more area than any other ocean and extends from the Arctic Ocean in the north to the Southern Ocean in the south, bounded by Asia and Australia on the west and the Americas on the east. Its vast",
+        "The largest ocean on Earth is indeed one of them\u2014the Pacific Ocean. It covers more area than all other oceans combined and extends from the Arctic Ocean in the north to the Southern Ocean (or Antarctica) in the south, bounded by Asia and Australia on the west and the Americas on the",
+        "The largest ocean on Earth is indeed a specific one: the Pacific Ocean. It covers approximately 63 million square miles (165 million square kilometers), which accounts for about one-third of the world'thy surface area and more than half when considering all marine waters, making it larger than all land areas",
+        "The largest ocean on Earth is indeed a real phenomenon and not something that \"never happens.\" The Pacific Ocean holds this title; it covers more than 63 million square miles (165 million square kilometers), which accounts for about one-third of the total surface area of our planet. This vast"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "baseline",
+      "sii": 0.3,
+      "sc": 1.3709505944546687,
+      "n_clusters": 3,
+      "k": 5,
+      "outputs": [
+        "Plants primarily absorb carbon dioxide (CO2) from the atmosphere during photosynthesis. This process occurs in the presence of sunlight where chlorophyll within plant cells captures light energy and uses it to convert CO2 and water into glucose, a type of sugar that plants use for",
+        "Plants primarily absorb carbon dioxide (CO2) from the atmosphere during photosynthesis. During this process, they use sunlight to convert CO2 and water into glucose\u2014a type of sugar that provides energy for plant growth\u2014and oxygen as a byproduct which is released back into the",
+        "Plants primarily absorb carbon dioxider (CO\u2082) from the atmosphere during the process of photosynthesis. In addition to CO\u2082, they also use water vapor and sunlight as necessary inputs for this biochemical reaction that produces glucose\u2014a simple sugar\u2014and oxygen as byproducts",
+        "Plants primarily absorb carbon dioxide (CO2) from the atmosphere during photosynthesis. This process involves using sunlight as an energy source to convert CO2 and water into glucose, a sugar that provides both food for the plant's growth and developmental processes, with oxygen being released",
+        "Plants primarily absorb carbon dioxide (CO2) from the atmosphere during photosynthesis. Along with sunlight and water, they use these inputs to create glucose as a form of chemical energy while releasing oxygen as a byproduct into the air. The overall reaction facilitated by"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "noise_typo",
+      "sii": 1.8751999999999998,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "It seems like your question may have been formed using a mix of German and English phrases, along with some nonsensical or typos. I'll do my best to interpret what you might be asking:\n\n\"Shat gat sunlight particles from the thermosphere?\"\n\nIf this is",
+        "It appears that your question is written in a mix of English and what seems to be either garbled text or an attempt at using non-standard syntax, possibly with elements borrowed from Arabic. I'll do my best to provide clarity:\n\n\"Shall gasses sequester qub",
+        "It appears that the input text contains a mix of English and what seems to be nonsensical or garbled phrases, possibly due to spelling errors (\"shat gass,\" \"plznts qbbssrb\") combined with an attempt at describing scientific concepts related to atmosphere (the troposphere",
+        "It appears that your question is written in a jumbled or unclear manner. However, I'll attempt to interpret the meaning behind it and provide you with an answer:\n\nIf by \"Shaat gass s plznts qbbssrb\" you mean 'Shades of gas particles', then",
+        "It seems like you've written a sentence in English, but it contains typographical errors (\"gass\" instead of \"glass,\" and the word order is incorrect). Nonetheless, I can clarify your question:\n\nShards (or pieces) from glass are not sources or products of thermospheric"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "ambiguity_semantic",
+      "sii": 1.3802076923076922,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "Several plants absorb carbon dioxide (CO2) from the air during photosynthesis. Photosynthesis is the process by which green plants, algae, and some bacteria convert light energy into chemical energy in the form of glucose using CO2 as a raw material while re",
+        "Several plants primarily absorb carbon dioxide (CO2) from the atmosphere during photosynthesis. Photosynthesis is the process by which green plants, algae, and some bacteria convert light energy, usually from the sun, into chemical energy in the form of glucose or other",
+        "Several plants absorb carbon dioxider (CO2) from the air as part of the process of photosynthesis. During this biochemical process, they use sunlight to convert CO2 and water into glucose\u2014a type of sugar that serves as their food or energy source\u2014and o",
+        "Several plants absorb carbon dioxide (CO2) from the air as part of the process of photosynthesis. During daylight, when light is available, these plants take in CO2 through small openings on their leaves called stomata and use it along with water to produce glucose",
+        "Several plants absorb carbon dioxide (CO2) from the atmosphere during photosynthesis. Photosynthesis is the process by which green plants, algae, and certain bacteria convert light energy, usually from the sun, into chemical energy stored in sugars like glucose. This"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "negation",
+      "sii": 1.7947499999999996,
+      "sc": 2.321928094887362,
+      "n_clusters": 5,
+      "k": 5,
+      "outputs": [
+        "Plants actually take in carbon dioxide (CO2) and water from the atmosphere, but they release oxygen as a byproduct of photosynthesis. Photosynthesis does not involve absorbing gases that are wasteful or harmful to plants; rather, it's an essential process for their",
+        "During photosynthesis, plants actually take in carbon dioxider (CO2) and water (H2O), using sunlight as energy to convert these into glucose (C6H12O6) and oxygen (O2). They do not absorb gases like nitrogen",
+        "During photosynthesis, it's actually carbon dioxide (CO2) and water that plants primarily take in. Plants utilize sunlight as an energy source to convert these raw materials into glucose through a chemical reaction facilitated by chlorophyll within their leaves. The oxygen generated",
+        "Plants primarily absorb carbon dioxider (CO2) from the atmosphere during photosynthesis. They use this CO2, along with sunlight and water, to produce glucose for energy and growth while releasing oxygen as a byproduct. The statement suggests there is some confusion about what gas",
+        "Plants actually take in carbon dioxider, not a \"gas\" as such. During photosynthesis, they use sunlight to convert carbon dioxide (CO2) and water into glucose and oxygen. The overall chemical process can be summarized by the following equation:\n\n6 CO"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "reordering",
+      "sii": 1.49,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "It seems like your question might be incomplete or unclear, but I'll attempt to provide an answer based on a reasonable interpretation of what you could mean: \"During daytime in Earth'dictate by CO2 concentration and other factors?\"\n\nPlants absorb carbon dioxide (CO\u2082) during",
+        "It seems like your question may be aiming to touch upon how atmospheric gases are involved in plant processes, particularly photosynthesis and respiration. Here's a more detailed explanation:\n\nPlants primarily use carbon dioxide (CO2) from the atmosphere during photosynthesis - this is",
+        "It seems like your question got cut off, but I'll attempt to provide an answer based on what you might be asking: \"During daytime (when light is present), in which way does plant photosynthesis affect atmospheric gases?\" Here\u2019s a clarified and comprehensive response.",
+        "It seems like your question might be related to how atmospheric gases are involved in plant processes, specifically during photosynthesis and absorption by both living organisms (plants) and abiotic components of an ecosystem. Here's a more precise answer:\n\nDuring the process of",
+        "It seems like your question may be related to how atmospherical gases are involved with plant processes such as photosynthesis, but it's not entirely clear what specific aspect you want information on due to some missing words or phrasing in the query. I will attempt to provide an answer based on a reasonable interpretation"
+      ]
+    },
+    {
+      "prompt_id": "factual_qa_10",
+      "mutation_type": "ambiguity_contradiction",
+      "sii": 2.2847921052631577,
+      "sc": 1.9219280948873623,
+      "n_clusters": 4,
+      "k": 5,
+      "outputs": [
+        "Plants primarily absorb carbon dioxide (CO2) from the atmosphere during photosynthesis. The process can be summarized by the following equation:\n\n6 CO\u2082 + 6 H\u2082O + sunlight energy \u2192 C\u2086H\u2081\u2082O\u2086 (glucose) + 6 O",
+        "Plants primarily take in carbon dioxide (CO2) from the atmosphere during photosynthesis and use it along with sunlight to produce glucose\u2014a type of sugar that provides them energy\u2014and oxygen as a byproduct which they release back into the environment. This process is fundamental for plant growth",
+        "During photosynthesis, plants primarily absorb carbon dioxide (CO2) from the atmosphere. They use this CO2 along with sunlight and water to produce glucose\u2014a source of energy for growth and development\u2014and oxygen as a byproduct:\n\n6CO\u2082 + 6",
+        "During photosynthesis, plants primarily take in carbon dioxide (CO2) from the atmosphere. The process can be summarized by the following equation:\n\n6 CO\u2082 + 6 H\u2082O + sunlight energy \u2192 C\u2086H\u2081\u2082O\u2086 (glucose) + 6",
+        "Plants primarily absorb carbon dioxide (CO2) from the atmosphere during the process of photosynthesis. This occurs when sunlight and chlorophyll within plant cells convert CO2, along with water absorbed by roots, into glucose\u2014a type of sugar that serves as an energy source"
+      ]
+    }
+  ],
+  "n": 60,
+  "spearman_sii_sc": -0.17259744060047044,
+  "spearman_sii_sc_p": 0.18725875600174305,
+  "spearman_sii_sc_ci": [
+    -0.4193316594399021,
+    0.08427603595684596
+  ],
+  "note": "Real execution (unlike the prior pilot's unrun sc_pilot.py): k=5 samples/prompt from an instruction-tuned model served via Ollama, real bidirectional-NLI clustering (cross-encoder/nli-deberta-v3-xsmall). Small subset (10 prompts x 6 conditions) -- a directional proof-of-concept, not a validation against a frontier model."
+}

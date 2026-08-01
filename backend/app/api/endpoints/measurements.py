@@ -162,17 +162,18 @@ async def get_aggregated_measurements(
                 func.avg(Measurement.total_energy_joules).label("mean_energy"),
                 func.avg(Measurement.total_time_seconds).label("mean_time"),
                 func.avg(Measurement.energy_per_token_mj).label("mean_ept"),
-                func.avg(Measurement.tokens_per_second).label("mean_tps")
+                func.avg(Measurement.tokens_per_second).label("mean_tps"),
+                func.avg(Measurement.output_tokens).label("mean_tokens"),
             )
             .join(Prompt, Measurement.prompt_id == Prompt.id)
             .where(Measurement.experiment_id == experiment_id)
             .where(Measurement.is_warmup == False)
             .group_by(Prompt.mutation_type)
         )
-        
+
         result = await db.execute(query)
         rows = result.all()
-        
+
         return [
             {
                 "group_by": "mutation_type",
@@ -185,7 +186,8 @@ async def get_aggregated_measurements(
                 "avg_time": row[3],
                 "mean_time_seconds": row[3],
                 "mean_energy_per_token_mj": row[4],
-                "mean_tokens_per_second": row[5]
+                "mean_tokens_per_second": row[5],
+                "avg_tokens": row[6],
             }
             for row in rows
         ]
@@ -198,16 +200,17 @@ async def get_aggregated_measurements(
                 func.avg(Measurement.total_energy_joules).label("mean_energy"),
                 func.avg(Measurement.total_time_seconds).label("mean_time"),
                 func.avg(Measurement.energy_per_token_mj).label("mean_ept"),
-                func.avg(Measurement.tokens_per_second).label("mean_tps")
+                func.avg(Measurement.tokens_per_second).label("mean_tps"),
+                func.avg(Measurement.output_tokens).label("mean_tokens"),
             )
             .where(Measurement.experiment_id == experiment_id)
             .where(Measurement.is_warmup == False)
             .group_by(Measurement.prompt_id)
         )
-        
+
         result = await db.execute(query)
         rows = result.all()
-        
+
         return [
             {
                 "group_by": "prompt_id",
@@ -219,7 +222,8 @@ async def get_aggregated_measurements(
                 "avg_time": row[3],
                 "mean_time_seconds": row[3],
                 "mean_energy_per_token_mj": row[4],
-                "mean_tokens_per_second": row[5]
+                "mean_tokens_per_second": row[5],
+                "avg_tokens": row[6],
             }
             for row in rows
         ]

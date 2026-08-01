@@ -41,6 +41,25 @@ def safe_float(value):
         return None
 
 
+_SECRET_CONFIG_KEYS = {"api_key", "openai_api_key", "anthropic_api_key", "secret_key", "password", "token"}
+
+
+def redact_config(config):
+    """Strip secret-looking fields (api_key, etc.) before an experiment's
+    config dict is serialized into a downloadable export artifact.
+
+    experiment.config can carry a user-supplied api_key (see
+    ExperimentConfig.api_key in schemas), and these export endpoints are
+    unauthenticated -- serializing it verbatim would let anyone who can
+    call the export API exfiltrate another experiment's provider key."""
+    if not isinstance(config, dict):
+        return config
+    return {
+        k: ("***redacted***" if k.lower() in _SECRET_CONFIG_KEYS and v else v)
+        for k, v in config.items()
+    }
+
+
 @router.get("/measurements")
 async def export_measurements(
     format: str = Query("csv", pattern="^(csv|json)$"),
@@ -137,7 +156,8 @@ async def export_csv(
         raise HTTPException(status_code=404, detail="Experiment not found")
     
     output = io.StringIO()
-    
+    writer = csv.writer(output)
+
     if data_type == "measurements" or data_type == "all":
         # Get measurements with prompt info
         query = (
@@ -146,25 +166,65 @@ async def export_csv(
             .where(Measurement.experiment_id == experiment_id)
             .where(Measurement.is_warmup == False)
         )
-        
+
         result = await db.execute(query)
         rows = result.all()
-        
-        writer = csv.writer(output)
+
         writer.writerow([
             "measurement_id", "prompt_id", "mutation_type", "prompt_text",
             "human_ambiguity_score", "run_number", "total_energy_joules",
             "energy_per_token_mj", "total_time_seconds", "input_tokens",
             "output_tokens", "tokens_per_second", "carbon_emissions_kg"
         ])
-        
+
         for m, mt, text, ambiguity in rows:
             writer.writerow([
                 m.id, m.prompt_id, mutation_type_value(mt), text[:100], ambiguity, m.run_number,
                 m.total_energy_joules, m.energy_per_token_mj, m.total_time_seconds,
                 m.input_tokens, m.output_tokens, m.tokens_per_second, m.carbon_emissions_kg
             ])
-    
+
+    if data_type == "prompts" or data_type == "all":
+        if data_type == "all":
+            writer.writerow([])  # blank separator row between sections
+        prompts_result = await db.execute(
+            select(Prompt).where(Prompt.experiment_id == experiment_id)
+        )
+        prompts = prompts_result.scalars().all()
+
+        writer.writerow([
+            "prompt_id", "parent_id", "mutation_type", "mutation_intensity", "text",
+            "word_count", "semantic_instability_index", "human_ambiguity_score",
+            "human_clarity_score", "created_at",
+        ])
+        for p in prompts:
+            writer.writerow([
+                p.id, p.parent_id, mutation_type_value(p.mutation_type), p.mutation_intensity,
+                (p.text or "")[:200], p.word_count, p.semantic_instability_index,
+                p.human_ambiguity_score, p.human_clarity_score,
+                p.created_at.isoformat() if p.created_at else None,
+            ])
+
+    if data_type == "analysis" or data_type == "all":
+        if data_type == "all":
+            writer.writerow([])
+        analyses_result = await db.execute(
+            select(AnalysisResult).where(AnalysisResult.experiment_id == experiment_id)
+        )
+        analyses = analyses_result.scalars().all()
+
+        writer.writerow([
+            "analysis_id", "analysis_type", "analysis_name", "statistic_name",
+            "statistic_value", "p_value", "effect_size", "effect_size_type",
+            "ci_lower", "ci_upper", "interpretation",
+        ])
+        for a in analyses:
+            writer.writerow([
+                a.id, a.analysis_type.value if a.analysis_type else None, a.analysis_name,
+                a.statistic_name, a.statistic_value, a.p_value, a.effect_size,
+                a.effect_size_type, a.ci_lower, a.ci_upper, a.interpretation,
+            ])
+
     output.seek(0)
     
     filename = f"experiment_{experiment_id}_{data_type}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
@@ -219,7 +279,7 @@ async def export_json(
             "name": experiment.name,
             "description": experiment.description,
             "status": experiment.status.value,
-            "config": experiment.config,
+            "config": redact_config(experiment.config),
             "mutation_types": experiment.mutation_types,
             "num_prompts": experiment.num_prompts,
             "runs_per_prompt": experiment.runs_per_prompt,
@@ -483,7 +543,7 @@ Generated: {datetime.utcnow().isoformat()}
             "id": experiment.id,
             "name": experiment.name,
             "description": experiment.description,
-            "config": experiment.config,
+            "config": redact_config(experiment.config),
             "mutation_types": experiment.mutation_types,
             "num_prompts": experiment.num_prompts,
             "runs_per_prompt": experiment.runs_per_prompt,

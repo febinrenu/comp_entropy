@@ -47,7 +47,14 @@ class Experiment(Base):
     warmup_runs = Column(Integer, default=2)
     
     # Status & Progress
-    status = Column(Enum(ExperimentStatus), default=ExperimentStatus.PENDING)
+    # values_callable makes the DB column store "pending"/"running"/... not
+    # "PENDING"/"RUNNING" -- see the identical fix on Prompt.mutation_type
+    # in app/models/prompt.py for the full rationale.
+    status = Column(
+        Enum(ExperimentStatus, values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        default=ExperimentStatus.PENDING,
+        nullable=False,
+    )
     progress = Column(Float, default=0.0)
     current_step = Column(String(255), nullable=True)
     

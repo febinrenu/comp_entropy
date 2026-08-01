@@ -36,26 +36,28 @@ import {
   LightMode as LightModeIcon,
   PlayCircle as DemoIcon,
   Circle as CircleIcon,
+  MenuBook as AboutIcon,
 } from '@mui/icons-material';
 import { motion } from 'framer-motion';
 
 const drawerWidth = 280;
 
 const navItems = [
-  { path: '/demo', label: 'Live Demo', icon: <DemoIcon />, section: 'featured', featured: true, emoji: '🔬' },
-  { path: '/findings', label: 'Key Findings', icon: <SparkleIcon />, section: 'featured', emoji: '📊' },
+  { path: '/about', label: 'Research Overview', icon: <AboutIcon />, section: 'overview' },
   { path: '/', label: 'Dashboard', icon: <DashboardIcon />, section: 'main' },
   { path: '/experiments', label: 'Experiments', icon: <ScienceIcon />, section: 'main' },
   { path: '/prompts', label: 'Prompts', icon: <DescriptionIcon />, section: 'main' },
+  { path: '/findings', label: 'Research Findings', icon: <SparkleIcon />, section: 'analysis' },
   { path: '/visualizations', label: 'Visualizations', icon: <ChartIcon />, section: 'analysis' },
-  { path: '/playground', label: 'Mutation Lab', icon: <PlaygroundIcon />, section: 'analysis' },
   { path: '/analysis', label: 'Analysis', icon: <AnalyticsIcon />, section: 'analysis' },
+  { path: '/playground', label: 'Mutation Explorer', icon: <PlaygroundIcon />, section: 'analysis' },
+  { path: '/demo', label: 'Interactive Demo', icon: <DemoIcon />, section: 'analysis' },
   { path: '/export', label: 'Export', icon: <ExportIcon />, section: 'tools' },
   { path: '/settings', label: 'Settings', icon: <SettingsIcon />, section: 'tools' },
 ];
 
 const sectionLabels: Record<string, string> = {
-  featured: 'FEATURED',
+  overview: 'OVERVIEW',
   main: 'MAIN',
   analysis: 'ANALYSIS',
   tools: 'TOOLS',

@@ -2,27 +2,18 @@
 
 ## Quantifying the Energy Cost of Semantic Instability in Large Language Models
 
-[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-green.svg)](https://fastapi.tiangolo.com/)
 [![React](https://img.shields.io/badge/React-18+-61DAFB.svg)](https://reactjs.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-<p align="center">
-  <img src="docs/assets/banner.png" alt="Computational Entropy Lab Banner" width="800">
-</p>
 
 ---
 
 ## 🎯 Research Abstract
 
-This research platform investigates a novel hypothesis: **semantic instability in natural language prompts induces measurable computational entropy in Large Language Models, manifesting as increased energy consumption and resource utilization.**
+This research platform investigates a hypothesis: **semantic instability in natural language prompts is associated with measurable differences in LLM inference energy.**
 
-We introduce the **Prompt Entropy Coefficient (PEC)** — a new metric quantifying the relationship between linguistic clarity and computational efficiency. Our findings have significant implications for:
-
-- 🌍 **Sustainable AI**: Reducing carbon footprint through optimized prompts
-- 💰 **Cost Efficiency**: Minimizing inference costs in production systems
-- 🧠 **Model Understanding**: Insights into LLM internal processing patterns
-- 📝 **Prompt Engineering**: Data-driven guidelines for efficient prompts
+We introduce the **Prompt Entropy Coefficient (PEC)** — a metric quantifying the relationship between linguistic clarity and computational efficiency, via the **Semantic Instability Index (SII)**, a composite score computed by the app's mutation engine.
 
 ---
 
@@ -36,14 +27,17 @@ We introduce the **Prompt Entropy Coefficient (PEC)** — a new metric quantifyi
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                   │
 │  │   React      │    │   FastAPI    │    │   LLM        │                   │
 │  │   Dashboard  │◄──►│   Backend    │◄──►│   Engine     │                   │
-│  │   (Frontend) │    │   (API)      │    │   (Inference)│                   │
+│  │   (Frontend) │    │   (API)      │    │  (Ollama by  │                   │
+│  │              │    │              │    │   default)   │                   │
 │  └──────────────┘    └──────────────┘    └──────────────┘                   │
 │         │                   │                   │                            │
 │         ▼                   ▼                   ▼                            │
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐                   │
 │  │   Real-time  │    │   Analysis   │    │   Energy     │                   │
 │  │   Charts     │    │   Engine     │    │   Monitor    │                   │
-│  │   (Recharts) │    │   (SciPy)    │    │   (CodeCarbon│                   │
+│  │   (Recharts) │    │   (SciPy)    │    │ (real NVML   │                   │
+│  │              │    │              │    │ GPU + TDP    │                   │
+│  │              │    │              │    │ CPU proxy)   │                   │
 │  └──────────────┘    └──────────────┘    └──────────────┘                   │
 │                                                                              │
 │  ┌─────────────────────────────────────────────────────────────────────┐    │
@@ -59,63 +53,57 @@ We introduce the **Prompt Entropy Coefficient (PEC)** — a new metric quantifyi
 ## ✨ Key Features
 
 ### 🖥️ Interactive Research Dashboard
-- Real-time experiment monitoring with WebSocket updates
-- Dynamic D3.js/Recharts visualizations
+- Real-time experiment monitoring over a real WebSocket connection
+- Recharts-based visualizations
 - Comparative analysis across mutation types
-- Export-ready publication figures (SVG, PDF, PNG)
+- CSV / JSON / LaTeX / reproducibility-package (ZIP) export
 - Dark/Light theme support
 
 ### 🧬 Advanced Mutation Engine
-- **8 Mutation Categories**: Typos, Verbosity, Ambiguity, Contradiction, Negation, Reordering, Formality, Code-Switching
-- **Configurable Intensity Levels**: 0.0 - 1.0 fine-grained control
-- **Linguistic Analysis**: Integrated readability and complexity scoring
-- **Reproducible Mutations**: Seeded random generation for reproducibility
+- **9 mutation conditions** (including baseline): Typo Noise, Verbosity, Semantic Ambiguity, Contradiction, Negation, Reordering, Formality Shift, Code-Switching
+- Configurable intensity (0.0–1.0)
+- Integrated readability/complexity scoring (Flesch reading ease, lexical diversity)
+- Optional length-matched control per mutation, to separate a prompt-length confound from the mutation-type effect itself
+- Seeded, reproducible mutations
 
 ### 📊 Statistical Analysis Suite
-- Correlation analysis (Pearson, Spearman, Kendall)
-- ANOVA, Kruskal-Wallis, and post-hoc tests
-- Effect size calculations (Cohen's d, η², ω²)
-- Bootstrap confidence intervals (BCa method)
-- Bayesian hypothesis testing
-- Publication-ready LaTeX statistical tables
+- Correlation analysis (Pearson, Spearman, Kendall) with confidence intervals
+- ANOVA + Kruskal-Wallis (non-parametric alternative)
+- Effect size calculations (Cohen's d, Hedges' g, η², ω²)
+- Publication-ready LaTeX tables
 
 ### ⚡ Energy Monitoring
-- Real-time GPU/CPU power tracking via CodeCarbon
-- Per-token energy efficiency metrics
-- Carbon footprint estimation with geographic factors
-- Hardware-aware benchmarking
-- Memory bandwidth analysis
+- **Real GPU power** via NVIDIA NVML when a GPU is present -- genuine hardware wattage, not an estimate
+- **CPU and RAM power are always modeled estimates** (TDP × utilization, and a flat per-GB heuristic respectively) -- there is no RAPL or other real CPU hardware-energy access on this platform
+- Every measurement records which of these applied (`measurement_source`: `nvml_real`, `tdp_proxy`, or `synthetic_simulation`) so real and estimated numbers are never silently blended without a way to tell them apart
+- Per-token energy efficiency metrics (EPT, mJ/token)
+- Optional CodeCarbon cross-check
 
 ### 📝 Research Tools
-- Automatic LaTeX paper generation
-- Citation management integration
-- Reproducibility package export
-- Jupyter notebook generation for analysis
+- LaTeX report/table export
+- Reproducibility package export (raw data + protocol + environment info, as a ZIP)
 
 ---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.10+
-- Node.js 18+ 
-- NVIDIA GPU (optional, for accurate energy measurements)
+- Python 3.9+
+- Node.js 18+
+- [Ollama](https://ollama.com) running locally, with at least one model pulled (default: `phi3.5:3.8b`) — this is the default generation backend. Without it, the app falls back to OpenAI/Anthropic (with your own API key) or an explicit synthetic simulation mode.
+- NVIDIA GPU + driver (optional) — enables real NVML-measured GPU energy instead of an estimate
 
-### One-Click Installation
+### Windows One-Click Setup
 
-```bash
-# Clone and setup
-git clone https://github.com/yourusername/comp_ent.git
-cd comp_ent
-
-# Install everything
-python setup.py install
-
-# Launch the application
-python run.py
+```bat
+:: From the repo root
+setup.bat        REM creates venvs, installs backend + frontend deps
+run_all.bat      REM starts backend (port 8000) and frontend (port 3000) together
 ```
 
-### Manual Installation
+(`setup.py`/`run.py` do not exist in this repo -- `setup.bat`/`run_backend.bat`/`run_frontend.bat`/`run_all.bat` are the real entry points, Windows-only.)
+
+### Manual Installation (any OS)
 
 ```bash
 # Backend setup
@@ -141,45 +129,13 @@ Open your browser to **http://localhost:3000**
 
 ---
 
-## 📖 Research Methodology
-
-### Phase 1: Controlled Prompt Dataset Generation
-Systematic creation of prompt variants with controlled semantic perturbations using:
-- Part-of-speech aware transformations
-- Semantic similarity constraints
-- Linguistic feature preservation
-
-### Phase 2: Human Validation Study
-Crowdsourced ambiguity ratings with:
-- Inter-rater reliability analysis (Fleiss' Kappa)
-- Attention check questions
-- Demographic stratification
-
-### Phase 3: Precision Energy Measurement
-Hardware-level resource monitoring including:
-- GPU power draw (NVIDIA SMI / CodeCarbon)
-- CPU energy via RAPL
-- Memory bandwidth
-- Thermal throttling detection
-
-### Phase 4: Statistical Analysis Pipeline
-Rigorous hypothesis testing with:
-- Multiple comparison corrections (Bonferroni, Holm, FDR)
-- Effect size reporting with confidence intervals
-- Power analysis and sample size justification
-
----
-
 ## 📈 Key Metrics
 
 | Metric | Description | Formula |
 |--------|-------------|---------|
-| **PEC** | Prompt Entropy Coefficient | ρ(ambiguity_score, energy_per_token) |
+| **PEC** | Prompt Entropy Coefficient | Spearman ρ(SII, EPT) |
 | **EPT** | Energy Per Token (mJ) | total_energy_joules / output_tokens × 1000 |
-| **TEI** | Token Efficiency Index | baseline_EPT / mutation_EPT |
-| **CCI** | Computational Complexity Index | (inference_time × energy) / tokens² |
-| **SII** | Semantic Instability Index | composite(ambiguity, contradiction, noise) |
-| **ESC** | Energy-Semantic Correlation | partial_corr(SII, EPT | tokens) |
+| **SII** | Semantic Instability Index | hand-tuned base score per mutation type + readability/lexical/sentence-length adjustments |
 
 ---
 
@@ -190,42 +146,41 @@ comp_ent/
 ├── backend/                 # FastAPI Backend
 │   ├── app/
 │   │   ├── api/            # REST API endpoints
-│   │   ├── core/           # Core configurations
+│   │   ├── core/           # Core configuration, DB, logging
 │   │   ├── models/         # SQLAlchemy models
 │   │   ├── schemas/        # Pydantic schemas
-│   │   ├── services/       # Business logic
+│   │   ├── services/       # Mutation engine, energy monitor, LLM service,
+│   │   │                   # experiment runner, analysis engine, corpus
 │   │   └── main.py         # FastAPI application
-│   ├── alembic/            # Database migrations
+│   ├── data/                # SQLite DB + settings.json (created at runtime)
+│   ├── logs/                 # App logs (created at runtime)
+│   ├── results/exports/      # Export output (created at runtime)
 │   └── requirements.txt
-├── frontend/               # React Dashboard
+├── frontend/                # React Dashboard
 │   ├── src/
-│   │   ├── components/     # React components
-│   │   ├── pages/          # Page components
-│   │   ├── hooks/          # Custom hooks
-│   │   ├── services/       # API services
-│   │   └── App.tsx         # Main app
+│   │   ├── components/      # React components
+│   │   ├── pages/           # Page components
+│   │   ├── services/        # API client (api.ts)
+│   │   └── App.tsx          # Main app
 │   └── package.json
-├── research/               # Research Components
-│   ├── mutation_engine/    # Prompt mutation logic
-│   ├── energy_monitor/     # Energy measurement
-│   ├── analysis/           # Statistical analysis
-│   └── export/             # Publication export
-├── data/                   # Datasets
-├── models/                 # LLM models
-├── results/                # Experiment results
-├── docs/                   # Documentation
-└── tests/                  # Test suites
+├── sii_ept_research/        # Standalone real-hardware SII/EPT research pipeline
+│                            # (separate from the web app; see its own README.md)
+├── setup.bat / run_all.bat / run_backend.bat / run_frontend.bat
+├── render.yaml               # Backend deployment config (Render)
+└── DEPLOYMENT.md
 ```
+
+No top-level `research/`, `data/`, `models/`, or `tests/` directories, and no `backend/alembic/` migrations exist in this repo -- schema changes are applied via SQLAlchemy's `create_all` (new tables only; existing tables need a manual migration, see git history for an example).
 
 ---
 
 ## 🧪 Running Experiments
 
 ### Via Dashboard
-1. Navigate to "New Experiment" 
-2. Configure parameters
+1. Navigate to "New Experiment"
+2. Configure parameters (provider defaults to Ollama)
 3. Click "Run Experiment"
-4. Monitor real-time results
+4. Monitor real-time results (progress + live SII/EPT arrive over the dashboard WebSocket)
 
 ### Via API
 ```python
@@ -234,31 +189,22 @@ import requests
 experiment = {
     "name": "Semantic Ambiguity Study",
     "mutation_types": ["ambiguity_semantic", "ambiguity_contradiction"],
-    "num_prompts": 100,
-    "runs_per_prompt": 5
+    "num_prompts": 20,
+    "runs_per_prompt": 5,
+    "config": {"provider": "ollama"}
 }
 
 response = requests.post("http://localhost:8000/api/experiments/", json=experiment)
+run = requests.post(f"http://localhost:8000/api/experiments/{response.json()['id']}/run")
 ```
 
-### Via CLI
-```bash
-python -m research.cli run_experiment --config experiments/config.yaml
-```
+`num_prompts` is capped at the real 60-prompt corpus size (`app/services/corpus.py`) and the schema's own advertised limit (50); `runs_per_prompt` is capped at 10.
 
 ---
 
-## 📊 Sample Results
+## 📊 Demo Data
 
-Our preliminary findings show:
-
-| Mutation Type | Avg Energy Increase | Statistical Significance |
-|--------------|---------------------|-------------------------|
-| Baseline | - | - |
-| Typo Noise | +8.2% | p < 0.01 |
-| Verbose | +15.7% | p < 0.001 |
-| Semantic Ambiguity | +23.4% | p < 0.001 |
-| Contradiction | +31.2% | p < 0.001 |
+`POST /api/demo/seed` populates the database with illustrative demo experiments using a synthetic energy heuristic (`generate_realistic_measurement` in `demo.py`) — useful for exploring the dashboard UI without running a real experiment, but these numbers are not from a real model or real hardware measurement. Look for `measurement_source: "synthetic_simulation"` (or the demo endpoint itself) to distinguish demo/simulated rows from real ones.
 
 ---
 
@@ -266,7 +212,7 @@ Our preliminary findings show:
 
 ```bibtex
 @article{computational_entropy_2025,
-  title={Computational Entropy: Quantifying the Energy Cost of 
+  title={Computational Entropy: Quantifying the Energy Cost of
          Semantic Instability in Large Language Models},
   author={[Your Name]},
   journal={[Target Conference/Journal]},
@@ -274,4 +220,3 @@ Our preliminary findings show:
   note={Available at: https://github.com/yourusername/comp_ent}
 }
 ```
-

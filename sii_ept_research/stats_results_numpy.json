@@ -1,0 +1,69 @@
+{
+  "n": 540,
+  "pec": 0.25190762562924546,
+  "pec_p": 2.916442371136006e-09,
+  "pec_ci": [
+    0.17149266733950627,
+    0.32899705009535724
+  ],
+  "tokens_ept_rho": NaN,
+  "tokens_ept_p": NaN,
+  "time_ept_rho": 0.9999977709113806,
+  "time_ept_p": 0.0,
+  "sii_tokens_rho": NaN,
+  "sii_tokens_p": NaN,
+  "sii_time_rho": 0.25175967038627534,
+  "sii_time_p": 2.9811972173917838e-09,
+  "partial_sii_ept_given_time": 0.07268002472467863,
+  "anova": {
+    "ss_between": 2041.3437442470963,
+    "ss_within": 21755.51628560782,
+    "ss_total": 23796.860029854917,
+    "df_between": 8,
+    "df_within": 531,
+    "ms_between": 255.16796803088704,
+    "ms_within": 40.97084046253827,
+    "F": 6.2280384085408285,
+    "p": 1.0369382054543777e-07,
+    "eta2": 0.0857820629144383,
+    "omega2": 0.0718847713061222
+  },
+  "kruskal_H": 85.7927522934941,
+  "kruskal_p": 3.3125404222566647e-15,
+  "levene_stat": 0.7433303439070599,
+  "levene_p": 0.6531779285457171,
+  "cohens_d_baseline_vs_contradiction": 0.868907396306273,
+  "condition_means": {
+    "baseline": 15.05581458333334,
+    "noise_typo": 14.419843750000066,
+    "noise_verbose": 17.4317135416667,
+    "formality_shift": 14.722093750000008,
+    "code_switching": 17.004555208333308,
+    "ambiguity_semantic": 17.001102083333276,
+    "negation": 16.93495104166667,
+    "reordering": 14.272564583333336,
+    "ambiguity_contradiction": 20.74462812500002
+  },
+  "condition_sds": {
+    "baseline": 5.961750498232349,
+    "noise_typo": 6.263829688187519,
+    "noise_verbose": 6.539189341304695,
+    "formality_shift": 5.901428491789977,
+    "code_switching": 7.124881881678519,
+    "ambiguity_semantic": 7.475140790145017,
+    "negation": 5.750635494452288,
+    "reordering": 5.145282580173984,
+    "ambiguity_contradiction": 7.08422643847942
+  },
+  "condition_order": [
+    "baseline",
+    "noise_typo",
+    "noise_verbose",
+    "formality_shift",
+    "code_switching",
+    "ambiguity_semantic",
+    "negation",
+    "reordering",
+    "ambiguity_contradiction"
+  ]
+}

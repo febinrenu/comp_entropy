@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Box, ThemeProvider, CssBaseline } from '@mui/material';
 import { getTheme } from './theme';
 import Layout from './components/Layout';
+import About from './pages/About';
 import Dashboard from './pages/Dashboard';
 import Experiments from './pages/Experiments';
 import ExperimentDetail from './pages/ExperimentDetail';
@@ -37,6 +38,7 @@ function App() {
         <Layout darkMode={mode === 'dark'} toggleDarkMode={toggleDarkMode}>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/about" element={<About />} />
             <Route path="/demo" element={<Demo />} />
             <Route path="/findings" element={<Findings />} />
             <Route path="/experiments" element={<Experiments />} />

@@ -46,7 +46,19 @@ class Prompt(Base):
     original_text = Column(Text, nullable=True)  # For mutations, store the original
     
     # Classification
-    mutation_type = Column(Enum(MutationType), default=MutationType.BASELINE, index=True)
+    # values_callable stores the enum's .value ("baseline") in the DB
+    # column, not its member name ("BASELINE") -- SQLAlchemy's default
+    # behavior for a str-mixin Enum without this stores the member name,
+    # which silently disagrees with the lowercase string literals used
+    # everywhere else in the API/JSON layer (e.g. any raw SQL query or
+    # external tool reading the SQLite file directly would otherwise see
+    # "BASELINE", not "baseline").
+    mutation_type = Column(
+        Enum(MutationType, values_callable=lambda enum_cls: [e.value for e in enum_cls]),
+        default=MutationType.BASELINE,
+        nullable=False,
+        index=True,
+    )
     mutation_intensity = Column(Float, default=0.0)
     mutation_params = Column(JSON, nullable=True)
     

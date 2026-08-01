@@ -29,6 +29,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import HistoryIcon from '@mui/icons-material/History';
 import InsightsIcon from '@mui/icons-material/Insights';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import { promptsApi, MutationPreviewResponse } from '../services/api';
 
 interface MutationResult {
   original: string;
@@ -37,20 +38,25 @@ interface MutationResult {
   changes: string[];
   metrics: {
     word_count_change: number;
-    char_count_change: number;
-    complexity_change: number;
+    semantic_instability_index: number | null;
+    flesch_reading_ease: number | null;
   };
 }
 
+// These match the backend's real MutationType enum values exactly
+// (app/models/prompt.py) -- the previous list here (SYNONYM_REPLACEMENT,
+// PARAPHRASE, PASSIVE_ACTIVE_CONVERSION, etc.) didn't correspond to any
+// backend mutation type at all, so wiring this page to the real API
+// required fixing the options themselves, not just the API call.
 const mutationTypes = [
-  { value: 'SYNONYM_REPLACEMENT', label: 'Synonym Replacement', icon: '🔄', description: 'Replace words with synonyms' },
-  { value: 'PARAPHRASE', label: 'Paraphrase', icon: '📝', description: 'Rephrase while keeping meaning' },
-  { value: 'WORD_ORDER_CHANGE', label: 'Word Order Change', icon: '🔀', description: 'Shuffle word positions' },
-  { value: 'PASSIVE_ACTIVE_CONVERSION', label: 'Voice Conversion', icon: '🔊', description: 'Change active/passive voice' },
-  { value: 'FORMALITY_SHIFT', label: 'Formality Shift', icon: '👔', description: 'Adjust formality level' },
-  { value: 'SIMPLIFICATION', label: 'Simplification', icon: '✨', description: 'Simplify complex language' },
-  { value: 'ELABORATION', label: 'Elaboration', icon: '📚', description: 'Add more detail' },
-  { value: 'NEGATION_INSERTION', label: 'Negation', icon: '❌', description: 'Insert negations' },
+  { value: 'noise_typo', label: 'Typo Noise', icon: '🔤', description: 'Keyboard-adjacent character typos' },
+  { value: 'noise_verbose', label: 'Verbose Filler', icon: '📝', description: 'Insert filler phrases' },
+  { value: 'ambiguity_semantic', label: 'Semantic Ambiguity', icon: '❓', description: 'Vague pronouns and quantifiers' },
+  { value: 'ambiguity_contradiction', label: 'Contradiction', icon: '⚡', description: 'Insert contradictory statements' },
+  { value: 'negation', label: 'Negation', icon: '❌', description: 'Confusing double negatives' },
+  { value: 'reordering', label: 'Reordering', icon: '🔀', description: 'Shuffle sentence/word order' },
+  { value: 'formality_shift', label: 'Formality Shift', icon: '👔', description: 'Shift formal/informal register' },
+  { value: 'code_switching', label: 'Code-Switching', icon: '🌐', description: 'Insert foreign-language phrases' },
 ];
 
 const examplePrompts = [
@@ -63,7 +69,7 @@ const examplePrompts = [
 
 const Playground: React.FC = () => {
   const [originalText, setOriginalText] = useState('');
-  const [mutationType, setMutationType] = useState('SYNONYM_REPLACEMENT');
+  const [mutationType, setMutationType] = useState('noise_typo');
   const [intensity, setIntensity] = useState(0.5);
   const [isLoading, setIsLoading] = useState(false);
   const [results, setResults] = useState<MutationResult[]>([]);
@@ -72,35 +78,47 @@ const Playground: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState({
     totalMutations: 0,
-    avgComplexityChange: 0,
+    avgSiiChange: 0,
     avgWordCountChange: 0,
   });
 
-  // Simulated mutation function (can be connected to real API)
+  // Calls the real backend mutation engine (POST /api/prompts/mutate) --
+  // previously this ran a client-side fake simulateMutation() and never
+  // touched the API at all.
   const performMutation = useCallback(async () => {
     if (!originalText.trim()) {
       setError('Please enter some text to mutate');
       return;
     }
-    
+
     setIsLoading(true);
     setError(null);
 
     try {
-      // Simulate API call with realistic mutation
-      await new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 500));
+      const response = await promptsApi.mutate(originalText, mutationType, intensity);
+      const data: MutationPreviewResponse = response.data;
 
-      const mutated = simulateMutation(originalText, mutationType, intensity);
-      
+      const changes: string[] = [];
+      const params = data.mutation_params;
+      if (params && Array.isArray((params as any).changes)) {
+        for (const c of (params as any).changes as any[]) {
+          if (typeof c === 'string') changes.push(c);
+          else if (c && typeof c === 'object') {
+            changes.push(Object.entries(c).map(([k, v]) => `${k}: ${v}`).join(', '));
+          }
+        }
+      }
+      if (changes.length === 0) changes.push('No changes recorded for this intensity/type combination');
+
       const result: MutationResult = {
-        original: originalText,
-        mutated: mutated.text,
-        mutation_type: mutationType,
-        changes: mutated.changes,
+        original: data.original_text,
+        mutated: data.text,
+        mutation_type: data.mutation_type,
+        changes,
         metrics: {
-          word_count_change: mutated.text.split(' ').length - originalText.split(' ').length,
-          char_count_change: mutated.text.length - originalText.length,
-          complexity_change: Math.round((Math.random() - 0.5) * 20),
+          word_count_change: (data.word_count ?? 0) - originalText.split(' ').length,
+          semantic_instability_index: data.semantic_instability_index,
+          flesch_reading_ease: data.flesch_reading_ease,
         },
       };
 
@@ -108,87 +126,19 @@ const Playground: React.FC = () => {
       setHistory([result, ...history.slice(0, 19)]);
       setStats({
         totalMutations: stats.totalMutations + 1,
-        avgComplexityChange: (stats.avgComplexityChange * stats.totalMutations + result.metrics.complexity_change) / (stats.totalMutations + 1),
-        avgWordCountChange: (stats.avgWordCountChange * stats.totalMutations + result.metrics.word_count_change) / (stats.totalMutations + 1),
+        avgSiiChange:
+          (stats.avgSiiChange * stats.totalMutations + (result.metrics.semantic_instability_index ?? 0)) /
+          (stats.totalMutations + 1),
+        avgWordCountChange:
+          (stats.avgWordCountChange * stats.totalMutations + result.metrics.word_count_change) /
+          (stats.totalMutations + 1),
       });
-    } catch (err) {
-      setError('Failed to perform mutation. Please try again.');
+    } catch (err: any) {
+      setError(err?.response?.data?.detail?.[0]?.msg || err?.response?.data?.detail || 'Failed to perform mutation. Please try again.');
     } finally {
       setIsLoading(false);
     }
   }, [originalText, mutationType, intensity, results, history, stats]);
-
-  const simulateMutation = (text: string, type: string, intensity: number) => {
-    const words = text.split(' ');
-    const changes: string[] = [];
-    let mutatedWords = [...words];
-
-    const synonymMap: Record<string, string[]> = {
-      'explain': ['describe', 'elucidate', 'clarify', 'illustrate'],
-      'concept': ['idea', 'notion', 'principle', 'theory'],
-      'simple': ['basic', 'straightforward', 'elementary', 'uncomplicated'],
-      'key': ['main', 'primary', 'essential', 'crucial'],
-      'differences': ['distinctions', 'variations', 'contrasts', 'disparities'],
-      'describe': ['explain', 'outline', 'depict', 'portray'],
-      'process': ['procedure', 'method', 'mechanism', 'operation'],
-      'work': ['function', 'operate', 'perform', 'run'],
-      'significance': ['importance', 'relevance', 'meaning', 'value'],
-    };
-
-    const numChanges = Math.ceil(words.length * intensity * 0.3);
-
-    switch (type) {
-      case 'SYNONYM_REPLACEMENT':
-        for (let i = 0; i < numChanges; i++) {
-          const idx = Math.floor(Math.random() * mutatedWords.length);
-          const word = mutatedWords[idx].toLowerCase().replace(/[.,!?]/g, '');
-          if (synonymMap[word]) {
-            const synonym = synonymMap[word][Math.floor(Math.random() * synonymMap[word].length)];
-            const punct = mutatedWords[idx].match(/[.,!?]$/)?.[0] || '';
-            changes.push(`"${word}" → "${synonym}"`);
-            mutatedWords[idx] = synonym + punct;
-          }
-        }
-        break;
-
-      case 'PARAPHRASE':
-        if (text.includes('explain')) {
-          mutatedWords = ['Could', 'you', 'provide', 'an', 'explanation', 'of', ...mutatedWords.slice(2)];
-          changes.push('Restructured as a question');
-        }
-        break;
-
-      case 'FORMALITY_SHIFT':
-        mutatedWords = ['I', 'would', 'like', 'to', 'understand', ...mutatedWords.slice(1)];
-        changes.push('Added formal prefix');
-        break;
-
-      case 'SIMPLIFICATION':
-        mutatedWords = mutatedWords.filter((w) => w.length < 10 || Math.random() > 0.5);
-        changes.push('Removed complex words');
-        break;
-
-      case 'ELABORATION':
-        mutatedWords.splice(2, 0, 'specifically', 'and', 'comprehensively');
-        changes.push('Added elaborating words');
-        break;
-
-      default:
-        // Shuffle some words for other types
-        for (let i = 0; i < numChanges; i++) {
-          const idx1 = Math.floor(Math.random() * mutatedWords.length);
-          const idx2 = Math.floor(Math.random() * mutatedWords.length);
-          [mutatedWords[idx1], mutatedWords[idx2]] = [mutatedWords[idx2], mutatedWords[idx1]];
-          changes.push(`Swapped positions ${idx1} ↔ ${idx2}`);
-        }
-    }
-
-    if (changes.length === 0) {
-      changes.push('Minor adjustments applied');
-    }
-
-    return { text: mutatedWords.join(' '), changes };
-  };
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -208,11 +158,11 @@ const Playground: React.FC = () => {
       >
         <Box sx={{ mb: 4 }}>
           <Typography variant="h4" fontWeight={700} gutterBottom>
-            🧪 Mutation Playground
+            Mutation Explorer
           </Typography>
           <Typography variant="body1" color="text.secondary">
-            Experiment with different prompt mutations and see how they affect text characteristics.
-            Explore the relationship between linguistic changes and computational entropy.
+            Apply the real mutation engine to a prompt and see its effect on the Semantic
+            Instability Index and readability -- calls the same backend used by real experiments.
           </Typography>
         </Box>
       </motion.div>
@@ -346,9 +296,9 @@ const Playground: React.FC = () => {
                     <Grid item xs={4}>
                       <Paper sx={{ p: 1.5, textAlign: 'center', bgcolor: 'success.dark' }}>
                         <Typography variant="h5" fontWeight={700}>
-                          {stats.avgComplexityChange > 0 ? '+' : ''}{stats.avgComplexityChange.toFixed(1)}%
+                          {stats.avgSiiChange.toFixed(2)}
                         </Typography>
-                        <Typography variant="caption">Avg Complexity</Typography>
+                        <Typography variant="caption">Avg SII</Typography>
                       </Paper>
                     </Grid>
                   </Grid>
@@ -428,14 +378,12 @@ const Playground: React.FC = () => {
                                   </Grid>
                                   <Grid item xs={4}>
                                     <Typography variant="caption" color="text.secondary">
-                                      Chars: {result.metrics.char_count_change > 0 ? '+' : ''}
-                                      {result.metrics.char_count_change}
+                                      SII: {result.metrics.semantic_instability_index?.toFixed(3) ?? '—'}
                                     </Typography>
                                   </Grid>
                                   <Grid item xs={4}>
                                     <Typography variant="caption" color="text.secondary">
-                                      Complexity: {result.metrics.complexity_change > 0 ? '+' : ''}
-                                      {result.metrics.complexity_change}%
+                                      Flesch: {result.metrics.flesch_reading_ease?.toFixed(1) ?? '—'}
                                     </Typography>
                                   </Grid>
                                 </Grid>

@@ -52,7 +52,7 @@ import {
 } from 'recharts';
 import { format } from 'date-fns';
 import toast from 'react-hot-toast';
-import { experimentsApi, measurementsApi, Measurement } from '../services/api';
+import { experimentsApi, measurementsApi, exportApi, Measurement } from '../services/api';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -262,7 +262,7 @@ const ExperimentDetail: React.FC = () => {
           <Button
             variant="outlined"
             startIcon={<DownloadIcon />}
-            onClick={() => window.open(`http://localhost:8000/api/export/experiment/${id}/csv`, '_blank')}
+            onClick={() => window.open(exportApi.downloadCSV(Number(id)), '_blank')}
           >
             Export
           </Button>

@@ -1,10 +1,24 @@
+# This file only deploys the BACKEND (FastAPI, on Render). The frontend
+# (React) is a separate static-site deployment -- see DEPLOYMENT.md's
+# Vercel instructions; there is no single config here that deploys both.
+#
+# Note on LLM_PROVIDER=ollama (the app's default): Render's web service
+# has no Ollama server reachable at the default localhost:11434 -- a
+# production deployment must either run its own Ollama instance/point
+# OLLAMA_HOST at a reachable one, or set LLM_PROVIDER to "openai"/
+# "anthropic" (with the corresponding API key) for real generation.
+# Without either, requests fall back to the explicit "simulation" mode.
 services:
   - type: web
     name: comp-ent-api
     env: python
     region: oregon
     plan: free
-    buildCommand: pip install -r backend/requirements.txt
+    # requirements-production.txt (not requirements.txt) -- it adds
+    # gunicorn and psycopg2-binary, both required by startCommand/
+    # DATABASE_URL below. Installing from the base requirements.txt here
+    # would leave `gunicorn` not found at container start.
+    buildCommand: pip install -r backend/requirements-production.txt
     startCommand: cd backend && gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app --bind 0.0.0.0:${PORT:-8000}
     envVars:
       - key: DATABASE_URL
@@ -16,4 +30,12 @@ services:
       - key: PORT
         value: "8000"
       - key: ALLOWED_ORIGINS
+        scope: run
+      - key: LLM_PROVIDER
+        value: "simulation"  # override to "ollama"/"openai"/"anthropic"; see note above re: Ollama reachability
+      - key: OLLAMA_HOST
+        scope: run
+      - key: OPENAI_API_KEY
+        scope: run
+      - key: ANTHROPIC_API_KEY
         scope: run

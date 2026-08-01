@@ -38,7 +38,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { motion } from 'framer-motion';
-import { dashboardApi, Experiment } from '../services/api';
+import { dashboardApi, RecentExperimentSummary } from '../services/api';
 
 // Animation variants
 const containerVariants = {
@@ -165,7 +165,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, value, subtitle, icon, color
 );
 
 // Experiment Card Component
-const ExperimentCard: React.FC<{ experiment: Experiment; index?: number }> = ({ experiment, index = 0 }) => {
+const ExperimentCard: React.FC<{ experiment: RecentExperimentSummary; index?: number }> = ({ experiment, index = 0 }) => {
   const navigate = useNavigate();
   
   const statusConfig: Record<string, { color: string; gradient: string }> = {
@@ -409,8 +409,7 @@ const Dashboard: React.FC = () => {
                 value={stats?.total_experiments || 0}
                 icon={<ScienceIcon sx={{ fontSize: 28 }} />}
                 color="#8b5cf6"
-                gradient="linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(124, 58, 237, 0.05) 100%)"
-                trend={12}
+                gradient="linear-gradient(135deg, rgba(139, 92, 246, 0.15) 0%, rgba(124, 58, 237, 0.05) 100%)"
               />
             )}
           </motion.div>
@@ -425,8 +424,7 @@ const Dashboard: React.FC = () => {
                 value={(stats?.total_measurements || 0).toLocaleString()}
                 icon={<AnalyticsIcon sx={{ fontSize: 28 }} />}
                 color="#06b6d4"
-                gradient="linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(8, 145, 178, 0.05) 100%)"
-                trend={8}
+                gradient="linear-gradient(135deg, rgba(6, 182, 212, 0.15) 0%, rgba(8, 145, 178, 0.05) 100%)"
               />
             )}
           </motion.div>
@@ -441,8 +439,7 @@ const Dashboard: React.FC = () => {
                 value={`${(stats?.total_energy_kwh || 0).toFixed(4)} kWh`}
                 icon={<BoltIcon sx={{ fontSize: 28 }} />}
                 color="#f59e0b"
-                gradient="linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.05) 100%)"
-                trend={-5}
+                gradient="linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(217, 119, 6, 0.05) 100%)"
               />
             )}
           </motion.div>
@@ -457,8 +454,7 @@ const Dashboard: React.FC = () => {
                 value={(stats?.avg_pec_score || 0).toFixed(3)}
                 icon={<SpeedIcon sx={{ fontSize: 28 }} />}
                 color="#10b981"
-                gradient="linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.05) 100%)"
-                trend={4}
+                gradient="linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.05) 100%)"
               />
             )}
           </motion.div>
@@ -659,7 +655,7 @@ const Dashboard: React.FC = () => {
               </Grid>
             ))
           ) : (
-            recentExperiments?.map((exp: Experiment, index: number) => (
+            recentExperiments?.map((exp: RecentExperimentSummary, index: number) => (
               <Grid item xs={12} sm={6} md={4} key={exp.id}>
                 <ExperimentCard experiment={exp} index={index} />
               </Grid>

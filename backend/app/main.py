@@ -21,6 +21,7 @@ from app.core.paths import ensure_runtime_dirs, LOG_DIR
 from app.core.logger import logger
 from app.core.database import init_db
 from app.api import router as api_router
+from app.services.energy_monitor import energy_monitor
 
 
 # Configure logging
@@ -50,9 +51,10 @@ async def lifespan(app: FastAPI):
     logger.info(f"API documentation available at: http://localhost:{settings.PORT}/docs")
     
     yield
-    
+
     # Shutdown
     logger.info("Shutting down Computational Entropy Lab Backend...")
+    energy_monitor.shutdown()
 
 
 # Create FastAPI application
@@ -72,6 +74,12 @@ This API provides endpoints for:
 - **PEC (Prompt Entropy Coefficient)**: Correlation between prompt ambiguity and energy consumption
 - **EPT (Energy Per Token)**: Normalized energy metric for comparison
 - **SII (Semantic Instability Index)**: Composite measure of prompt clarity
+
+### Generation Backend
+Defaults to **Ollama** (real local models, real NVML GPU energy where
+available). OpenAI/Anthropic are available as alternate providers given an
+API key; simulation mode is an explicit, clearly-labeled synthetic
+fallback -- see `/api/settings` for provider configuration.
     """,
     version="1.0.0",
     docs_url="/docs",
@@ -79,20 +87,19 @@ This API provides endpoints for:
     lifespan=lifespan
 )
 
-# CORS configuration
+# CORS configuration. No hardcoded deployment-specific domain here --
+# the deployed frontend origin must be supplied via ALLOWED_ORIGINS so
+# this file doesn't need editing per-deployment. A wildcard ("*") origin
+# is never combined with allow_credentials=True: that combination is
+# rejected by browsers per the CORS spec anyway, and loosens origin
+# checking exactly when DEBUG is most likely to be left on by accident.
 allow_origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://comp-ent.vercel.app",  # Vercel frontend URL
 ]
-
-# Allow custom origins from environment variable
-if settings.DEBUG:
-    allow_origins.append("*")
-else:
-    custom_origins = os.getenv("ALLOWED_ORIGINS", "")
-    if custom_origins:
-        allow_origins.extend(custom_origins.split(","))
+custom_origins = os.getenv("ALLOWED_ORIGINS", "")
+if custom_origins:
+    allow_origins.extend(o.strip() for o in custom_origins.split(",") if o.strip())
 
 app.add_middleware(
     CORSMiddleware,
@@ -120,14 +127,21 @@ async def root():
 
 @app.get("/health", tags=["Health"])
 async def health_check():
-    """Health check endpoint for monitoring."""
+    """Health check endpoint for monitoring. Reports the energy monitor's
+    actual measured state rather than a hardcoded 'ready' string -- it is
+    only genuinely GPU-backed when NVML found a real device."""
     return {
         "status": "healthy",
         "database": "connected",
         "services": {
             "mutation_engine": "ready",
-            "energy_monitor": "ready",
-            "analysis_engine": "ready"
+            "energy_monitor": {
+                "gpu_monitoring_enabled": settings.ENABLE_GPU_MONITORING,
+                "nvml_available": energy_monitor.nvml_available,
+                "codecarbon_available": energy_monitor.codecarbon_available,
+            },
+            "analysis_engine": "ready",
+            "llm_provider": settings.LLM_PROVIDER,
         }
     }
 

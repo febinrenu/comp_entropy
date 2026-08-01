@@ -1,0 +1,76 @@
+{
+  "n": 255,
+  "pec": -0.017281906740912786,
+  "pec_p": 0.7835969982394204,
+  "pec_ci": [
+    -0.14306035974822695,
+    0.10873920219050963
+  ],
+  "tokens_ept_rho": -0.5059915567646802,
+  "tokens_ept_p": 5.532735123161127e-18,
+  "time_ept_rho": -0.3583234425660028,
+  "time_ept_p": 3.8476267181868786e-09,
+  "sii_tokens_rho": 0.052179516118429185,
+  "sii_tokens_p": 0.40670180769156,
+  "sii_time_rho": 0.002529183109709073,
+  "sii_time_p": 0.9679420869125245,
+  "partial_sii_ept_given_time": -0.017540421160289473,
+  "partial_sii_ept_given_input_tokens": -0.01531517301176764,
+  "anova": {
+    "ss_between": 2127966.8908525044,
+    "ss_within": 56258825.20893348,
+    "ss_total": 58386792.09978598,
+    "df_between": 8,
+    "df_within": 246,
+    "ms_between": 265995.86135656305,
+    "ms_within": 228694.4114184288,
+    "F": 1.1631060842579402,
+    "p": 0.322144591621375,
+    "eta2": 0.03644603195900369,
+    "omega2": 0.005091002690014905
+  },
+  "kruskal_H": 6.897230392156871,
+  "kruskal_p": 0.5477603484300191,
+  "levene_stat": 1.1750006133680524,
+  "levene_p": 0.3146988905230045,
+  "cohens_d_baseline_vs_contradiction": -0.058687117057305234,
+  "condition_means": {
+    "baseline": 1127.4449950173528,
+    "noise_typo": 949.1240802879595,
+    "noise_verbose": 1037.0715003837818,
+    "formality_shift": 1227.9665147008536,
+    "code_switching": 1174.5665357790103,
+    "ambiguity_semantic": 989.3745951908779,
+    "negation": 979.7802659173908,
+    "reordering": 1121.7014507012123,
+    "ambiguity_contradiction": 1094.5423699104292
+  },
+  "condition_sds": {
+    "baseline": 522.2546036721424,
+    "noise_typo": 101.09508400552447,
+    "noise_verbose": 418.8118084447338,
+    "formality_shift": 693.5785835606853,
+    "code_switching": 517.8665514427796,
+    "ambiguity_semantic": 272.51744460118806,
+    "negation": 264.1302961498212,
+    "reordering": 628.4933385359224,
+    "ambiguity_contradiction": 578.2664846749187
+  },
+  "condition_order": [
+    "baseline",
+    "noise_typo",
+    "noise_verbose",
+    "formality_shift",
+    "code_switching",
+    "ambiguity_semantic",
+    "negation",
+    "reordering",
+    "ambiguity_contradiction"
+  ],
+  "wilcoxon_raw_vs_length_matched": {
+    "n_pairs": 120,
+    "statistic": 3240.0,
+    "p": 0.30708440703004547,
+    "mean_diff_raw_minus_matched": 7.165959937059442
+  }
+}

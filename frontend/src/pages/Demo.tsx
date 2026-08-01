@@ -134,7 +134,6 @@ const Demo: React.FC = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [result, setResult] = useState<QuickExperimentResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [currentStep, setCurrentStep] = useState(0);
 
   const runExperiment = useCallback(async () => {
     if (!prompt.trim()) {
@@ -145,17 +144,11 @@ const Demo: React.FC = () => {
     setIsRunning(true);
     setError(null);
     setResult(null);
-    setCurrentStep(0);
 
     try {
-      // Simulate step-by-step progress
-      const steps = ['Analyzing baseline...', 'Testing mutations...', 'Measuring complexity...', 'Comparing variations...', 'Finalizing results...'];
-      
-      for (let i = 0; i < steps.length; i++) {
-        setCurrentStep(i);
-        await new Promise(resolve => setTimeout(resolve, 400));
-      }
-
+      // A single honest loading state tied to the real request -- this
+      // previously stepped through five hardcoded status strings on fixed
+      // setTimeout delays with no connection to the actual request.
       const response = await demoApi.runQuickExperiment(prompt);
       setResult(response.data);
     } catch (err) {
@@ -163,7 +156,6 @@ const Demo: React.FC = () => {
       console.error(err);
     } finally {
       setIsRunning(false);
-      setCurrentStep(0);
     }
   }, [prompt]);
 
@@ -254,35 +246,38 @@ const Demo: React.FC = () => {
                     letterSpacing: '-0.02em',
                   }}
                 >
-                  Live Energy Experiment
+                  Interactive Demo
                 </Typography>
                 <Box display="flex" alignItems="center" gap={1} mt={0.5}>
-                  <Chip 
-                    label="Interactive Proof" 
+                  <Chip
+                    label="Real Mutation Engine"
                     size="small"
                     icon={<SparkleIcon sx={{ fontSize: 16 }} />}
-                    sx={{ 
-                      background: isDark 
+                    sx={{
+                      background: isDark
                         ? 'linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(6, 182, 212, 0.2))'
                         : 'linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(6, 182, 212, 0.15))',
                       border: `1px solid ${isDark ? 'rgba(16, 185, 129, 0.4)' : 'rgba(16, 185, 129, 0.3)'}`,
                       '& .MuiChip-icon': { color: '#10b981' },
-                    }} 
+                    }}
                   />
-                  <Chip 
-                    label="Real-time Measurements" 
+                  <Chip
+                    label="Synthetic Energy Estimate"
                     size="small"
-                    sx={{ 
+                    sx={{
                       background: isDark ? 'rgba(139, 92, 246, 0.15)' : 'rgba(139, 92, 246, 0.1)',
                       border: `1px solid ${isDark ? 'rgba(139, 92, 246, 0.3)' : 'rgba(139, 92, 246, 0.2)'}`,
-                    }} 
+                    }}
                   />
                 </Box>
               </Box>
             </Box>
             <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 700, lineHeight: 1.7 }}>
-              Test any prompt and see <strong style={{ color: '#8b5cf6' }}>real-time energy measurements</strong> across different phrasing variations.
-              This demonstrates our key finding: <em style={{ color: '#ec4899' }}>how you phrase a prompt directly affects AI energy consumption</em>.
+              Type a prompt and see the same mutation engine and SII scoring used in real
+              experiments run instantly. <strong>The energy numbers on this page are a fast
+              synthetic estimate, not a real model call or hardware measurement</strong> — that
+              keeps this demo interactive. For statistically validated results from real
+              measurements, see <em>Research Findings</em> and <em>Analysis</em>.
             </Typography>
           </Box>
         </Box>
@@ -397,23 +392,19 @@ const Demo: React.FC = () => {
                     exit={{ opacity: 0, height: 0 }}
                   >
                     <Box sx={{ mb: 2 }}>
-                      <LinearProgress 
-                        variant="determinate" 
-                        value={(currentStep + 1) * 20} 
-                        sx={{ 
-                          mb: 1, 
-                          height: 10, 
+                      <LinearProgress
+                        sx={{
+                          mb: 1,
+                          height: 10,
                           borderRadius: 2,
                           background: 'rgba(139, 92, 246, 0.1)',
                           '& .MuiLinearProgress-bar': {
                             background: 'linear-gradient(90deg, #8b5cf6, #ec4899, #06b6d4)',
-                            backgroundSize: '200% 100%',
-                            animation: 'shimmer 2s infinite',
                           },
-                        }} 
+                        }}
                       />
                       <Typography variant="body2" color="primary.main" fontWeight={500}>
-                        {['🔍 Analyzing baseline...', '🔧 Testing mutations...', '🎯 Measuring complexity...', '📊 Comparing variations...', '⚡ Finalizing results...'][currentStep]}
+                        Running mutations and requesting the backend...
                       </Typography>
                     </Box>
                   </motion.div>
@@ -492,7 +483,7 @@ const Demo: React.FC = () => {
                     WebkitTextFillColor: 'transparent',
                   }}
                 >
-                  <ScienceIcon sx={{ color: '#06b6d4' }} /> What This Experiment Proves
+                  <ScienceIcon sx={{ color: '#06b6d4' }} /> What This Demo Illustrates
                 </Typography>
                 
                 <motion.div
@@ -553,7 +544,11 @@ const Demo: React.FC = () => {
                     '& .MuiAlert-icon': { color: '#3b82f6' },
                   }}
                 >
-                  <strong style={{ color: '#3b82f6' }}>Hypothesis:</strong> Ambiguous and overly-elaborate prompts force the AI to do more "computational work" to resolve uncertainty, consuming more energy.
+                  <strong style={{ color: '#3b82f6' }}>Hypothesis under test:</strong> ambiguous and
+                  overly-elaborate prompts require more computational work to resolve, consuming
+                  more energy per token. This demo's synthetic estimate is tuned to reflect that
+                  hypothesis directionally, for illustration — it is not itself evidence for or
+                  against it. See Research Findings for the actual test.
                 </Alert>
               </CardContent>
             </Card>
@@ -732,25 +727,29 @@ const Demo: React.FC = () => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  <Alert severity="success" sx={{ borderLeft: '4px solid #10b981' }}>
+                  <Alert severity="info" sx={{ borderLeft: '4px solid #6366f1' }}>
                     <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
-                      ✅ Research Finding Confirmed
+                      Demo Result (single prompt, synthetic energy estimate)
                     </Typography>
                     <Typography variant="body2">
                       {result.summary.most_efficient === 'reordering' ? (
                         <>
-                          <strong>Baseline prompts</strong> consistently consumed the least energy — validating our hypothesis that 
-                          clear, unambiguous phrasing reduces computational overhead.
+                          <strong>The baseline variant</strong> had the lowest estimated energy for
+                          this one prompt — consistent with the hypothesis being tested, but a
+                          single run isn't a statistical result on its own.
                         </>
                       ) : result.summary.least_efficient === 'formality_shift' ? (
                         <>
-                          <strong>Overly-elaborate prompts</strong> consumed the most energy ({result.results.find(r => r.mutation_type === 'formality_shift')?.energy_change_percent?.toFixed(1)}% more than baseline).
-                          This proves that verbosity without clarity actually increases AI energy consumption.
+                          <strong>The elaborate/verbose variant</strong> had the highest estimated
+                          energy for this one prompt ({result.results.find(r => r.mutation_type === 'formality_shift')?.energy_change_percent?.toFixed(1)}% more than baseline). See
+                          Research Findings for whether this holds up across many real
+                          measurements.
                         </>
                       ) : (
                         <>
-                          The experiment shows <strong>{result.summary.potential_savings_percent.toFixed(1)}% potential energy savings</strong> achievable
-                          through optimal prompt phrasing — a key contribution of our research.
+                          This single-prompt estimate suggests up to <strong>{result.summary.potential_savings_percent.toFixed(1)}%</strong> difference
+                          between phrasing variants — illustrative only; see Research Findings for
+                          the statistically validated figures.
                         </>
                       )}
                     </Typography>
@@ -775,7 +774,7 @@ const Demo: React.FC = () => {
                   Enter a prompt above and click "Run Experiment"
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  See real-time energy measurements that prove our key research findings
+                  See how each mutation type changes the prompt and its (synthetic, illustrative) estimated energy cost
                 </Typography>
               </Paper>
             </motion.div>

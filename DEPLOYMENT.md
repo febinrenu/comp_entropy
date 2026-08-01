@@ -39,7 +39,8 @@ This guide walks you through deploying **Computational Entropy Lab** to producti
 
 ### Step 2.2: Migrate Data
 ```bash
-pgloader sqlite:///c:\Users\fkr77\Downloads\comp_ent\backend\data\entropy_lab.db postgresql://user:password@host:5432/entropy_lab
+# Replace <path-to-repo> with your local checkout path
+pgloader sqlite:///<path-to-repo>/backend/data/entropy_lab.db postgresql://user:password@host:5432/entropy_lab
 ```
 
 ### Step 2.3: Verify Migration

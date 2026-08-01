@@ -45,7 +45,7 @@ import {
   Cell,
 } from 'recharts';
 import toast from 'react-hot-toast';
-import { analysisApi, experimentsApi, measurementsApi, Measurement } from '../services/api';
+import { analysisApi, experimentsApi, measurementsApi, exportApi, Measurement } from '../services/api';
 
 const mutationColors: Record<string, string> = {
   baseline: '#8b5cf6',
@@ -315,7 +315,7 @@ const Analysis: React.FC = () => {
               <Button
                 variant="contained"
                 startIcon={<DownloadIcon />}
-                onClick={() => window.open(`http://localhost:8000/api/export/experiment/${selectedExperiment}/latex`, '_blank')}
+                onClick={() => window.open(exportApi.downloadLatex(selectedExperiment!), '_blank')}
               >
                 Export Report
               </Button>
